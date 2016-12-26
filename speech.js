@@ -21,7 +21,7 @@ function upgrade() {
 }
 
 function startButton(event) {
-  toggleRecognition(event);
+  if (!toggleRecognition(event)) forceStop();
 }
 
 function showInfo(s) {

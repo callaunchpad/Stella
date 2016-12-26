@@ -97,7 +97,7 @@ function toggleRecognition(event) {
     log("Turning Mic Off");
     // forced_stop = true;
     recognition.stop();
-    return;
+    return false;
   }
   final_transcript = '';
   recognition.lang = select_dialect.value;
@@ -109,6 +109,7 @@ function toggleRecognition(event) {
   micOff();
   if (info_allow) showInfo('info_allow');
   if (event) start_timestamp = event.timeStamp;
+  return true;
 }
 
 function forceStop() {
