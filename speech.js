@@ -129,6 +129,13 @@ if (!('webkitSpeechRecognition' in window)) {
     }
     showInfo('');
     console.log("FINISHED: " + final_transcript);
+    if (final_transcript.contains("Jarvis")) {
+      // start_button.click();
+      // console.log("recognizing: " + recognizing);
+      // console.log("taking action");
+      takeAction(final_transcript);
+      // chrome.alarms.create("restart", {when: Date.now() + 3000});
+    }
     if (window.getSelection) {
       window.getSelection().removeAllRanges();
       var range = document.createRange();
@@ -218,3 +225,7 @@ function showButtons(style) {
   }
   current_style = style;
 }
+
+// ACTIONS
+
+start_button.click();

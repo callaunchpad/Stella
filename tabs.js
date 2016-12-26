@@ -21,11 +21,11 @@
 
 function discardAllAudibleTabs(callback) {
     var query = { audible: true };
-    chrome.tabs.query(queryInfo, function(tabs) {
+    chrome.tabs.query(query, function(tabs) {
         for (var i = 0; i < tabs.length; i++) {
             var tab = tabs[i];
             chrome.tabs.discard(tab.id, function(tab) {
-                log("Removed tab from memory. Click tab again to reload." + tab); 
+                log("Removed tab from memory. Click tab again to reload." + JSON.stringify(tab));
             });
         }
         callback(tabs);
@@ -34,11 +34,11 @@ function discardAllAudibleTabs(callback) {
 
 function memorySaveMode(callback) {
     var query = { active: false }
-    chrome.tabs.query(queryInfo, function(tabs) {
+    chrome.tabs.query(query, function(tabs) {
         for (var i = 0; i < tabs.length; i++) {
             var tab = tabs[i];
             chrome.tabs.discard(tab.id, function(tab) {
-                log("Removed tab from memory. Click tab again to reload." + tab); 
+                log("Removed tab from memory. Click tab again to reload." + JSON.stringify(tab));
             });
         }
         callback(tabs);
@@ -46,9 +46,9 @@ function memorySaveMode(callback) {
 }
 
 function getCurrentTab(callback) {
-  var queryInfo = { active: true, currentWindow: true };
+  var query = { active: true, currentWindow: true };
 
-  chrome.tabs.query(queryInfo, function(tabs) {
+  chrome.tabs.query(query, function(tabs) {
     var tab = tabs[0];
     // console.assert(typeof url == 'string', 'tab.url should be a string');
     callback(tab);
@@ -56,8 +56,7 @@ function getCurrentTab(callback) {
 }
 
 function openEmptyTab(callback) {
-    var props = null;
-    chrome.tabs.create(props, function(tab) {
+    chrome.tabs.create({}, function(tab) {
         callback(tab);
     });
 }
@@ -87,3 +86,12 @@ document.addEventListener('DOMContentLoaded', function() {
   // });
 
 });
+
+var Tabs = {
+  muteTabs: discardAllAudibleTabs,
+  memSave: memorySaveMode,
+  getCurrent: getCurrentTab,
+  openEmpty: openEmptyTab,
+  openNew: openNewTab,
+  duplicate: duplicateTab
+}
