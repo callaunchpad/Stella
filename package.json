@@ -1,0 +1,24 @@
+{
+  "name": "voiceweb",
+  "version": "1.0.0",
+  "description": "A Launchpad app that browses the web using your voice",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "browserify app.js -o bundle.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/callaunchpad/VoiceWeb.git"
+  },
+  "author": "Launchpad",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/callaunchpad/VoiceWeb/issues"
+  },
+  "homepage": "https://github.com/callaunchpad/VoiceWeb#readme",
+  "dependencies": {
+    "jquery": "^3.1.1"
+  },
+  "devDependencies": {}
+}
