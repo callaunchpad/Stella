@@ -9,6 +9,7 @@
     <title>Voice Web by Launchpad</title>
     <style>
       * { font-family: Verdana, Arial, sans-serif; }
+      body { width: 600px; }
       a:link { color:#000; text-decoration: none; }
       a:visited { color:#000; }
       a:hover { color:#33F; }
@@ -23,13 +24,7 @@
       #info { font-size: 20px; text-align: center; color: #777; visibility: hidden; }
       #results { font-size: 14px; font-weight: bold; border: 1px solid #ddd; padding: 15px; text-align: left; min-height: 150px; }
       #start_button { border: 0; background-color:transparent; padding: 0; }
-      #status {
-        /* avoid an excessively wide status text */
-        white-space: pre;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        max-width: 400px;
-      }
+      #status { white-space: pre; text-overflow: ellipsis; overflow: hidden; max-width: 600px; }
     </style>
   </head>
   <body>
@@ -62,6 +57,7 @@
     </div>
     <div id="status"></div>
     <script src="bundle.js"></script>
+    <script src="index.js"></script>
     <script src="speech.js"></script>
     <script src="tabs.js"></script>
   </body>
