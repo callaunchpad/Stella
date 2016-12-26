@@ -35,13 +35,6 @@ function showInfo(s) {
   }
 }
 
-// function showButtons(style) {
-//   var current_style;
-//   if (style == current_style) return;
-//   current_style = style;
-// }
-
 // ACTIONS
 goToVocalWeb();
 toggleRecognition();
-// chrome.extension.getBackgroundPage().setTimeout(toggleRecognition, 3000);

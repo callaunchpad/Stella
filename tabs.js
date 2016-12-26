@@ -31,6 +31,7 @@ function goToVocalWeb() {
     }
   });
 }
+
 function discardAllAudibleTabs(callback) {
     var query = { audible: true };
     chrome.tabs.query(query, function(tabs) {
@@ -87,16 +88,26 @@ function duplicateTab(tabId, callback) {
     });
 }
 
+function closeRecentTabs(num) {
+  var query = { currentWindow: true };
+  chrome.tabs.query(query, function(tabs) {
+    var counter = 0;
+    while (counter < num && counter < tabs.length - 1) {
+      var tab = tabs[tabs.length - 1 - counter];
+      if (tab.url != "chrome-extension://ecbiglglpcmpjmdplphadimldeldkpbl/index.html") {
+        chrome.tabs.remove(tab.id, function(tab) {
+          log("Tab removed: " + JSON.stringify(tab));
+        });
+      }
+      counter++;
+    }
+  });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
   getCurrentTab(function(tab) {
     renderStatus('Current Tab URL: ' + tab.url);
   });
-
-  // API Examples
-  // openNewTab({url:"http://www.google.com"}, function(tab) {
-  //   log(tab);
-  // });
-
 });
 
 var Tabs = {
@@ -105,5 +116,6 @@ var Tabs = {
   getCurrent: getCurrentTab,
   openEmpty: openEmptyTab,
   openNew: openNewTab,
-  duplicate: duplicateTab
+  duplicate: duplicateTab,
+  closeTabs: closeRecentTabs
 }

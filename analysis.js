@@ -26,6 +26,17 @@ function doTabAction(text) {
     Tabs.muteTabs(function(tabs) {
       log("Muted all audible tabs " + tabs);
     });
+  } else if (text.contains("close this tab")) {
+    Tabs.closeTabs(1);
+  } else if (text.contains("close the last") && text.contains("tabs")) {
+    var num = text.match(/[0-9]+\s(tabs)/g)
+    if (num) {
+      num = num[0].replace(" tabs", "");
+    } else {
+      var textArr = text.split(" ");
+      num = textTonum(textArr[textArr.indexOf("last") + 1]);
+    }
+    Tabs.closeTabs(num);
   }
 }
 

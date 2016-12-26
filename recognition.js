@@ -19,11 +19,7 @@ if (!('webkitSpeechRecognition' in window)) {
   };
 
   recognition.onerror = function(event) {
-    // if (event.error == 'no-speech') {
-    //   micOff();
-    //   showInfo('info_no_speech');
-    //   ignore_onend = true;
-    // }
+    // if (event.error == 'no-speech') { micOff(); showInfo('info_no_speech'); ignore_onend = true; }
     if (event.error == 'audio-capture') {
       micOff();
       showInfo('info_no_microphone');
@@ -43,13 +39,10 @@ if (!('webkitSpeechRecognition' in window)) {
   recognition.onend = function() {
     if (!forced_stop && continuous_check.checked) {
       recognition.start();
-      // setTimeout(toggleRecognition, 2000);
       return;
     };
     recognizing = false;
-    if (ignore_onend) {
-      return;
-    }
+    if (ignore_onend) return;
     micOff();
     if (!final_transcript) {
       showInfo('info_start');
@@ -82,8 +75,6 @@ if (!('webkitSpeechRecognition' in window)) {
       if (final_transcript.contains("Jarvis")) {
         toggleRecognition();
         takeAction(final_transcript);
-        // if (!forced_stop) setTimeout(toggleRecognition, 2000);
-        // chrome.alarms.create("restart", {when: 3000});
       }
       final_transcript = '';
       final_span.innerHTML = '';
@@ -95,7 +86,6 @@ if (!('webkitSpeechRecognition' in window)) {
 function toggleRecognition(event) {
   if (recognizing) {
     log("Turning Mic Off");
-    // forced_stop = true;
     recognition.stop();
     return false;
   }
@@ -120,11 +110,3 @@ function forceStop() {
     return;
   }
 }
-
-// toggleRecognition();
-
-// chrome.alarms.onAlarm.addListener(function(alarm) {
-//   if (alarm.name == 'restartMic') {
-//     toggleRecognition();
-//   }
-// });
