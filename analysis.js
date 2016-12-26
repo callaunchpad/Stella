@@ -2,7 +2,7 @@ log(Tabs);
 
 function analyze(text) {
   var text = text.toLowerCase();
-  if (text.contains("jarvis stop")) { return 'stop' };
+  if (text.contains("jarvis go to sleep")) { return 'sleep' };
   if (text.contains("continuous analysis")) { return 'continuous' };
   // return null;
   return 'tabs';
@@ -50,8 +50,8 @@ function takeAction(text) {
       log('Tab Command');
       doTabAction(text);
       break;
-    case 'stop':
-      log('Stop Command');
+    case 'sleep':
+      log('Sleep Command');
       forceStop();
       break;
     default:
