@@ -1,0 +1,58 @@
+/* GLOBAL */
+html, body {
+	font-family: 'Gidole';
+	color: #2F3540;
+}
+
+p,h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6 {
+  color: black;
+}
+
+strong { font-weight: 700; }
+
+/* TITLE */
+
+.brand-title {
+  font-family: 'Ropa Sans', 'Helvetica Neue', 'Arial', sans-serif;;
+  font-size: 3em;
+  font-weight: 800;
+  color: #2F3540;
+  margin-bottom: 1rem;
+  /*text-shadow: 0 0 8px rgba(47, 53, 64, 0.5);*/
+}
+
+/* LOGO */
+a.brand-logo {
+  height: inherit;
+}
+
+a.brand-logo .logo-wrapper {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-left: 1.5rem;
+}
+
+a.brand-logo .logo-wrapper .valign-wrapper .valign { display: inline-flex; }
+
+a.brand-logo div.logo {
+  cursor: pointer;
+  height: inherit;
+  display: inline-flex;
+  vertical-align: middle;
+}
+
+a.brand-logo div.logo img {
+  position: relative;
+  height: 2.5em;
+}
+
+/* HEADER */
+.header {
+  position: relative;
+  background-image: linear-gradient(rgba(47, 53, 64, 0.5), rgba(47, 53, 64, 0.5)), url('../images/launchpad/cover.jpg');
+  background-size: auto;
+  background-position: center center;
+  background-repeat: no-repeat;
+  width: 100%;
+}

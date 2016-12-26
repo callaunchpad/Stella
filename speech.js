@@ -42,6 +42,6 @@ function showInfo(s) {
 // }
 
 // ACTIONS
-// goToVocalWeb();
+goToVocalWeb();
 toggleRecognition();
 // chrome.extension.getBackgroundPage().setTimeout(toggleRecognition, 3000);

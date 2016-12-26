@@ -5,6 +5,20 @@ String.prototype.contains = function(substr) { return this.indexOf(substr) != -1
 function linebreak(s) { return s.replace(/\n\n/g, '<p></p>').replace(/\n/g, '<br>'); }
 function capitalize(s) { return s.replace(/\S/, function(m) { return m.toUpperCase(); }); }
 
+function micRec() {
+  log('MIC Recording');
+  rec_dot.style.borderColor = '#FF3030';
+  rec_dot.style.borderRadius = '30px';
+  rec_pulse.style.display = 'block';
+}
+
+function micOff() {
+  log('MIC Off');
+  rec_dot.style.borderRadius = 'none';
+  rec_pulse.style.display = 'none';
+  rec_dot.style.borderColor = 'lightgray';
+}
+
 var langs = [['Afrikaans',       ['af-ZA']],
  ['Bahasa Indonesia',['id-ID']],
  ['Bahasa Melayu',   ['ms-MY']],

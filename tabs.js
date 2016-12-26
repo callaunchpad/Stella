@@ -24,7 +24,7 @@ function goToVocalWeb(callback) {
   chrome.tabs.query(query, function(tabs) {
     if (tabs.length == 0) {
       chrome.tabs.create({active: false, url: "chrome-extension://ecbiglglpcmpjmdplphadimldeldkpbl/index.html"}, function(tab) {
-        log("Vocal Web site tab initialized: " + tab);
+        log("Vocal Web site tab initialized: " + JSON.stringify(tab));
         callback(tab);
       });
     } else {

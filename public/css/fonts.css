@@ -1,0 +1,21 @@
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans'), local('OpenSans'), url(https://fonts.gstatic.com/s/opensans/v13/cJZKeOuBrn4kERxqtaUH3bO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');
+}
+@font-face {
+  font-family: 'Ropa Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Ropa Sans'), local('RopaSans-Regular'), url(https://fonts.gstatic.com/s/ropasans/v5/QnguTd82yEUxQZygH2gm8LO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');
+}
+@font-face {
+	font-family: 'Gidole';
+	src: url('../fonts/gidole/Gidole-Regular.eot'); /* IE9 Compat Modes */
+	src: url('../fonts/gidole/Gidole-Regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+	url('../fonts/gidole/Gidole-Regular.woff2') format('woff2'), /* Super Modern Browsers */
+	url('../fonts/gidole/Gidole-Regular.woff') format('woff'), /* Pretty Modern Browsers */
+	url('../fonts/gidole/Gidole-Regular.ttf')  format('truetype'), /* Safari, Android, iOS */
+	url('../fonts/gidole/Gidole-Regular.svg#svgFontName') format('svg'); /* Legacy iOS */
+}

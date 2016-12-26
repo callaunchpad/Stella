@@ -1,3 +1,5 @@
+continuous_check.addEventListener('change', toggleRecognition);
+
 var final_transcript = '';
 var recognizing = false;
 var ignore_onend;
@@ -13,24 +15,24 @@ if (!('webkitSpeechRecognition' in window)) {
   recognition.onstart = function() {
     recognizing = true;
     showInfo('info_speak_now');
-    start_img.src = 'mic-animate.gif';
+    micRec();
   };
 
   recognition.onerror = function(event) {
-    if (event.error == 'no-speech') {
-      start_img.src = 'mic.gif';
-      showInfo('info_no_speech');
-      ignore_onend = true;
-    }
+    // if (event.error == 'no-speech') {
+    //   micOff();
+    //   showInfo('info_no_speech');
+    //   ignore_onend = true;
+    // }
     if (event.error == 'audio-capture') {
-      start_img.src = 'mic.gif';
+      micOff();
       showInfo('info_no_microphone');
       ignore_onend = true;
     }
     if (event.error == 'not-allowed') {
       if (event.timeStamp - start_timestamp < 100) {
         showInfo('info_blocked');
-        chrome.tabs.create({url: "chrome-extension://ecbiglglpcmpjmdplphadimldeldkpbl/index.html"}, function(tab) { log("Premissions tab created: " + tab); });
+        chrome.tabs.create({active: false, url: "chrome-extension://ecbiglglpcmpjmdplphadimldeldkpbl/index.html"}, function(tab) { log("Premissions tab created: " + tab); });
       } else {
         showInfo('info_denied');
       }
@@ -39,11 +41,16 @@ if (!('webkitSpeechRecognition' in window)) {
   };
 
   recognition.onend = function() {
+    if (!forced_stop && continuous_check.checked) {
+      recognition.start();
+      // setTimeout(toggleRecognition, 2000);
+      return;
+    };
     recognizing = false;
     if (ignore_onend) {
       return;
     }
-    start_img.src = 'mic.gif';
+    micOff();
     if (!final_transcript) {
       showInfo('info_start');
       return;
@@ -73,40 +80,41 @@ if (!('webkitSpeechRecognition' in window)) {
     if (interim_transcript.length == 0) {
       var new_speech = event.results[event.results.length - 1][0].transcript;
       if (final_transcript.contains("Jarvis")) {
-        // start_button.click();
         toggleRecognition();
         takeAction(final_transcript);
-        if (!forced_stop) setTimeout(toggleRecognition, 2000);
+        // if (!forced_stop) setTimeout(toggleRecognition, 2000);
         // chrome.alarms.create("restart", {when: 3000});
       }
+      final_transcript = '';
+      final_span.innerHTML = '';
+      interim_span.innerHTML = '';
     }
-    // if (final_transcript || interim_transcript) {
-    //   showButtons('inline-block');
-    // }
   };
 }
 
 function toggleRecognition(event) {
   if (recognizing) {
+    log("Turning Mic Off");
+    // forced_stop = true;
     recognition.stop();
     return;
   }
   final_transcript = '';
-  if (select_dialect) recognition.lang = select_dialect.value;
+  recognition.lang = select_dialect.value;
   recognition.start();
   forced_stop = false;
   ignore_onend = false;
-  if (final_span) final_span.innerHTML = '';
-  if (interim_span) interim_span.innerHTML = '';
-  if (start_img) start_img.src = 'mic-slash.gif';
+  final_span.innerHTML = '';
+  interim_span.innerHTML = '';
+  micOff();
   if (info_allow) showInfo('info_allow');
-  // showButtons('none');
   if (event) start_timestamp = event.timeStamp;
 }
 
 function forceStop() {
   forced_stop = true;
   if (recognizing) {
+    log("Forcing Mic Off");
     recognition.stop();
     return;
   }
