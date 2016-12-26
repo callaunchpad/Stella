@@ -19,6 +19,20 @@
 // function _height(tab) { return tab.height; }
 // function _sessionId(tab) { return tab.sessionId; }
 
+function goToVocalWeb(callback) {
+  var query = { url: "chrome-extension://ecbiglglpcmpjmdplphadimldeldkpbl/index.html" };
+  chrome.tabs.query(query, function(tabs) {
+    if (tabs.length == 0) {
+      chrome.tabs.create({active: false, url: "chrome-extension://ecbiglglpcmpjmdplphadimldeldkpbl/index.html"}, function(tab) {
+        log("Vocal Web site tab initialized: " + tab);
+        callback(tab);
+      });
+    } else {
+      var tab = tabs[0];
+      callback(tab);
+    }
+  });
+}
 function discardAllAudibleTabs(callback) {
     var query = { audible: true };
     chrome.tabs.query(query, function(tabs) {

@@ -1,12 +1,12 @@
 {
   "manifest_version": 2,
-
   "name": "Voice Web",
   "description": "A Launchpad app that browses the web using your voice",
   "version": "1.0",
-
   "browser_action": {
-    "default_icon": "favicon-16x16.png",
+    "default_icon": {
+      "16": "favicon-16x16.png"
+    },
     "default_popup": "index.html"
   },
   "permissions": [

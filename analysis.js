@@ -1,8 +1,8 @@
-console.log(Tabs);
+log(Tabs);
 
 function analyze(text) {
   var text = text.toLowerCase();
-  // if (text.contains(" tab")) { return 'tabs' };
+  if (text.contains("jarvis stop")) { return 'stop' };
   // return null;
   return 'tabs';
 }
@@ -36,6 +36,10 @@ function takeAction(text) {
     case 'tabs':
       log('Tab Command');
       doTabAction(text);
+      break;
+    case 'stop':
+      log('Stop Command');
+      forceStop();
       break;
     default:
       log('Not a valid Command');
