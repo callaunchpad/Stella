@@ -3,6 +3,7 @@ log(Tabs);
 function analyze(text) {
   var text = text.toLowerCase();
   if (text.contains("jarvis stop")) { return 'stop' };
+  if (text.contains("continuous analysis")) { return 'continuous' };
   // return null;
   return 'tabs';
 }
@@ -28,10 +29,22 @@ function doTabAction(text) {
   }
 }
 
+function toggleContinuousAnalysis(text) {
+  if (text.contains("off")) {
+    continuous_check.checked = false;
+  } else if (text.contains("on")) {
+    continuous_check.checked = true;
+  }
+}
+
 function takeAction(text) {
   switch(analyze(text)) {
     case 'search':
       log('Search Command');
+      break;
+    case 'continuous':
+      log('Toggle Continuous Analysis');
+      toggleContinuousAnalysis(text);
       break;
     case 'tabs':
       log('Tab Command');
