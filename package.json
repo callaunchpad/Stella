@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "browserify app.js -o bundle.js"
   },
   "repository": {
     "type": "git",
@@ -17,8 +16,6 @@
     "url": "https://github.com/callaunchpad/VoiceWeb/issues"
   },
   "homepage": "https://github.com/callaunchpad/VoiceWeb#readme",
-  "dependencies": {
-    "jquery": "^3.1.1"
-  },
+  "dependencies": {},
   "devDependencies": {}
 }
