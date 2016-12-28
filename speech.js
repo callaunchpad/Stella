@@ -36,5 +36,5 @@ function showInfo(s) {
 }
 
 // ACTIONS
-goToVocalWeb();
+// goToVocalWeb();
 toggleRecognition();

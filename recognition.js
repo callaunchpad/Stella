@@ -28,6 +28,7 @@ if (!('webkitSpeechRecognition' in window)) {
     if (event.error == 'not-allowed') {
       if (event.timeStamp - start_timestamp < 100) {
         showInfo('info_blocked');
+        log('Mic recording not allowed');
         chrome.tabs.create({active: false, url: "chrome-extension://ecbiglglpcmpjmdplphadimldeldkpbl/index.html"}, function(tab) { log("Premissions tab created: " + tab); });
       } else {
         showInfo('info_denied');

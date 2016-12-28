@@ -146,20 +146,14 @@ var langs = [['Afrikaans',       ['af-ZA']],
 
  function feach(w) {
      var x = Small[w];
-     if (x != null) {
-         g = g + x;
-     }
-     else if (w == "hundred") {
-         g = g * 100;
-     }
+     if (x != null) { g = g + x; }
+     else if (w == "hundred") { g = g * 100; }
      else {
          x = Magnitude[w];
          if (x != null) {
              n = n + g * x
              g = 0;
          }
-         else {
-             alert("Unknown number: "+w);
-         }
+         else { alert("Unknown number: "+w); }
      }
  }

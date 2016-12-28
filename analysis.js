@@ -1,5 +1,5 @@
 function googleSearch(query) {
-  var url = 'http://google.com/search?q=' + query;
+  var url = 'http://google.com/search?q=' + query + "&from=" + TRIGGER_NAME;
   Tabs.openNew(url, function(tab) {
     log("Searched Google for " + query + ": " + JSON.stringify(tab));
   });
@@ -74,6 +74,10 @@ function answerQuestion(text) {
   googleSearch(text);
 }
 
+function stopSpeaking() {
+  tts.stop();
+}
+
 function analyze(text) {
   var text = text.toLowerCase();
   if (text.contains(TRIGGER_NAME + " go to sleep")) { return 'sleep' };
@@ -100,6 +104,8 @@ function doTabAction(text) {
     discardNonActiveTabs();
   } else if (text.isQuestion()) {
     answerQuestion(text);
+  } else if (text.contains("be quiet") || text.contains("stop speaking") || text.contains("shut up")) {
+    stopSpeaking();
   }
 }
 

@@ -6,14 +6,22 @@
   "browser_action": {
     "default_icon": {
       "16": "public/img/favicon-16x16.png"
-    },
-    "default_popup": "index.html"
+    }
   },
+  "content_scripts": [
+    {
+      "matches": ["https://www.google.com/search?q=*&from=stella"],
+      "js": ["preview.js"]
+    }
+  ],
   "permissions": [
     "activeTab",
     "tabs",
     "alarms",
     "tts",
     "https://ajax.googleapis.com/"
-  ]
+  ],
+  "background": {
+    "scripts": ["background.js", "tts.js"]
+  }
 }
