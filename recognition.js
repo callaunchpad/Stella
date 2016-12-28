@@ -72,7 +72,8 @@ if (!('webkitSpeechRecognition' in window)) {
     interim_span.innerHTML = linebreak(interim_transcript);
     if (interim_transcript.length == 0) {
       var new_speech = event.results[event.results.length - 1][0].transcript;
-      if (final_transcript.contains("Jarvis")) {
+      var lowercaseTranscript = final_transcript.toLowerCase();
+      if (lowercaseTranscript.contains(TRIGGER_NAME)) {
         toggleRecognition();
         takeAction(final_transcript);
       }
