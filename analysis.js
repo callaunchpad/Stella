@@ -1,3 +1,10 @@
+function googleSearch(query) {
+  var url = 'http://google.com/search?q=' + query;
+  Tabs.openNew(url, function(tab) {
+    log("Searched Google for " + query + ": " + JSON.stringify(tab));
+  });
+}
+
 function openEmptyTab() {
   Tabs.openEmpty(function(tab) {
     log("New Empty Tab Created: " + JSON.stringify(tab));
@@ -20,8 +27,7 @@ function discardNonActiveAudibleTabs() {
   });
 }
 
-function searchGoogle(text) {
-  text = text.replace(TRIGGER_NAME + " ", "");
+function requestSearch(text) {
   var textArr = text.split(" ");
   var query = '';
   if (textArr[0] == "look" && textArr[1] == "up") {
@@ -38,10 +44,7 @@ function searchGoogle(text) {
       query = text.replace("search", "");
     }
   }
-  var url = 'http://google.com/search?q=' + query;
-  Tabs.openNew(url, function(tab) {
-    log("Searched Google for " + query + ": " + JSON.stringify(tab));
-  });
+  googleSearch(query);
 }
 
 function closeCurrentTab() {
@@ -74,7 +77,7 @@ function analyze(text) {
 }
 
 function doTabAction(text) {
-  var text = text.toLowerCase();
+  var text = text.toLowerCase().remove(TRIGGER_NAME + " ");
   if (text.contains("open a new tab") || text.contains("open another tab")) {
     openEmptyTab();
   } else if (text.contains("go to ")) {
@@ -82,13 +85,16 @@ function doTabAction(text) {
   } else if (text.contains("mute all audible tabs") || text.contains("close all audible tabs") || text.contains("stop all audible tabs")) {
     discardNonActiveAudibleTabs();
   } else if (text.contains("search") || text.contains("look up") || text.contains("google")) {
-    searchGoogle(text);
+    requestSearch(text);
   } else if (text.contains("close this tab")) {
     closeCurrentTab(); // If not voice web
   } else if (text.contains("close the last") && text.contains("tabs")) {
     closeRecentTabs(text); // If not voice web
   } else if (text.contains("enter memory save mode")) {
     discardNonActiveTabs();
+  } else if (text.isQuestion()) {
+    tts.say('Let me look that up for you.');
+    googleSearch(text);
   }
 }
 

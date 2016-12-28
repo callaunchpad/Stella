@@ -13,6 +13,7 @@
     "activeTab",
     "tabs",
     "alarms",
+    "tts",
     "https://ajax.googleapis.com/"
   ]
 }

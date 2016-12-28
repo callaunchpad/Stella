@@ -2,9 +2,13 @@ var debug = true;
 const TRIGGER_NAME = "jarvis";
 function renderStatus(statusText) { document.getElementById("status").textContent = statusText; }
 function log(obj) { if (debug) console.log(obj); }
-String.prototype.contains = function(substr) { return this.indexOf(substr) != -1; }
 function linebreak(s) { return s.replace(/\n\n/g, '<p></p>').replace(/\n/g, '<br>'); }
 function capitalize(s) { return s.replace(/\S/, function(m) { return m.toUpperCase(); }); }
+
+String.prototype.contains = function(substr) { return this.indexOf(substr) != -1; }
+String.prototype.getWords = function(startIndex, endIndex) { return this.split(" ").slice(startIndex, endIndex).join(" "); }
+String.prototype.remove = function(substr) { return this.replace(substr, ""); };
+String.prototype.isQuestion = function() { return ["who", "what", "when", "where", "why", "how", "whom", "whose", "which", "is"].includes(this.getWords(0, 1)); }
 
 function micRec() {
   log('MIC Recording');
@@ -19,6 +23,8 @@ function micOff() {
   rec_pulse.style.display = 'none';
   rec_dot.style.borderColor = 'lightgray';
 }
+
+// const QUESTION_WORDS = ["who", "what", "when", "where", "why", "how", "whom", "whose", "which"];
 
 var langs = [['Afrikaans',       ['af-ZA']],
  ['Bahasa Indonesia',['id-ID']],
