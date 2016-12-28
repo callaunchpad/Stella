@@ -11,10 +11,11 @@
   "content_scripts": [
     {
       "matches": ["https://www.google.com/search?q=*&from=stella"],
-      "js": ["preview.js"]
+      "js": ["background/preview.js"]
     }
   ],
   "permissions": [
+    "background",
     "activeTab",
     "tabs",
     "alarms",
@@ -22,6 +23,6 @@
     "https://ajax.googleapis.com/"
   ],
   "background": {
-    "scripts": ["background.js", "tts.js"]
+    "scripts": ["background/background.js", "background/tts.js"]
   }
 }
