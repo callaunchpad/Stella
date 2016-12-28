@@ -1,7 +1,5 @@
-function say(text) {
-  chrome.tts.speak(text, {enqueue: true, gender: 'male', lang: 'en-GB', pitch: 0, rate: 0.8});
-}
+chrome.runtime.onMessage.addListener(function(request) { say(request.speechText); });
 
-var tts = {
-  say: say
-}
+function say(text) {  chrome.tts.speak(text, {enqueue: true, gender: 'female', lang: 'en-GB', pitch: 0.8, rate: 0.85}); }
+
+var tts = { say: say }

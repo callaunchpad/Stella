@@ -68,6 +68,12 @@ function discardNonActiveTabs() {
   });
 }
 
+function answerQuestion(text) {
+  log('Searching Google for ' + text);
+  tts.say('Searching Google for ' + text);
+  googleSearch(text);
+}
+
 function analyze(text) {
   var text = text.toLowerCase();
   if (text.contains(TRIGGER_NAME + " go to sleep")) { return 'sleep' };
@@ -93,8 +99,7 @@ function doTabAction(text) {
   } else if (text.contains("enter memory save mode")) {
     discardNonActiveTabs();
   } else if (text.isQuestion()) {
-    tts.say('Let me look that up for you.');
-    googleSearch(text);
+    answerQuestion(text);
   }
 }
 
