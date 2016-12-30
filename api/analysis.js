@@ -49,19 +49,36 @@ function requestSearch(text) {
   googleSearch(query);
 }
 
-function closeCurrentTab() {
-  Tabs.closeTabs(1);
+function closeLastTab() {
+  Tabs.closeLastTabs(1);
 }
 
 function closeRecentTabs(text) {
-  var num = text.match(/[0-9]+\s(tabs)/g)
+  var num = text.match(/[0-9]+\s(tabs)/g);
   if (num) {
     num = num[0].replace(" tabs", "");
   } else {
     var textArr = text.split(" ");
     num = textTonum(textArr[textArr.indexOf("last") + 1]);
   }
-  Tabs.closeTabs(num);
+  Tabs.closeLastTabs(num);
+}
+
+function closePreviousTab() {
+  console.log('closing previous tab');
+  Tabs.closePrevTabs(1);
+}
+
+function closePreviousTabs(text) {
+  var num = text.match(/[0-9]+\s(tabs)/g);
+  if (num) {
+    num = num[0].replace(" tabs", "");
+  } else {
+    var textArr = text.split(" ");
+    num = textTonum(textArr[textArr.indexOf("previous") + 1]);
+  }
+  console.log('closing previous' + num + 'tabs');
+  Tabs.closePrevTabs(num);
 }
 
 function discardNonActiveTabs() {
@@ -88,7 +105,7 @@ function goToSleep() {
 function focus() {
   Tabs.refocus(function(tab) {
     log(TRIGGER_NAME + " refocused: " + tab.id);
-    tts.say("Hello, what can I do for you?");
+    tts.say("Hello, what would you like me to do?");
   })
 }
 
@@ -106,10 +123,14 @@ function doTabAction(text) {
     discardNonActiveAudibleTabs();
   } else if (text.contains("search") || text.contains("look up") || text.contains("google")) {
     requestSearch(text);
-  } else if (text.contains("close this tab")) {
-    closeCurrentTab(); // If not voice web
+  } else if (text.contains("close the last tab") || text.contains("close last tab")) {
+    closeLastTab(); // If not voice web
   } else if (text.contains("close the last") && text.contains("tabs")) {
     closeRecentTabs(text); // If not voice web
+  } else if (text.contains("close the previous tab") || text.contains("close previous tab")) {
+    closePreviousTab(); // If not voice webclose
+  } else if (text.contains("close the previous") && text.contains("tabs")) {
+    closePreviousTabs(text); // If not voice web
   } else if (text.contains("enter memory save mode")) {
     discardNonActiveTabs();
   } else if (text.isQuestion()) {

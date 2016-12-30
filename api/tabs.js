@@ -64,7 +64,7 @@ function duplicateTab(tabId, callback) {
     });
 }
 
-function closeRecentTabs(num) {
+function closeLastTabs(num) {
   var query = { currentWindow: true };
   chrome.tabs.query(query, function(tabs) {
     var counter = 0;
@@ -77,6 +77,34 @@ function closeRecentTabs(num) {
       }
       counter++;
     }
+  });
+}
+
+function closePreviousTabs(num) {
+  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+     var activeTab = tabs[0];
+     var query = { currentWindow: true };
+     chrome.tabs.query(query, function(tabs) {
+       var activeTabIndex = -1;
+       for (var i = 0; i < tabs.length; i++) {
+         var tab = tabs[i];
+         if (tab.id == activeTab.id) {
+           activeTabIndex = i;
+           break;
+         }
+       }
+       while (num > 0) {
+         if (activeTabIndex > num) {
+           var tab = tabs[activeTabIndex - num];
+           if (tab.url != "chrome-extension://ecbiglglpcmpjmdplphadimldeldkpbl/index.html") {
+             chrome.tabs.remove(tab.id, function(tab) {
+               log("Tab removed: " + JSON.stringify(tab));
+             });
+           }
+         }
+         num--;
+       }
+     });
   });
 }
 
@@ -94,5 +122,6 @@ var Tabs = {
   openEmpty: openEmptyTab,
   openNew: openNewTab,
   duplicate: duplicateTab,
-  closeTabs: closeRecentTabs
+  closeLastTabs: closeLastTabs,
+  closePrevTabs: closePreviousTabs
 }
