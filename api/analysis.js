@@ -88,6 +88,7 @@ function goToSleep() {
 function focus() {
   Tabs.refocus(function(tab) {
     log(TRIGGER_NAME + " refocused: " + tab.id);
+    tts.say("Hello, what can I do for you?");
   })
 }
 
