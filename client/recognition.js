@@ -69,8 +69,6 @@ if (!('webkitSpeechRecognition' in window)) {
       }
     }
     final_transcript = capitalize(final_transcript);
-    // final_span.innerHTML = linebreak(final_transcript);
-    // interim_span.innerHTML = linebreak(interim_transcript);
     message_input.value = linebreak(interim_transcript);
     if (interim_transcript.length == 0) {
       message_input.value = linebreak(final_transcript);
@@ -83,8 +81,6 @@ if (!('webkitSpeechRecognition' in window)) {
         insertMessage();
       }
       final_transcript = '';
-      // final_span.innerHTML = '';
-      // interim_span.innerHTML = '';
       message_input.value = '';
     }
   };
@@ -101,8 +97,6 @@ function toggleRecognition(event) {
   recognition.start();
   forced_stop = false;
   ignore_onend = false;
-  // final_span.innerHTML = '';
-  // interim_span.innerHTML = '';
   message_input.value = '';
   micOff();
   if (info_allow) showInfo('info_allow');

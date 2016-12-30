@@ -85,6 +85,12 @@ function goToSleep() {
   forceStop();
 }
 
+function focus() {
+  Tabs.refocus(function(tab) {
+    log(TRIGGER_NAME + " refocused: " + tab.id);
+  })
+}
+
 function dontUnderstand() {
   tts.say("Sorry I do not know how to do that yet.");
 }
@@ -122,6 +128,8 @@ function toggleContinuousAnalysis(text) {
 
 function analyze(text) {
   var text = text.toLowerCase();
+  console.log('STEALLLALASDAS: ' + text);
+  if (text.contains("hello " + TRIGGER_NAME)) { return 'hello'; }
   if (text.contains(TRIGGER_NAME + " go to sleep")) { return 'sleep' };
   if (text.contains("continuous analysis")) { return 'continuous' };
   if (text.contains("be quiet") || text.contains("stop speaking") || text.contains("shut up")) { return 'quiet' };
@@ -131,6 +139,10 @@ function analyze(text) {
 
 function takeAction(text) {
   switch(analyze(text)) {
+    case 'hello':
+      log('Refocus Command');
+      focus();
+      break;
     case 'search':
       log('Search Command');
       break;
