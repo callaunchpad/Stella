@@ -21,7 +21,7 @@ function createNotification(title, message, contextMessage) {
   // if (Notification in window && Notification.permission === "granted") {
   //   var options = {
   //     body: message,
-  //     icon: 'public/img/stella_sq.png'
+  //     icon: 'public/img/stella.png'
   //   }
   //   var n = new Notification(title,options);
   //   setTimeout(n.close.bind(n), 3000);
@@ -32,7 +32,7 @@ function createNotification(title, message, contextMessage) {
   });
   var options = {
     type: 'basic',
-    iconUrl: 'public/img/stella_sq.png',
+    iconUrl: 'public/img/stella.png',
     // appIconMaskUrl: undefined,
     title: title,
     message: message,
@@ -40,7 +40,7 @@ function createNotification(title, message, contextMessage) {
     priority: 2,
     // eventTime: Date.now(),
     // buttons: undefined,
-    // imageUrl: 'public/img/stella_sq.png',
+    // imageUrl: 'public/img/stella.png',
     // items: undefined,
     // progress: undefined,
     // isClickable: undefined,

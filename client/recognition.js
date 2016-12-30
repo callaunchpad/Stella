@@ -69,19 +69,23 @@ if (!('webkitSpeechRecognition' in window)) {
       }
     }
     final_transcript = capitalize(final_transcript);
-    final_span.innerHTML = linebreak(final_transcript);
-    interim_span.innerHTML = linebreak(interim_transcript);
+    // final_span.innerHTML = linebreak(final_transcript);
+    // interim_span.innerHTML = linebreak(interim_transcript);
+    message_input.value = linebreak(interim_transcript);
     if (interim_transcript.length == 0) {
+      message_input.value = linebreak(final_transcript);
       var new_speech = event.results[event.results.length - 1][0].transcript;
       var lowercaseTranscript = final_transcript.toLowerCase();
       if (lowercaseTranscript.contains(TRIGGER_NAME)) {
         toggleRecognition();
         notifications.create('Stella', final_transcript.replace(TRIGGER_NAME, ""));
         takeAction(final_transcript);
+        insertMessage();
       }
       final_transcript = '';
-      final_span.innerHTML = '';
-      interim_span.innerHTML = '';
+      // final_span.innerHTML = '';
+      // interim_span.innerHTML = '';
+      message_input.value = '';
     }
   };
 }
@@ -97,8 +101,9 @@ function toggleRecognition(event) {
   recognition.start();
   forced_stop = false;
   ignore_onend = false;
-  final_span.innerHTML = '';
-  interim_span.innerHTML = '';
+  // final_span.innerHTML = '';
+  // interim_span.innerHTML = '';
+  message_input.value = '';
   micOff();
   if (info_allow) showInfo('info_allow');
   if (event) start_timestamp = event.timeStamp;

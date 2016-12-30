@@ -6,15 +6,15 @@
  -->
 <html>
   <head>
-    <title>Voice Web by Launchpad</title>
+    <title>Stella by Launchpad</title>
     <link type="text/css" href="public/css/fonts.css" rel="stylesheet">
     <link type="text/css" href="public/css/index.css" rel="stylesheet">
     <link type="text/css" href="public/css/theme.css" rel="stylesheet">
     <link type="text/css" href="public/css/recording.css" rel="stylesheet">
     <link type="text/css" href="public/css/switch.css" rel="stylesheet">
+    <link type="text/css" href="public/css/chat.css" rel="stylesheet">
   </head>
   <body>
-    <h1 class="center brand-title" id="headline">Voice Web by <a href="http://callaunchpad.org" target="_blank">Launchpad</a></h1>
     <div id="info">
       <p id="info_start">Click on the gray circle and begin speaking.</p>
       <p id="info_speak_now">Analyzing audio... Begin command with "Stella"</p>
@@ -29,24 +29,36 @@
       <p id="info_upgrade">Web Speech API is not supported by this browser. Upgrade to <a href="//www.google.com/chrome">Chrome</a> version 25 or later.</p>
     </div>
     <br>
+    <!-- <div class="chat-container"> -->
+      <div class="chat">
+        <div class="chat-title">
+          <h1>STELLA</h1>
+          <h2>by Launchpad</h2>
+          <figure class="avatar">
+            <img src="public/img/stella.png" />
+          </figure>
+          <div class="right">
+            <button id="start_button" class="rec-container">
+              <div id="rec_dot" class="dot"></div>
+              <div id="rec_pulse" class="pulse"></div>
+            </button>
+          </div>
+        </div>
+        <div class="messages">
+          <div class="messages-content"></div>
+        </div>
+        <div class="message-box">
+          <textarea type="text" id="message_input" class="message-input" placeholder="Begin speaking..." readonly></textarea>
+        </div>
+      </div>
+    <!-- </div> -->
+    <br>
     <div class="switch-container">
       <label class="switch">
         <input id="continuous_check" type="checkbox" checked="true">
         <div class="slider round"></div>
       </label>
       <p>Continuous Analysis: Accept commands until "Stella go to sleep" or "Stella turn off continuous analysis"</p>
-    </div>
-    <div class="right">
-      <button id="start_button" class="rec-container">
-        <!-- <img id="start_img" src="mic.gif" alt="Start"> -->
-        <div id="rec_dot" class="dot"></div>
-        <div id="rec_pulse" class="pulse"></div>
-      </button>
-    </div>
-    <div id="results">
-      <span id="final_span" class="final"></span>
-      <span id="interim_span" class="interim"></span>
-      <p>
     </div>
     <div class="center">
       <div id="div_language">
@@ -57,6 +69,8 @@
     </div>
     <br>
     <div id="status"></div>
+    <script src="scripts/jquery.min.js"></script>
+    <script src="scripts/chat.js"></script>
     <script src="api/index.js"></script>
     <script src="background/tts.js"></script>
     <script src="background/notifications.js"></script>

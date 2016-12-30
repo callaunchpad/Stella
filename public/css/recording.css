@@ -1,9 +1,13 @@
+.right {
+  position: absolute;
+  right: 10px;
+  top: 7px;
+}
+
 .rec-container {
   position: relative;
   height: 20px;
   width: 20px;
-  right: 10px;
-  top: 5px;
 }
 
 .dot {
@@ -24,8 +28,8 @@
   -webkit-border-radius: 60px;
   -moz-border-radius: 60px;
   border-radius: 60px;
-  height: 31px;
-  width: 31px;
+  height: 34px;
+  width: 34px;
   -webkit-animation: pulse 2s ease-out;
   -moz-animation: pulse 2s ease-out;
   animation: pulse 2s ease-out;

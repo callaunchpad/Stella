@@ -1,5 +1,5 @@
 /** { font-family: Verdana, Arial, sans-serif; }*/
-body { width: 600px; }
+body { text-align: center; }
 a:link { color:#000; text-decoration: none; }
 a:visited { color:#000; }
 a:hover { color:#33F; }
@@ -8,7 +8,6 @@ a:hover { color:#33F; }
 .final { color: black; padding-right: 3px;  }
 .interim { color: gray; }
 .info { font-size: 14px; text-align: center; color: #777; display: none; }
-.right { float: right; }
 .sidebyside { display: inline-block; width: 45%; min-height: 40px; text-align: left; vertical-align: top; }
 #headline { font-size: 40px; font-weight: 300; }
 #info { font-size: 20px; text-align: center; color: #777; visibility: hidden; }
