@@ -11,14 +11,14 @@ String.prototype.remove = function(substr) { return this.replace(substr, ""); };
 String.prototype.isQuestion = function() { return ["are", "who", "what", "when", "where", "why", "will", "how", "whom", "whose", "which", "is"].includes(this.getWords(0, 1)); }
 
 function micRec() {
-  log('MIC Recording');
+  // log('MIC Recording');
   rec_dot.style.borderColor = '#FF3030';
   rec_dot.style.borderRadius = '30px';
   rec_pulse.style.display = 'block';
 }
 
 function micOff() {
-  log('MIC Off');
+  // log('MIC Off');
   rec_dot.style.borderRadius = 'none';
   rec_pulse.style.display = 'none';
   rec_dot.style.borderColor = 'lightgray';

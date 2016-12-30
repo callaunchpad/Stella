@@ -50,7 +50,7 @@ if (!('webkitSpeechRecognition' in window)) {
       return;
     }
     showInfo('');
-    log("FINISHED: " + final_transcript);
+    log("Finished Speaking: " + final_transcript);
     if (window.getSelection) {
       window.getSelection().removeAllRanges();
       var range = document.createRange();
@@ -76,6 +76,7 @@ if (!('webkitSpeechRecognition' in window)) {
       var lowercaseTranscript = final_transcript.toLowerCase();
       if (lowercaseTranscript.contains(TRIGGER_NAME)) {
         toggleRecognition();
+        notifications.create('Stella', final_transcript.replace(TRIGGER_NAME, ""));
         takeAction(final_transcript);
       }
       final_transcript = '';

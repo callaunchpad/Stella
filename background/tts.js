@@ -10,7 +10,6 @@ function say(text) {
 
 function sayParagraph(paragraph) {
   var sentences = paragraph.split(". ");
-  console.log(sentences);
   for (var i = 0; i < sentences.length; i++) {
     say(sentences[i]);
   }

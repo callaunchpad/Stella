@@ -1,7 +1,7 @@
 function googleSearch(query) {
   var url = 'http://google.com/search?q=' + query + "&from=" + TRIGGER_NAME;
   Tabs.openNew(url, function(tab) {
-    log("Searched Google for " + query + ": " + JSON.stringify(tab));
+    log("Searched Google for " + query);
   });
 }
 
@@ -43,6 +43,8 @@ function requestSearch(text) {
     } else {
       query = text.replace("search", "");
     }
+  } else if (textArr[0] == "google") {
+    query = text.replace("google", "");
   }
   googleSearch(query);
 }
@@ -78,12 +80,13 @@ function stopSpeaking() {
   tts.stop();
 }
 
-function analyze(text) {
-  var text = text.toLowerCase();
-  if (text.contains(TRIGGER_NAME + " go to sleep")) { return 'sleep' };
-  if (text.contains("continuous analysis")) { return 'continuous' };
-  // return null;
-  return 'tabs';
+function goToSleep() {
+  tts.say('Okay, goodbye.');
+  forceStop();
+}
+
+function dontUnderstand() {
+  tts.say("Sorry I do not know how to do that yet.");
 }
 
 function doTabAction(text) {
@@ -104,8 +107,8 @@ function doTabAction(text) {
     discardNonActiveTabs();
   } else if (text.isQuestion()) {
     answerQuestion(text);
-  } else if (text.contains("be quiet") || text.contains("stop speaking") || text.contains("shut up")) {
-    stopSpeaking();
+  } else {
+    dontUnderstand();
   }
 }
 
@@ -115,6 +118,15 @@ function toggleContinuousAnalysis(text) {
   } else if (text.contains("on")) {
     continuous_check.checked = true;
   }
+}
+
+function analyze(text) {
+  var text = text.toLowerCase();
+  if (text.contains(TRIGGER_NAME + " go to sleep")) { return 'sleep' };
+  if (text.contains("continuous analysis")) { return 'continuous' };
+  if (text.contains("be quiet") || text.contains("stop speaking") || text.contains("shut up")) { return 'quiet' };
+  // return null;
+  return 'tabs';
 }
 
 function takeAction(text) {
@@ -132,7 +144,11 @@ function takeAction(text) {
       break;
     case 'sleep':
       log('Sleep Command');
-      forceStop();
+      goToSleep();
+      break;
+    case 'quiet':
+      log('Quiet Command');
+      stopSpeaking();
       break;
     default:
       log('Not a valid Command');

@@ -15,14 +15,14 @@
     }
   ],
   "permissions": [
-    "background",
     "activeTab",
+    "background",
+    "notifications",
     "tabs",
-    "alarms",
     "tts",
     "https://ajax.googleapis.com/"
   ],
   "background": {
-    "scripts": ["background/background.js", "background/tts.js"]
+    "scripts": ["background/background.js", "background/tts.js", "background/notifications.js"]
   }
 }
