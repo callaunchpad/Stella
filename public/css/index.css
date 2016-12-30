@@ -1,5 +1,5 @@
 /** { font-family: Verdana, Arial, sans-serif; }*/
-body { text-align: center; }
+body { text-align: center; color: white; }
 a:link { color:#000; text-decoration: none; }
 a:visited { color:#000; }
 a:hover { color:#33F; }
@@ -12,5 +12,5 @@ a:hover { color:#33F; }
 #headline { font-size: 40px; font-weight: 300; }
 #info { font-size: 20px; text-align: center; color: #777; visibility: hidden; }
 #results { font-size: 14px; font-weight: bold; border: 1px solid #ddd; padding: 15px 40px 15px 15px; text-align: left; min-height: 60px; }
-#start_button { border: 0; background-color:transparent; padding: 0; }
 #status { white-space: pre; text-overflow: ellipsis; overflow: hidden; max-width: 600px; }
+.container { position: absolute; top: 50%; left: 50%; -webkit-transform: translate(-50%, -50%); transform: translate(-50%, -50%); width: 90vw;}

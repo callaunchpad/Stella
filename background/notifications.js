@@ -18,15 +18,6 @@ function getAllSystemNotifications() {
 }
 
 function createNotification(title, message, contextMessage) {
-  // if (Notification in window && Notification.permission === "granted") {
-  //   var options = {
-  //     body: message,
-  //     icon: 'public/img/stella.png'
-  //   }
-  //   var n = new Notification(title,options);
-  //   setTimeout(n.close.bind(n), 3000);
-  // }
-
   chrome.notifications.getPermissionLevel(function (level) {
     console.log("Permission: " + level);
   });
@@ -46,23 +37,13 @@ function createNotification(title, message, contextMessage) {
     // isClickable: undefined,
     requireInteraction: true
   }
-  console.log(options);
-
-  // chrome.notifications.getAll(function(notifications) {
-  //   var ids = Object.keys(notifications);
-  //   for (var i  = 0; i < ids.length; i++) {
-  //     var id = ids[i];
-  //     clearNotification(id);
-  //   }
-  // });
 
   chrome.notifications.create(options, function(id) {
     log("Notification created: " + id);
     running[id] = true;
-    var timeout = setTimeout(clearNotification, 2000, id);
-    console.log("Last error:", chrome.runtime.lastError);
+    var timeout = setTimeout(clearNotification, 3000, id);
+    log("Last error:", chrome.runtime.lastError);
   })
-  // log(getAllSystemNotifications());
 }
 
 var notifications = {

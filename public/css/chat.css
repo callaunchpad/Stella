@@ -13,7 +13,6 @@ body {
   background: -webkit-linear-gradient(315deg, #2F3540, #666A73);
   background: linear-gradient(135deg, #2F3540, #666A73);
   background-size: cover;
-  font-family: 'Open Sans', sans-serif;
   font-size: 12px;
   line-height: 1.3;
   overflow: hidden;
@@ -22,19 +21,15 @@ body {
 /*--------------------
 Chat
 --------------------*/
-.chat-container {
-  position: relative;
-  width: 100%;
-}
-
 .chat {
+  font-family: 'Open Sans', sans-serif;
   position: relative;
   left: 50%;
   -webkit-transform: translateX(-50%);
   transform: translateX(-50%);
   width: 300px;
   height: 80vh;
-  max-height: 350px;
+  max-height: 400px;
   z-index: 2;
   overflow: hidden;
   box-shadow: 0 5px 30px rgba(0, 0, 0, 0.2);
@@ -73,11 +68,13 @@ Chat Title
   margin: 0;
   padding: 0;
   color: #fff;
+  line-height: inherit;
 }
 .chat-title h2 {
   color: rgba(255, 255, 255, 0.5);
   font-size: 8px;
   letter-spacing: 1px;
+  line-height: inherit;
 }
 .chat-title .avatar {
   position: absolute;

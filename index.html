@@ -15,21 +15,7 @@
     <link type="text/css" href="public/css/chat.css" rel="stylesheet">
   </head>
   <body>
-    <div id="info">
-      <p id="info_start">Click on the gray circle and begin speaking.</p>
-      <p id="info_speak_now">Analyzing audio... Begin command with "Stella"</p>
-      <p id="info_no_speech">No speech detected: You may need to adjust your
-        <a href="//support.google.com/chrome/bin/answer.py?hl=en&amp;answer=1407892"> mic settings</a>.</p>
-      <p id="info_no_microphone" style="display:none">
-        No microphone was found. Ensure that a microphone is installed and that
-        <a href="//support.google.com/chrome/bin/answer.py?hl=en&amp;answer=1407892"> microphone settings</a> are configured correctly.</p>
-      <p id="info_allow">Click the "Allow" button above to enable your microphone.</p>
-      <p id="info_denied">Permission to use microphone was denied.</p>
-      <p id="info_blocked">Permission to use microphone is blocked. To change, go to chrome://settings/contentExceptions#media-stream</p>
-      <p id="info_upgrade">Web Speech API is not supported by this browser. Upgrade to <a href="//www.google.com/chrome">Chrome</a> version 25 or later.</p>
-    </div>
-    <br>
-    <!-- <div class="chat-container"> -->
+    <div class="container">
       <div class="chat">
         <div class="chat-title">
           <h1>STELLA</h1>
@@ -51,24 +37,38 @@
           <textarea type="text" id="message_input" class="message-input" placeholder="Begin speaking..." readonly></textarea>
         </div>
       </div>
-    <!-- </div> -->
-    <br>
-    <div class="switch-container">
-      <label class="switch">
-        <input id="continuous_check" type="checkbox" checked="true">
-        <div class="slider round"></div>
-      </label>
-      <p>Continuous Analysis: Accept commands until "Stella go to sleep" or "Stella turn off continuous analysis"</p>
-    </div>
-    <div class="center">
-      <div id="div_language">
-        <select id="select_language"></select>
-        &nbsp;&nbsp;
-        <select id="select_dialect"></select>
+      <br>
+      <div id="info">
+        <p id="info_start">Click on the gray circle and begin speaking.</p>
+        <p id="info_speak_now">Analyzing audio... Begin command with "Stella"</p>
+        <p id="info_no_speech">No speech detected: You may need to adjust your
+          <a href="//support.google.com/chrome/bin/answer.py?hl=en&amp;answer=1407892"> mic settings</a>.</p>
+        <p id="info_no_microphone" style="display:none">
+          No microphone was found. Ensure that a microphone is installed and that
+          <a href="//support.google.com/chrome/bin/answer.py?hl=en&amp;answer=1407892"> microphone settings</a> are configured correctly.</p>
+        <p id="info_allow">Click the "Allow" button above to enable your microphone.</p>
+        <p id="info_denied">Permission to use microphone was denied.</p>
+        <p id="info_blocked">Permission to use microphone is blocked. To change, go to chrome://settings/contentExceptions#media-stream</p>
+        <p id="info_upgrade">Web Speech API is not supported by this browser. Upgrade to <a href="//www.google.com/chrome">Chrome</a> version 25 or later.</p>
       </div>
+      <br>
+      <div class="switch-container">
+        <label class="switch">
+          <input id="continuous_check" type="checkbox" checked="true">
+          <div class="slider round"></div>
+        </label>
+        <p>Continuous Analysis: Accept commands until "Stella go to sleep" or "Stella turn off continuous analysis"</p>
+      </div>
+      <div class="center">
+        <div id="div_language">
+          <select id="select_language"></select>
+          &nbsp;&nbsp;
+          <select id="select_dialect"></select>
+        </div>
+      </div>
+      <br>
+      <p id="status"></p>
     </div>
-    <br>
-    <div id="status"></div>
     <script src="scripts/jquery.min.js"></script>
     <script src="scripts/chat.js"></script>
     <script src="api/index.js"></script>

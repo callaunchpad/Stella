@@ -4,6 +4,17 @@
   top: 7px;
 }
 
+#start_button {
+  border: 0;
+  background-color:transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+#start_button:focus {
+  outline: none;
+}
+
 .rec-container {
   position: relative;
   height: 20px;

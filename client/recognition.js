@@ -78,7 +78,7 @@ if (!('webkitSpeechRecognition' in window)) {
       var lowercaseTranscript = final_transcript.toLowerCase();
       if (lowercaseTranscript.contains(TRIGGER_NAME)) {
         toggleRecognition();
-        notifications.create('Stella', final_transcript.replace(TRIGGER_NAME, ""));
+        notifications.create("Here's what I heard...", final_transcript.replace(TRIGGER_NAME, ""));
         takeAction(final_transcript);
         insertMessage();
       }
