@@ -3,9 +3,16 @@
   "name": "Voice Web",
   "description": "A Launchpad app that browses the web using your voice",
   "version": "1.0",
+  "icons": {
+    "16": "public/img/favicon-16x16.png",
+    "48": "public/img/icon-48x48.png",
+    "128": "public/img/icon-128x128.png"
+  },
   "browser_action": {
     "default_icon": {
-      "16": "public/img/favicon-16x16.png"
+      "16": "public/img/favicon-16x16.png",
+      "48": "public/img/icon-48x48.png",
+      "128": "public/img/icon-128x128.png"
     }
   },
   "content_scripts": [
