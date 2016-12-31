@@ -64,6 +64,17 @@ function duplicateTab(tabId, callback) {
     });
 }
 
+function closeCurrentTab(num) {
+  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+     var tab = tabs[0];
+     if (tab.url != "chrome-extension://ecbiglglpcmpjmdplphadimldeldkpbl/index.html") {
+       chrome.tabs.remove(tab.id, function(tab) {
+         log("Tab removed: " + JSON.stringify(tab));
+       });
+     }
+  });
+}
+
 function closeLastTabs(num) {
   var query = { currentWindow: true };
   chrome.tabs.query(query, function(tabs) {
@@ -122,6 +133,7 @@ var Tabs = {
   openEmpty: openEmptyTab,
   openNew: openNewTab,
   duplicate: duplicateTab,
+  closeThisTab: closeCurrentTab,
   closeLastTabs: closeLastTabs,
   closePrevTabs: closePreviousTabs
 }

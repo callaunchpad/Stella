@@ -49,6 +49,10 @@ function requestSearch(text) {
   googleSearch(query);
 }
 
+function closeCurrentTab() {
+  Tabs.closeThisTab();
+}
+
 function closeLastTab() {
   Tabs.closeLastTabs(1);
 }
@@ -123,6 +127,8 @@ function doTabAction(text) {
     discardNonActiveAudibleTabs();
   } else if (text.contains("search") || text.contains("look up") || text.contains("google")) {
     requestSearch(text);
+  } else if (text.contains("close the current tab") || text.contains("close this tab")) {
+    closeCurrentTab(); // If not voice web
   } else if (text.contains("close the last tab") || text.contains("close last tab")) {
     closeLastTab(); // If not voice web
   } else if (text.contains("close the last") && text.contains("tabs")) {
