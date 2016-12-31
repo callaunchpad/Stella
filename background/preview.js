@@ -28,9 +28,11 @@ if (feature.length > 0) {
   if (mod) {
     var modText = mod.innerText;
     console.log(modText);
+    modText = modText.replace("More items...", "");
     chrome.runtime.sendMessage({speechText: modText}, function() {});
   } else {
     console.log(featureText);
+    featureText = featureText.replace("More items...", "");
     chrome.runtime.sendMessage({speechText: featureText}, function() {});
   }
 }

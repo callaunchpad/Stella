@@ -30,6 +30,7 @@ function discardNonActiveAudibleTabs() {
 function requestSearch(text) {
   var textArr = text.split(" ");
   var query = '';
+  console.log(textArr);
   if (textArr[0] == "look" && textArr[1] == "up") {
     query = text.replace("look up", "");
   } else if (textArr[0] == "search") {
@@ -50,11 +51,28 @@ function requestSearch(text) {
 }
 
 function closeCurrentTab() {
-  Tabs.closeThisTab();
+  Tabs.closeCurrent(function(tab) {
+    responseMessage("Closed tab: " + tab.url);
+  });
 }
 
 function closeLastTab() {
-  Tabs.closeLastTabs(1);
+  Tabs.closeLastTabs(1, function(tab) {
+    responseMessage("Closed tab: " + tab.url);
+  });
+}
+
+function closePastTabs(text) {
+  var num = text.match(/[0-9]+\s(tabs)/g);
+  if (num) {
+    num = num[0].replace(" tabs", "");
+  } else {
+    var textArr = text.split(" ");
+    num = textTonum(textArr[textArr.indexOf("first") + 1]);
+  }
+  Tabs.closeFirstTabs(num), function(tab) {
+    responseMessage("Closed tab: " + tab.url);
+  };
 }
 
 function closeRecentTabs(text) {
@@ -65,12 +83,16 @@ function closeRecentTabs(text) {
     var textArr = text.split(" ");
     num = textTonum(textArr[textArr.indexOf("last") + 1]);
   }
-  Tabs.closeLastTabs(num);
+  Tabs.closeLastTabs(num, function(tab) {
+    responseMessage("Closed tab: " + tab.url);
+  });
 }
 
 function closePreviousTab() {
   console.log('closing previous tab');
-  Tabs.closePrevTabs(1);
+  Tabs.closePrevTabs(1, function(tab) {
+    responseMessage("Closed tab: " + tab.url);
+  });
 }
 
 function closePreviousTabs(text) {
@@ -82,7 +104,30 @@ function closePreviousTabs(text) {
     num = textTonum(textArr[textArr.indexOf("previous") + 1]);
   }
   console.log('closing previous' + num + 'tabs');
-  Tabs.closePrevTabs(num);
+  Tabs.closePrevTabs(num, function(tab) {
+    responseMessage("Closed tab: " + tab.url);
+  });
+}
+
+function closeNextTab() {
+  console.log('closing next tab');
+  Tabs.closeNextTabs(1, function(tab) {
+    responseMessage("Closed tab: " + tab.url);
+  });
+}
+
+function closeNextTabs(text) {
+  var num = text.match(/[0-9]+\s(tabs)/g);
+  if (num) {
+    num = num[0].replace(" tabs", "");
+  } else {
+    var textArr = text.split(" ");
+    num = textTonum(textArr[textArr.indexOf("next") + 1]);
+  }
+  console.log('closing next' + num + 'tabs');
+  Tabs.closeNextTabs(num, function(tab) {
+    responseMessage("Closed tab: " + tab.url);
+  });
 }
 
 function discardNonActiveTabs() {
@@ -131,12 +176,18 @@ function doTabAction(text) {
     closeCurrentTab(); // If not voice web
   } else if (text.contains("close the last tab") || text.contains("close last tab")) {
     closeLastTab(); // If not voice web
+  } else if (text.contains("close the first") && text.contains("tabs")) {
+    closePastTabs(text); // If not voice web
   } else if (text.contains("close the last") && text.contains("tabs")) {
     closeRecentTabs(text); // If not voice web
   } else if (text.contains("close the previous tab") || text.contains("close previous tab")) {
     closePreviousTab(); // If not voice webclose
   } else if (text.contains("close the previous") && text.contains("tabs")) {
     closePreviousTabs(text); // If not voice web
+  } else if (text.contains("close the next tab") || text.contains("close next tab")) {
+    closeNextTab(); // If not voice webclose
+  } else if (text.contains("close the next") && text.contains("tabs")) {
+    closeNextTabs(text); // If not voice web
   } else if (text.contains("enter memory save mode")) {
     discardNonActiveTabs();
   } else if (text.isQuestion()) {
@@ -156,7 +207,6 @@ function toggleContinuousAnalysis(text) {
 
 function analyze(text) {
   var text = text.toLowerCase();
-  console.log('STEALLLALASDAS: ' + text);
   if (text.contains("hello " + TRIGGER_NAME)) { return 'hello'; }
   if (text.contains(TRIGGER_NAME + " go to sleep")) { return 'sleep' };
   if (text.contains("continuous analysis")) { return 'continuous' };

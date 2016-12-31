@@ -64,7 +64,7 @@ Chat Title
 }
 .chat-title h1, .chat-title h2 {
   font-weight: normal;
-  font-size: 10px;
+  font-size: 14px;
   margin: 0;
   padding: 0;
   color: #fff;
@@ -72,7 +72,7 @@ Chat Title
 }
 .chat-title h2 {
   color: rgba(255, 255, 255, 0.5);
-  font-size: 8px;
+  font-size: 10px;
   letter-spacing: 1px;
   line-height: inherit;
 }
@@ -137,13 +137,10 @@ Messages
   position: relative;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
   text-align: left;
+  max-width: 70%;
+  word-wrap: break-word;
 }
-/*.messages .message .timestamp {
-  position: absolute;
-  bottom: -15px;
-  font-size: 9px;
-  color: rgba(255, 255, 255, 0.3);
-}*/
+
 .messages .message::before {
   content: '';
   position: absolute;

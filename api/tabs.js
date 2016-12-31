@@ -64,26 +64,42 @@ function duplicateTab(tabId, callback) {
     });
 }
 
-function closeCurrentTab(num) {
+function closeCurrentTab(callback) {
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
      var tab = tabs[0];
-     if (tab.url != "chrome-extension://ecbiglglpcmpjmdplphadimldeldkpbl/index.html") {
-       chrome.tabs.remove(tab.id, function(tab) {
-         log("Tab removed: " + JSON.stringify(tab));
-       });
-     }
+     chrome.tabs.remove(tab.id, function() {
+       log("Tab removed: " + JSON.stringify(tab));
+       if (callback) callback(tab);
+     });
   });
 }
 
-function closeLastTabs(num) {
+function closeFirstTabs(num, callback) {
+  var query = { currentWindow: true };
+  chrome.tabs.query(query, function(tabs) {
+    while (num > 0) {
+      var tab = tabs[num];
+      if (tab.url != "chrome-extension://ecbiglglpcmpjmdplphadimldeldkpbl/index.html") {
+        chrome.tabs.remove(tab.id, function() {
+          log("Tab removed: " + JSON.stringify(tab));
+          if (callback) callback(tab);
+        });
+      }
+      num--;
+    }
+  });
+}
+
+function closeLastTabs(num, callback) {
   var query = { currentWindow: true };
   chrome.tabs.query(query, function(tabs) {
     var counter = 0;
     while (counter < num && counter < tabs.length - 1) {
       var tab = tabs[tabs.length - 1 - counter];
       if (tab.url != "chrome-extension://ecbiglglpcmpjmdplphadimldeldkpbl/index.html") {
-        chrome.tabs.remove(tab.id, function(tab) {
+        chrome.tabs.remove(tab.id, function() {
           log("Tab removed: " + JSON.stringify(tab));
+          if (callback) callback(tab);
         });
       }
       counter++;
@@ -91,7 +107,36 @@ function closeLastTabs(num) {
   });
 }
 
-function closePreviousTabs(num) {
+function closeNextTabs(num, callback) {
+  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+     var activeTab = tabs[0];
+     var query = { currentWindow: true };
+     chrome.tabs.query(query, function(tabs) {
+       var activeTabIndex = -1;
+       for (var i = 0; i < tabs.length; i++) {
+         var tab = tabs[i];
+         if (tab.id == activeTab.id) {
+           activeTabIndex = i;
+           break;
+         }
+       }
+       while (num > 0) {
+         if (activeTabIndex + num < tabs.length) {
+           var tab = tabs[activeTabIndex + num];
+           if (tab.url != "chrome-extension://ecbiglglpcmpjmdplphadimldeldkpbl/index.html") {
+             chrome.tabs.remove(tab.id, function() {
+               log("Tab removed: " + JSON.stringify(tab));
+               if (callback) callback(tab);
+             });
+           }
+         }
+         num--;
+       }
+     });
+  });
+}
+
+function closePreviousTabs(num, callback) {
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
      var activeTab = tabs[0];
      var query = { currentWindow: true };
@@ -108,8 +153,9 @@ function closePreviousTabs(num) {
          if (activeTabIndex > num) {
            var tab = tabs[activeTabIndex - num];
            if (tab.url != "chrome-extension://ecbiglglpcmpjmdplphadimldeldkpbl/index.html") {
-             chrome.tabs.remove(tab.id, function(tab) {
+             chrome.tabs.remove(tab.id, function() {
                log("Tab removed: " + JSON.stringify(tab));
+               if (callback) callback(tab);
              });
            }
          }
@@ -133,7 +179,9 @@ var Tabs = {
   openEmpty: openEmptyTab,
   openNew: openNewTab,
   duplicate: duplicateTab,
-  closeThisTab: closeCurrentTab,
+  closeCurrent: closeCurrentTab,
+  closeFirstTabs: closeFirstTabs,
   closeLastTabs: closeLastTabs,
+  closeNextTabs: closeNextTabs,
   closePrevTabs: closePreviousTabs
 }
