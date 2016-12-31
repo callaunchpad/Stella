@@ -130,6 +130,28 @@ function closeNextTabs(text) {
   });
 }
 
+function closeSpecificTab(text) {
+  var textArr = text.split(" ");
+  var num = ordinalToNum(textArr[textArr.indexOf("tab") - 1]);
+  console.log('closing the ' + (textArr[textArr.indexOf("tab") - 1]) + ' tab');
+  var index = num - 1;
+  Tabs.closeSpecificTabs(index, index, function(tab) {
+    responseMessage("Closed tab: " + tab.url);
+  });
+}
+
+function closeSpecificTabs(text) {
+  var textArr = text.split(" ");
+  var startNum = ordinalToNum(textArr[textArr.indexOf("the") + 1]);
+  var endNum = ordinalToNum(textArr[textArr.indexOf("tabs") - 1]);
+  console.log('closing the ' + (textArr[textArr.indexOf("the") + 1]) + ' to ' + (textArr[textArr.indexOf("tabs") - 1]) + 'tabs');
+  var start = startNum - 1;
+  var end = endNum - 1;
+  Tabs.closeSpecificTabs(start, end, function(tab) {
+    responseMessage("Closed tab: " + tab.url);
+  });
+}
+
 function discardNonActiveTabs() {
   Tabs.memSave(function (tabs) {
     log("Dicarded the following tabs from memory: " + tabs);
@@ -188,6 +210,10 @@ function doTabAction(text) {
     closeNextTab(); // If not voice webclose
   } else if (text.contains("close the next") && text.contains("tabs")) {
     closeNextTabs(text); // If not voice web
+  } else if (text.contains("close the ") && text.contains("tab")) {
+    closeSpecificTab(text); // If not voice web
+  } else if ((text.contains("close the ") && text.contains("tabs")) || (text.contains("closed the ") && text.contains("tabs"))) {
+    closeSpecificTabs(text); // If not voice web
   } else if (text.contains("enter memory save mode")) {
     discardNonActiveTabs();
   } else if (text.isQuestion()) {

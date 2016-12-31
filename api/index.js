@@ -10,6 +10,38 @@ String.prototype.getWords = function(startIndex, endIndex) { return this.split("
 String.prototype.remove = function(substr) { return this.replace(substr, ""); };
 String.prototype.isQuestion = function() { return ["are", "who", "what", "when", "where", "why", "will", "how", "whom", "whose", "which", "is"].includes(this.getWords(0, 1)); }
 
+function ordinalToNum(text) {
+  if (text.contains("first")) text = text.replace("first", "1");
+  if (text.contains("second")) text = text.replace("second", "2");
+  if (text.contains("third")) text = text.replace("third", "3");
+  if (text.contains("fourth")) text = text.replace("fourth", "4");
+  if (text.contains("fifth")) text = text.replace("fifth", "5");
+  if (text.contains("sixth")) text = text.replace("sixth", "6");
+  if (text.contains("seventh")) text = text.replace("seventh", "7");
+  if (text.contains("eighth")) text = text.replace("eighth", "8");
+  if (text.contains("ninth")) text = text.replace("ninth", "9");
+  if (text.contains("tenth")) text = text.replace("tenth", "10");
+  if (text.contains("eleventh")) text = text.replace("eleventh", "11");
+  if (text.contains("twelfth")) text = text.replace("twelfth", "12");
+  if (text.contains("thirteenth")) text = text.replace("thirteenth", "13");
+  if (text.contains("fourteenth")) text = text.replace("fourteenth", "14");
+  if (text.contains("fifteenth")) text = text.replace("fifteenth", "15");
+  if (text.contains("sixteenth")) text = text.replace("sixteenth", "16");
+  if (text.contains("seventeenth")) text = text.replace("seventeenth", "17");
+  if (text.contains("eigteenth")) text = text.replace("eigteenth", "18");
+  if (text.contains("nineteenth")) text = text.replace("nineteenth", "19");
+  if (text.contains("twentieth")) text = text.replace("twentieth", "20");
+  if (text.contains("twenty")) text = text.replace("twenty", "2");
+  if (text.contains("thirtieth")) text = text.replace("thirtieth", "30");
+  if (text.contains("thirty")) text = text.replace("thirty", "3");
+  if (text.contains("fourtieth")) text = text.replace("fourtieth", "40");
+  if (text.contains("fourty")) text = text.replace("fourty", "4");
+  if (text.contains("fiftieth")) text = text.replace("fiftieth", "50");
+  if (text.contains("fifty")) text = text.replace("fifty", "5");
+  text = text.replace(" ", "");
+  return parseInt(text);
+}
+
 function micRec() {
   // log('MIC Recording');
   rec_dot.style.borderColor = '#FF3030';
@@ -154,6 +186,6 @@ var langs = [['Afrikaans',       ['af-ZA']],
              n = n + g * x
              g = 0;
          }
-         else { alert("Unknown number: "+w); }
+         else { console.log("Unknown number: "+w); }
      }
  }
