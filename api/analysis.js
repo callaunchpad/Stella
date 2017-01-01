@@ -241,6 +241,10 @@ function doTabAction(text) {
     Window.back();
   } else if (text.contains("go forward")) {
     Window.forward();
+  } else if (text.contains("refresh the page") || text.contains("refresh page")) {
+    Window.refresh();
+  } else if (text.contains("refresh yourself") || text.contains("reset")) {
+    Window.refreshApp();
   } else {
     dontUnderstand();
   }

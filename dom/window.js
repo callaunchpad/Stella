@@ -10,7 +10,20 @@ function goForward() {
   });
 }
 
+function refreshPage() {
+  chrome.tabs.executeScript(null, { code: "location.reload();" }, function(result) {
+    log("Refreshed the page");
+  });
+}
+
+function refreshExtension() {
+  log("Refreshed the extension");
+  location.reload();
+}
+
 var Window = {
   back: goBack,
-  forward: goForward
+  forward: goForward,
+  refresh: refreshPage,
+  refreshApp: refreshExtension
 }
