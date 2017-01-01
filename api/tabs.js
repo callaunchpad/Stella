@@ -182,6 +182,18 @@ function closeSpecificTabs(start, end, callback) {
   });
 }
 
+function openSpecificTab(index, callback) {
+  var query = { currentWindow: true };
+  chrome.tabs.query(query, function(tabs) {
+    if (index > 0 && index < tabs.length) {
+      var tab = tabs[index];
+      chrome.tabs.update(tab.id, { active: true, highlighted: true }, function(tab) {
+        callback(tab);
+      });
+    }
+  });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
   getCurrentTab(function(tab) {
     renderStatus('Current Tab URL: ' + tab.url);
@@ -201,5 +213,6 @@ var Tabs = {
   closeLastTabs: closeLastTabs,
   closeNextTabs: closeNextTabs,
   closePrevTabs: closePreviousTabs,
-  closeSpecificTabs: closeSpecificTabs
+  closeSpecificTabs: closeSpecificTabs,
+  openSpecificTab: openSpecificTab
 }

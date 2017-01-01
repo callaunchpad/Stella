@@ -9,7 +9,9 @@ chrome.browserAction.onClicked.addListener(function(activeTab) {
       });
     } else {
       var tab = tabs[0];
-      console.log("Vocal Web site tab initialized: " + tab.url);
+      chrome.tabs.update(tab.id, { active: true, highlighted: true }, function(tab) {
+        console.log("Vocal Web site tab initialized: " + tab.url);
+      });
     }
   });
 });

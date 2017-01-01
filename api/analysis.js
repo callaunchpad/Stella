@@ -14,12 +14,21 @@ function openEmptyTab() {
   });
 }
 
+function openSpecificTab(text) {
+  var textArr = text.split(" ");
+  var num = ordinalToNum(textArr[textArr.indexOf("tab") - 1]);
+  var index = num - 1;
+  Tabs.openSpecificTab(index, function(tab) {
+    responseMessage((textArr[textArr.indexOf("tab") - 1]) + " tab opened: " + tab.url);
+  });
+}
+
 function goToWebsite(text) {
   var url = text.match(/(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?/gm);
   if (url) {
     url = url[0];
     if (!url.contains("http://")) url = "http://" + url;
-    renderStatus('Going to: ' + url);
+    responseMessage('Going to: ' + url);
     Tabs.openNew(url, function(tab) {
       log("New tab at " + url + " created: " + JSON.stringify(tab));
     });
@@ -29,7 +38,7 @@ function goToWebsite(text) {
 }
 
 function discardNonActiveAudibleTabs() {
-  renderStatus('Muted all audible tabs.');
+  responseMessage('Muted all audible tabs.');
   Tabs.muteTabs(function(tabs) {
     log("Muted all audible tabs " + tabs);
   });
@@ -205,7 +214,9 @@ function doTabAction(text) {
   var text = text.toLowerCase().remove(TRIGGER_NAME + " ");
   if (text.contains("open a new tab") || text.contains("open another tab")) {
     openEmptyTab();
-  } else if (text.contains("go to ")) {
+  } else if ((text.contains("open the ") && text.contains("tab")) || text.contains("go to the ") && text.contains("tab")) {
+    openSpecificTab(text);
+  } else if (text.contains("go to ") || text.contains("open ")) {
     goToWebsite(text);
   } else if (text.contains("mute all audible tabs") || text.contains("close all audible tabs") || text.contains("stop all audible tabs")) {
     discardNonActiveAudibleTabs();
@@ -307,6 +318,6 @@ function takeAction(text) {
       break;
     default:
       log('Not a valid Command');
-      renderStatus('Not a valid Command');
+      responseMessage('Not a valid Command');
   }
 }
