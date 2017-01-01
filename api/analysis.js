@@ -1,7 +1,10 @@
 function googleSearch(query) {
-  var url = 'http://google.com/search?q=' + query + "&from=" + TRIGGER_NAME;
+  var url = 'http://google.com/search?q=' + query;
   Tabs.openNew(url, function(tab) {
     log("Searched Google for " + query);
+    chrome.tabs.executeScript(null, { file: "dom/preview.js" }, function(result) {
+      console.log("Previews Google feature text");
+    });
   });
 }
 

@@ -15,12 +15,6 @@
       "128": "public/img/icon-128x128.png"
     }
   },
-  "content_scripts": [
-    {
-      "matches": ["https://www.google.com/search?q=*&from=stella"],
-      "js": ["background/preview.js"]
-    }
-  ],
   "permissions": [
     "activeTab",
     "background",
