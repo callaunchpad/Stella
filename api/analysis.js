@@ -15,12 +15,17 @@ function openEmptyTab() {
 }
 
 function goToWebsite(text) {
-  var url = text.match(/(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?/gm)[0];
-  if (!url.contains("http://")) url = "http://" + url;
-  renderStatus('Going to: ' + url);
-  Tabs.openNew(url, function(tab) {
-    log("New tab at " + url + " created: " + JSON.stringify(tab));
-  });
+  var url = text.match(/(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?/gm);
+  if (url) {
+    url = url[0];
+    if (!url.contains("http://")) url = "http://" + url;
+    renderStatus('Going to: ' + url);
+    Tabs.openNew(url, function(tab) {
+      log("New tab at " + url + " created: " + JSON.stringify(tab));
+    });
+  } else {
+    tts.say('Sorry, I cannot find the url you requested.');
+  }
 }
 
 function discardNonActiveAudibleTabs() {
