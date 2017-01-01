@@ -65,7 +65,7 @@ var Scroll = {
 
 // Clicking
 
-function clickLink(content) {
+function clickLink(content) {  
   chrome.tabs.executeScript(null, { file: "scripts/jquery.min.js" }, function() {
     chrome.tabs.executeScript(null, { code: "$.expr[':'].casecontains = $.expr.createPseudo(function(arg) { return function( elem ) { return $(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0; }; }); console.log($('a:casecontains(\"" + content + "\")')[0]); $('a:casecontains(\"" + content + "\")')[0].click();" }, function(result) {
       log("Clicked on link containing:" + content);

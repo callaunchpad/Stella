@@ -12,7 +12,7 @@ function say(text) {
 function sayParagraph(paragraph) {
   var sentences = paragraph.split(/(?:\. |\.\.\.|\? |\! |\: |\; |[\r\n])+/);
   for (var i = 0; i < sentences.length; i++) {
-    say(sentences[i]);
+    if (sentences[i].length > 0) say(sentences[i]);
   }
 }
 

@@ -182,6 +182,10 @@ function focus() {
 
 function handleLinkClick(text) {
   var content = text.replace("click on the link that says ", "");
+  content = content.replace("click the link that says ", "");
+  content = content.replace("click on the link that contains ", "");
+  content = content.replace("click the link that contains ", "");
+  console.log("Trying to click on link containing:" + content);
   Click.refLink(content);
 }
 
@@ -235,7 +239,7 @@ function doTabAction(text) {
     Scroll.bigDown();
   } else if (text.contains("scroll down") || text.contains("scroll down more")) {
     Scroll.medDown();
-  } else if (text.contains("click on the link that contains") || text.contains("click the link that contains")) {
+  } else if (text.contains("click on the link that contains") || text.contains("click the link that contains") || text.contains("click on the link that says") || text.contains("click the link that says")) {
     handleLinkClick(text);
   } else if (text.contains("go back")) {
     Window.back();

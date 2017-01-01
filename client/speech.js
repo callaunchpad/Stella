@@ -35,6 +35,8 @@ function showInfo(s) {
   }
 }
 
-// ACTIONS
-// goToVocalWeb();
+// INITIAL ACTIONS
 toggleRecognition();
+setTimeout(function() {
+  tts.say("Hello, I'm Stella! Ask me anything.");
+}, 100);

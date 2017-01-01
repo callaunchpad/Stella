@@ -2,12 +2,6 @@ var $messages = $('.messages-content'),
     d, h, m,
     i = 0;
 
-$(window).load(function() {
-  setTimeout(function() {
-    responseMessage("Hello, I'm Stella! Ask me anything.");
-  }, 100);
-});
-
 function updateScrollbar() {
   $messages.scrollTop($messages[0].scrollHeight);
 }
