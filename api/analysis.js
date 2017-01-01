@@ -218,6 +218,18 @@ function doTabAction(text) {
     discardNonActiveTabs();
   } else if (text.isQuestion()) {
     answerQuestion(text);
+  } else if (text.contains("scroll up a little")) {
+    littleScrollUp();
+  } else if (text.contains("scroll up a lot") || text.contains("scroll up alot")) {
+    bigScrollUp();
+  } else if (text.contains("scroll up") || text.contains("scroll up more")) {
+    medScrollUp();
+  } else if (text.contains("scroll down a little")) {
+    littleScrollDown();
+  } else if (text.contains("scroll down a lot") || text.contains("scroll down alot")) {
+    bigScrollDown();
+  } else if (text.contains("scroll down") || text.contains("scroll down more")) {
+    medScrollDown();
   } else {
     dontUnderstand();
   }

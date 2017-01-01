@@ -27,7 +27,7 @@
     "notifications",
     "tabs",
     "tts",
-    "https://ajax.googleapis.com/"
+    "<all_urls>"
   ],
   "background": {
     "scripts": ["background/background.js", "background/tts.js", "background/notifications.js"]
