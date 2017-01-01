@@ -180,6 +180,11 @@ function focus() {
   })
 }
 
+function handleLinkClick(text) {
+  var content = text.replace("click on the link that says ", "");
+  Click.refLink(content);
+}
+
 function dontUnderstand() {
   tts.say("Sorry I do not know how to do that yet.");
 }
@@ -219,17 +224,23 @@ function doTabAction(text) {
   } else if (text.isQuestion()) {
     answerQuestion(text);
   } else if (text.contains("scroll up a little")) {
-    littleScrollUp();
+    Scroll.littleUp();
   } else if (text.contains("scroll up a lot") || text.contains("scroll up alot")) {
-    bigScrollUp();
+    Scroll.bigUp();
   } else if (text.contains("scroll up") || text.contains("scroll up more")) {
-    medScrollUp();
+    Scroll.medUp();
   } else if (text.contains("scroll down a little")) {
-    littleScrollDown();
+    Scroll.littleDown();
   } else if (text.contains("scroll down a lot") || text.contains("scroll down alot")) {
-    bigScrollDown();
+    Scroll.bigDown();
   } else if (text.contains("scroll down") || text.contains("scroll down more")) {
-    medScrollDown();
+    Scroll.medDown();
+  } else if (text.contains("click on the link that contains") || text.contains("click the link that contains")) {
+    handleLinkClick(text);
+  } else if (text.contains("go back")) {
+    Window.back();
+  } else if (text.contains("go forward")) {
+    Window.forward();
   } else {
     dontUnderstand();
   }

@@ -1,3 +1,5 @@
+// Scrolling
+
 function littleScrollUp() {
   chrome.tabs.executeScript(null, { file: "scripts/jquery.min.js" }, function() {
     chrome.tabs.executeScript(null, {
@@ -50,4 +52,27 @@ function bigScrollDown() {
     }, function(result) {
     });
   });
+}
+
+var Scroll = {
+  littleUp: littleScrollUp,
+  medUp: medScrollUp,
+  bigUp: bigScrollUp,
+  littleDown: littleScrollDown,
+  medDown: medScrollDown,
+  bigDown: bigScrollDown
+}
+
+// Clicking
+
+function clickLink(content) {
+  chrome.tabs.executeScript(null, { file: "scripts/jquery.min.js" }, function() {
+    chrome.tabs.executeScript(null, { code: "$.expr[':'].casecontains = $.expr.createPseudo(function(arg) { return function( elem ) { return $(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0; }; }); console.log($('a:casecontains(\"" + content + "\")')[0]); $('a:casecontains(\"" + content + "\")')[0].click();" }, function(result) {
+      log("Clicked on link containing:" + content);
+    });
+  });
+}
+
+var Click = {
+  refLink: clickLink
 }
