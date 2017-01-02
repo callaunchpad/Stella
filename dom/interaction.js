@@ -62,7 +62,7 @@ var Scroll = {
 
 function clickLink(content) {
   chrome.tabs.executeScript(null, { file: "scripts/jquery.min.js" }, function() {
-    var contentString = "var clickLinkContent = '" + content + "';";
+    var contentString = "var query = 'a:casecontains(" + clickLinkContent + ")'; var elementInView = true;";
     console.log(contentString);
     chrome.tabs.executeScript(null, { code: contentString }, function() {
       chrome.tabs.executeScript(null, { file: "dom/click.js" });
@@ -70,6 +70,21 @@ function clickLink(content) {
   });
 }
 
+function clickYoutubeLink(first, custom) {
+  chrome.tabs.executeScript(null, { file: "scripts/jquery.min.js" }, function() {
+    if (first) {
+      var contentString = "var videos = $('a.yt-uix-tile-link.yt-ui-ellipsis.yt-ui-ellipsis-2.yt-uix-sessionlink.spf-link[href*=\"/watch?v=\"]'); if (videos.length > 0) videos[0].click();";
+      chrome.tabs.executeScript(null, { code: contentString }, function() {});
+    } else if (custom) {
+      var contentString = "var query = 'a.yt-uix-tile-link.yt-ui-ellipsis.yt-ui-ellipsis-2.yt-uix-sessionlink.spf-link[href*=\"/watch?v=\"]:casecontains(" + custom + ")'; var elementInView = false;"
+      chrome.tabs.executeScript(null, { code: contentString }, function() {
+        chrome.tabs.executeScript(null, { file: "dom/click.js" });
+      });
+    }
+  });
+}
+
 var Click = {
-  refLink: clickLink
+  refLink: clickLink,
+  clickYoutube: clickYoutubeLink
 }

@@ -87,7 +87,7 @@ function discardNonActiveAudibleTabs() {
   });
 }
 
-function requestSearch(text) {
+function requestSearch(text, engine) {
   var textArr = text.split(" ");
   var query = '';
   console.log(textArr);
@@ -107,7 +107,8 @@ function requestSearch(text) {
   } else if (textArr[0] == "google") {
     query = text.replace("google", "");
   }
-  googleSearch(query);
+  if (engine == "youtube") playVideo(text, query)
+  else googleSearch(query);
 }
 
 function closeCurrentTab() {
@@ -255,6 +256,21 @@ function handleLinkClick(text) {
   Click.refLink(content);
 }
 
+function playVideo(text, custom) {
+  var playPhrases = ["play a video of ", "play some ", "play "];
+  for (var i = 0; i < playPhrases.length; i++) {
+    if (text.contains(playPhrases[i])) text = text.replace(playPhrases[i], "");
+    console.log(text);
+  }
+  var query = text;
+  var url = 'http://youtube.com/search?q=' + query;
+  Tabs.openNew(url, function(tab) {
+    log("Searched Youtube for " + query);
+    if (!custom) Click.clickYoutube(true, null);
+    else CLick.clickYoutube(false, custom);
+  });
+}
+
 function dontUnderstand() {
   tts.say("Sorry I do not know how to do that yet.");
 }
@@ -273,8 +289,10 @@ function doTabAction(text) {
     goToWebsite(text);
   } else if (text.contains("mute all audible tabs") || text.contains("close all audible tabs") || text.contains("stop all audible tabs")) {
     discardNonActiveAudibleTabs();
-  } else if (text.contains("search") || text.contains("look up") || text.contains("google")) {
-    requestSearch(text);
+  } else if (!text.contains("youtube") && (text.contains("search") || text.contains("look up") || text.contains("google"))) {
+    requestSearch(text, "google");
+  } else if (!text.contains("google") && (text.contains("search") || text.contains("look up") || text.contains("youtube"))) {
+    requestSearch(text, "youtube");
   } else if (text.contains("close the current tab") || text.contains("close this tab")) {
     closeCurrentTab(); // If not voice web
   } else if (text.contains("close the last tab") || text.contains("close last tab")) {
@@ -323,6 +341,8 @@ function doTabAction(text) {
     Window.refresh();
   } else if (text.contains("refresh yourself") || text.contains("reset")) {
     Window.refreshApp();
+  } else if (text.contains("play")) {
+    playVideo(text);
   } else {
     dontUnderstand();
   }

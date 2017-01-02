@@ -26,13 +26,13 @@ $.expr[':'].casecontains =$.expr.createPseudo(function(arg) {
   };
 });
 
-var possibleElements = $('a:casecontains(' + clickLinkContent + ')');
+var possibleElements = $(query);
 
 console.log(possibleElements);
 
 for (var i = 0; i < possibleElements.length; i++) {
   var elem = possibleElements[i];
-  var elemInView = Utils.isElementInView(elem, true);
+  var elemInView = Utils.isElementInView(elem, elementInView);
   if (elemInView) {
     elem.click();
     console.log(elem);
@@ -41,3 +41,4 @@ for (var i = 0; i < possibleElements.length; i++) {
 }
 
 clickLinkContent = null;
+elementInView = null;
