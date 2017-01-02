@@ -16,13 +16,15 @@ function openDocumentation() {
       console.log('Finished animating');
     });
   }, 100);
+  tts.say("Here are some things I can do.");
+  tts.say("Make sure to say my name before each command, so I know you are talking to me.");
 }
 
 function closeDocumentation() {
   console.log("CLOSING DOCS");
   $('.table-container').stop().animate({
     top: '100%'},
-    '3000',
+    '2000',
     'swing',
   function() {
     console.log('Finished animating');
@@ -31,7 +33,7 @@ function closeDocumentation() {
   setTimeout(function() {
     $('.chat-container').stop().animate({
       left: '25%'},
-      '6000',
+      '50000',
       'swing',
     function() {
       console.log('Finished animating');
@@ -120,6 +122,12 @@ function closeLastTab() {
   });
 }
 
+function closeFirstTab() {
+  Tabs.closeFirstTabs(1, function(tab) {
+    responseMessage("Closed tab: " + tab.url);
+  });
+}
+
 function closePastTabs(text) {
   var num = text.match(/[0-9]+\s(tabs)/g);
   if (num) {
@@ -128,9 +136,9 @@ function closePastTabs(text) {
     var textArr = text.split(" ");
     num = textTonum(textArr[textArr.indexOf("first") + 1]);
   }
-  Tabs.closeFirstTabs(num), function(tab) {
+  Tabs.closeFirstTabs(num, function(tab) {
     responseMessage("Closed tab: " + tab.url);
-  };
+  });
 }
 
 function closeRecentTabs(text) {
@@ -271,6 +279,8 @@ function doTabAction(text) {
     closeCurrentTab(); // If not voice web
   } else if (text.contains("close the last tab") || text.contains("close last tab")) {
     closeLastTab(); // If not voice web
+  } else if (text.contains("close the first tab") || text.contains("close first tab")) {
+    closeFirstTab(); // If not voice web
   } else if (text.contains("close the first") && text.contains("tabs")) {
     closePastTabs(text); // If not voice web
   } else if (text.contains("close the last") && text.contains("tabs")) {

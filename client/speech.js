@@ -39,4 +39,5 @@ function showInfo(s) {
 toggleRecognition();
 setTimeout(function() {
   tts.say("Hello, I'm Stella! Ask me anything.");
-}, 200);
+  tts.say('Say "Stella, open help menu" for assistance');
+}, 300);
