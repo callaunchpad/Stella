@@ -1,5 +1,6 @@
 var debug = true;
 const TRIGGER_NAME = "stella";
+const APP_URL = "chrome-extension://ecbiglglpcmpjmdplphadimldeldkpbl/index.html";
 function renderStatus(statusText) { document.getElementById("status").textContent = statusText; }
 function log(obj) { if (debug) console.log(obj); }
 function linebreak(s) { return s.replace(/\n\n/g, '<p></p>').replace(/\n/g, '<br>'); }

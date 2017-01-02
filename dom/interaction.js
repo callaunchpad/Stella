@@ -3,67 +3,59 @@ const LITTLE = 200;
 const MED = 500;
 const ALOT = 1000;
 
-function littleScrollUp() {
-  chrome.tabs.executeScript(null, { file: "scripts/jquery.min.js" }, function() {
-    chrome.tabs.executeScript(null, {
-      code: "$('html, body').stop().animate({scrollTop: '-=" + LITTLE + "px'}, '1000', 'swing', function() { console.log('Finished animating'); });"
-    }, function(result) {
+function scrollUp(amount) {
+  return function() {
+    Tabs.getCurrent(function(tab) {
+      if(tab.url == APP_URL) {
+        $('tbody').stop().animate({
+          scrollTop: '-=' + amount + 'px'},
+          '1000',
+          'swing',
+          function() {
+            console.log('Finished animating');
+          });
+      } else {
+        chrome.tabs.executeScript(null, { file: "scripts/jquery.min.js" }, function() {
+          chrome.tabs.executeScript(null, {
+            code: "$('html, body').stop().animate({scrollTop: '-=" + amount + "px'}, '1000', 'swing', function() { console.log('Finished animating'); });"
+          }, function(result) {
+          });
+        });
+      }
     });
-  });
+  }
 }
 
-function medScrollUp() {
-  chrome.tabs.executeScript(null, { file: "scripts/jquery.min.js" }, function() {
-    chrome.tabs.executeScript(null, {
-      code: "$('html, body').stop().animate({scrollTop: '-=" + MED + "px'}, '1000', 'swing', function() { console.log('Finished animating'); });"
-    }, function(result) {
+function scrollDown(amount) {
+  return function() {
+    Tabs.getCurrent(function(tab) {
+      if(tab.url == APP_URL) {
+        $('tbody').stop().animate({
+          scrollTop: '+=' + amount + 'px'},
+          '1000',
+          'swing',
+          function() {
+            console.log('Finished animating');
+          });
+      } else {
+        chrome.tabs.executeScript(null, { file: "scripts/jquery.min.js" }, function() {
+          chrome.tabs.executeScript(null, {
+            code: "$('html, body').stop().animate({scrollTop: '+=" + amount + "px'}, '1000', 'swing', function() { console.log('Finished animating'); });"
+          }, function(result) {
+          });
+        });
+      }
     });
-  });
-}
-
-function bigScrollUp() {
-  chrome.tabs.executeScript(null, { file: "scripts/jquery.min.js" }, function() {
-    chrome.tabs.executeScript(null, {
-      code: "$('html, body').stop().animate({scrollTop: '-=" + ALOT + "px'}, '1000', 'swing', function() { console.log('Finished animating'); });"
-    }, function(result) {
-    });
-  });
-}
-
-function littleScrollDown() {
-  chrome.tabs.executeScript(null, { file: "scripts/jquery.min.js" }, function() {
-    chrome.tabs.executeScript(null, {
-      code: "$('html, body').stop().animate({scrollTop: '+=" + LITTLE + "px'}, '1000', 'swing', function() { console.log('Finished animating'); });"
-    }, function(result) {
-    });
-  });
-}
-
-function medScrollDown() {
-  chrome.tabs.executeScript(null, { file: "scripts/jquery.min.js" }, function() {
-    chrome.tabs.executeScript(null, {
-      code: "$('html, body').stop().animate({scrollTop: '+=" + MED + "px'}, '1000', 'swing', function() { console.log('Finished animating'); });"
-    }, function(result) {
-    });
-  });
-}
-
-function bigScrollDown() {
-  chrome.tabs.executeScript(null, { file: "scripts/jquery.min.js" }, function() {
-    chrome.tabs.executeScript(null, {
-      code: "$('html, body').stop().animate({scrollTop: '+=" + ALOT + "px'}, '1000', 'swing', function() { console.log('Finished animating'); });"
-    }, function(result) {
-    });
-  });
+  }
 }
 
 var Scroll = {
-  littleUp: littleScrollUp,
-  medUp: medScrollUp,
-  bigUp: bigScrollUp,
-  littleDown: littleScrollDown,
-  medDown: medScrollDown,
-  bigDown: bigScrollDown
+  littleUp: scrollUp(LITTLE),
+  medUp: scrollUp(MED),
+  bigUp: scrollUp(ALOT),
+  littleDown: scrollDown(LITTLE),
+  medDown: scrollDown(MED),
+  bigDown: scrollDown(ALOT)
 }
 
 // Clicking

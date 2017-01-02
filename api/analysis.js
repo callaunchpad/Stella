@@ -1,3 +1,44 @@
+function openDocumentation() {
+  $('.chat-container').stop().animate({
+    left: '50%'},
+    '6000',
+    'swing',
+  function() {
+    console.log('Finished animating');
+  });
+
+  setTimeout(function() {
+    $('.table-container').stop().animate({
+      top: '0'},
+      '3000',
+      'swing',
+    function() {
+      console.log('Finished animating');
+    });
+  }, 100);
+}
+
+function closeDocumentation() {
+  console.log("CLOSING DOCS");
+  $('.table-container').stop().animate({
+    top: '100%'},
+    '3000',
+    'swing',
+  function() {
+    console.log('Finished animating');
+  });
+
+  setTimeout(function() {
+    $('.chat-container').stop().animate({
+      left: '25%'},
+      '6000',
+      'swing',
+    function() {
+      console.log('Finished animating');
+    });
+  }, 100);
+}
+
 function googleSearch(query) {
   var url = 'http://google.com/search?q=' + query;
   Tabs.openNew(url, function(tab) {
@@ -212,7 +253,11 @@ function dontUnderstand() {
 
 function doTabAction(text) {
   var text = text.toLowerCase().remove(TRIGGER_NAME + " ");
-  if (text.contains("open a new tab") || text.contains("open another tab")) {
+  if (text.contains("what can you do") || text.contains("open help menu") || text.contains("open help")) {
+    openDocumentation();
+  } else if (text.contains("close help menu") || text.contains("close help")) {
+    closeDocumentation();
+  } else if (text.contains("open a new tab") || text.contains("open another tab")) {
     openEmptyTab();
   } else if ((text.contains("open the ") && text.contains("tab")) || text.contains("go to the ") && text.contains("tab")) {
     openSpecificTab(text);

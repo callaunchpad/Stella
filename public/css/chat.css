@@ -21,6 +21,16 @@ body {
 /*--------------------
 Chat
 --------------------*/
+.chat-container {
+  position: absolute;
+  display: block;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 50%;
+  left: 25%;
+}
+
 .chat {
   font-family: 'Open Sans', sans-serif;
   position: relative;

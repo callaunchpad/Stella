@@ -14,61 +14,200 @@
     <link type="text/css" href="public/css/switch.css" rel="stylesheet">
     <link type="text/css" href="public/css/chat.css" rel="stylesheet">
     <link type="text/css" href="public/css/demo.css" rel="stylesheet">
+    <link type="text/css" href="public/css/docs.css" rel="stylesheet">
   </head>
   <body>
-    <div class="container">
-      <div class="chat">
-        <div class="chat-title">
-          <h1>STELLA</h1>
-          <h2>by Launchpad</h2>
-          <figure class="avatar">
-            <img src="public/img/stella.png" />
-          </figure>
-          <div class="right">
-            <button id="start_button" class="rec-container">
-              <div id="rec_dot" class="dot"></div>
-              <div id="rec_pulse" class="pulse"></div>
-            </button>
+    <div class="table-container">
+      <table class="table" cellspacing="0">
+        <colgroup>
+          <col span="1" style="width: 40%;">
+          <col span="1" style="width: 60%;">
+        </colgroup>
+        <thead>
+          <tr>
+            <td data-th="Command">Command ("Stella...")</th>
+            <td data-th="Action">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-th="Command">Hello Stella</td>
+            <td data-th="Action">Makes Stella's tab visible</td>
+          </tr>
+          <tr>
+            <td data-th="Command">What can you do&nbsp;/&nbsp;Help menu</td>
+            <td data-th="Action">Opens the Commands Table</td>
+          </tr>
+          <tr>
+            <td data-th="Command">Open a new tab</td>
+            <td data-th="Action">Creates a new empty tab in the current window</td>
+          </tr>
+          <tr>
+            <td data-th="Command">Go to the <i>n</i>&nbsp;-&nbsp;th tab</td>
+            <td data-th="Action">Makes the <i>n</i>&nbsp;-&nbsp;th tab of the current window active</td>
+          </tr>
+          <tr>
+            <td data-th="Command">Go to <i>url</i></td>
+            <td data-th="Action">Opens the website at <i>url</i> in a new tab</td>
+          </tr>
+          <tr>
+            <td data-th="Command">Mute all audible tabs</td>
+            <td data-th="Action">Disables all tabs making sound (Click them to reload)</td>
+          </tr>
+          <tr>
+            <td data-th="Command">Look up <i>query</i></td>
+            <td data-th="Action">Searches google for the requested query</td>
+          </tr>
+          <tr>
+            <td data-th="Command">Close this tab</td>
+            <td data-th="Action">Closes the tab that is visible</td>
+          </tr>
+          <tr>
+            <td data-th="Command">Close the last tab</td>
+            <td data-th="Action">Closes the last tab in the window</td>
+          </tr>
+          <tr>
+            <td data-th="Command">Close the first <i>n</i> tabs</td>
+            <td data-th="Action">Closes the first <i>n</i> tabs in the window from left to right (Skips Stella tab)</td>
+          </tr>
+          <tr>
+            <td data-th="Command">Close the last <i>n</i> tabs</td>
+            <td data-th="Action">Closes the last <i>n</i> tabs in the window from right to left (Skips Stella tab)</td>
+          </tr>
+          <tr>
+            <td data-th="Command">Close the previous tab</td>
+            <td data-th="Action">Closes the tab directly to the left of the currently visible one</td>
+          </tr>
+          <tr>
+            <td data-th="Command">Close the previous <i>n</i> tabs</td>
+            <td data-th="Action">Closes the <i>n</i> tabs directly to the left of the currently visible one from closest to farthest</td>
+          </tr>
+          <tr>
+            <td data-th="Command">Close the next tab</td>
+            <td data-th="Action">Closes the tab directly to the right of the currently visible one</td>
+          </tr>
+          <tr>
+            <td data-th="Command">Close the next <i>n</i> tabs</td>
+            <td data-th="Action">Closes the <i>n</i> tabs directly to the right of the currently visible one from closest to farthest</td>
+          </tr>
+          <tr>
+            <td data-th="Command">Close the <i>n</i>&nbsp;-&nbsp;th tab</td>
+            <td data-th="Action">Closes the <i>n</i>&nbsp;-&nbsp;th tab in the current window (1-indexed from left to right and skips Stella)</td>
+          </tr>
+          <tr>
+            <td data-th="Command">Close the <i>n</i>&nbsp;-&nbsp;th to <i>m</i>&nbsp;-&nbsp;th tabs</td>
+            <td data-th="Action">Closes the <i>n</i>&nbsp;-&nbsp;th tab to <i>m</i>&nbsp;-&nbsp;th tab in the current window (1-indexed from left to right and skips Stella)</td>
+          </tr>
+          <tr>
+            <td data-th="Command">Enter memory save mode</td>
+            <td data-th="Action">Unloads all inactive tabs to save computer memory (Click tabs to reload them)</td>
+          </tr>
+          <tr>
+            <td data-th="Command">[Question]</td>
+            <td data-th="Action">Searches Google for the answer to your question. If the question or answer is simple, Stella will verbally respond.</td>
+          </tr>
+          <tr>
+            <td data-th="Command">Scroll up a little</td>
+            <td data-th="Action">Scrolls any webpage up 200 pixels</td>
+          </tr>
+          <tr>
+            <td data-th="Command">Scroll up (more)</td>
+            <td data-th="Action">Scrolls any webpage up 500 pixels</td>
+          </tr>
+          <tr>
+            <td data-th="Command">Scroll up alot</td>
+            <td data-th="Action">Scrolls any webpage up 1000 pixels</td>
+          </tr>
+          <tr>
+            <td data-th="Command">Scroll down a little</td>
+            <td data-th="Action">Scrolls any webpage down 200 pixels</td>
+          </tr>
+          <tr>
+            <td data-th="Command">Scroll down (more)</td>
+            <td data-th="Action">Scrolls any webpage down 500 pixels</td>
+          </tr>
+          <tr>
+            <td data-th="Command">Scroll down alot</td>
+            <td data-th="Action">Scrolls any webpage down 1000 pixels</td>
+          </tr>
+          <tr>
+            <td data-th="Command">Click on the link that says <i>text</i></td>
+            <td data-th="Action">Clicks on the first visible link on screen that contains the specified <i>text</i></td>
+          </tr>
+          <tr>
+            <td data-th="Command">Go back</td>
+            <td data-th="Action">Toggles the back button on the active tab</td>
+          </tr>
+          <tr>
+            <td data-th="Command">Go forward</td>
+            <td data-th="Action">Toggles the forward button on the active tab</td>
+          </tr>
+          <tr>
+            <td data-th="Command">Refresh the page</td>
+            <td data-th="Action">Refreshes the currently visible tab</td>
+          </tr>
+          <tr>
+            <td data-th="Command">Reset</td>
+            <td data-th="Action">Resets Stella</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="chat-container">
+      <div class="container">
+        <div class="chat">
+          <div class="chat-title">
+            <h1>STELLA</h1>
+            <h2>by Launchpad</h2>
+            <figure class="avatar">
+              <img src="public/img/stella.png" />
+            </figure>
+            <div class="right">
+              <button id="start_button" class="rec-container">
+                <div id="rec_dot" class="dot"></div>
+                <div id="rec_pulse" class="pulse"></div>
+              </button>
+            </div>
+          </div>
+          <div class="messages">
+            <div class="messages-content"></div>
+          </div>
+          <div class="message-box">
+            <textarea type="text" id="message_input" class="message-input" placeholder="Begin speaking..." readonly></textarea>
           </div>
         </div>
-        <div class="messages">
-          <div class="messages-content"></div>
+        <br>
+        <div id="info">
+          <p id="info_start">Click on the gray circle and begin speaking.</p>
+          <p id="info_speak_now">Analyzing audio... Begin command with "Stella"</p>
+          <p id="info_no_speech">No speech detected: You may need to adjust your
+            <a href="//support.google.com/chrome/bin/answer.py?hl=en&amp;answer=1407892"> mic settings</a>.</p>
+          <p id="info_no_microphone" style="display:none">
+            No microphone was found. Ensure that a microphone is installed and that
+            <a href="//support.google.com/chrome/bin/answer.py?hl=en&amp;answer=1407892"> microphone settings</a> are configured correctly.</p>
+          <p id="info_allow">Click the "Allow" button above to enable your microphone.</p>
+          <p id="info_denied">Permission to use microphone was denied.</p>
+          <p id="info_blocked">Permission to use microphone is blocked. To change, go to chrome://settings/contentExceptions#media-stream</p>
+          <p id="info_upgrade">Web Speech API is not supported by this browser. Upgrade to <a href="//www.google.com/chrome">Chrome</a> version 25 or later.</p>
         </div>
-        <div class="message-box">
-          <textarea type="text" id="message_input" class="message-input" placeholder="Begin speaking..." readonly></textarea>
+        <br>
+        <div class="switch-container">
+          <label class="switch">
+            <input id="continuous_check" type="checkbox" checked="true">
+            <div class="slider round"></div>
+          </label>
+          <p>Continuous Analysis: Accept commands until "Stella go to sleep" or "Stella turn off continuous analysis"</p>
         </div>
-      </div>
-      <br>
-      <div id="info">
-        <p id="info_start">Click on the gray circle and begin speaking.</p>
-        <p id="info_speak_now">Analyzing audio... Begin command with "Stella"</p>
-        <p id="info_no_speech">No speech detected: You may need to adjust your
-          <a href="//support.google.com/chrome/bin/answer.py?hl=en&amp;answer=1407892"> mic settings</a>.</p>
-        <p id="info_no_microphone" style="display:none">
-          No microphone was found. Ensure that a microphone is installed and that
-          <a href="//support.google.com/chrome/bin/answer.py?hl=en&amp;answer=1407892"> microphone settings</a> are configured correctly.</p>
-        <p id="info_allow">Click the "Allow" button above to enable your microphone.</p>
-        <p id="info_denied">Permission to use microphone was denied.</p>
-        <p id="info_blocked">Permission to use microphone is blocked. To change, go to chrome://settings/contentExceptions#media-stream</p>
-        <p id="info_upgrade">Web Speech API is not supported by this browser. Upgrade to <a href="//www.google.com/chrome">Chrome</a> version 25 or later.</p>
-      </div>
-      <br>
-      <div class="switch-container">
-        <label class="switch">
-          <input id="continuous_check" type="checkbox" checked="true">
-          <div class="slider round"></div>
-        </label>
-        <p>Continuous Analysis: Accept commands until "Stella go to sleep" or "Stella turn off continuous analysis"</p>
-      </div>
-      <div class="center">
-        <div id="div_language">
-          <select id="select_language"></select>
-          &nbsp;&nbsp;
-          <select id="select_dialect"></select>
+        <div class="center">
+          <div id="div_language">
+            <select id="select_language"></select>
+            &nbsp;&nbsp;
+            <select id="select_dialect"></select>
+          </div>
         </div>
+        <br>
+        <p id="status"></p>
       </div>
-      <br>
-      <p id="status"></p>
     </div>
     <script src="scripts/jquery.min.js"></script>
     <script src="scripts/chat.js"></script>

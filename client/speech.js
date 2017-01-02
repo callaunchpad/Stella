@@ -39,4 +39,4 @@ function showInfo(s) {
 toggleRecognition();
 setTimeout(function() {
   tts.say("Hello, I'm Stella! Ask me anything.");
-}, 100);
+}, 200);
