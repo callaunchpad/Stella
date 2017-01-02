@@ -36,12 +36,12 @@
   font-weight: 600;
 }
 .table td.command {
+  width: 30%;
   color: rgba(255,255,255,0.7);
 }
-
-.table i {
-  /*color: black;*/
-  font-weight: 700;
+.table td.action {
+  width: 70%;
+  line-height: 1rem;
 }
 
 .table tbody::-webkit-scrollbar {
