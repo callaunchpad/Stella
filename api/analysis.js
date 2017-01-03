@@ -25,9 +25,7 @@ function doCoreAction(text) {
 }
 
 function doSearchAction(text) {
-  if (text.contains("go to ") || text.contains("open ")) {
-    API.Search.goToWebsite(text); return true;
-  } else if (!text.contains("youtube") && (text.contains("search") || text.contains("look up") || text.contains("google"))) {
+  if (!text.contains("youtube") && (text.contains("search") || text.contains("look up") || text.contains("google"))) {
     API.Search.requestSearch(text, "google"); return true;
   } else if (!text.contains("google") && (text.contains("search") || text.contains("look up") || text.contains("youtube"))) {
     API.Search.requestSearch(text, "youtube"); return true;
@@ -74,8 +72,12 @@ function doBrowserAction(text) {
 function doTabAction(text) {
   if (text.contains("open a new tab") || text.contains("open another tab")) {
     API.Tabs.openEmptyTab(); return true;
+  } else if ((text.contains("reopen the last ") || text.contains("re-open the last ") || text.contains("open the last ")) && text.contains("tabs")) {
+    API.Tabs.reopenTabs(text); return true;
   } else if ((text.contains("open the ") && text.contains("tab")) || text.contains("go to the ") && text.contains("tab")) {
     API.Tabs.openSpecificTab(text); return true;
+  } else if (text.contains("go to ") || text.contains("open ")) {
+    API.Tabs.goToWebsite(text); return true;
   } else if (text.contains("mute all audible tabs") || text.contains("close all audible tabs") || text.contains("stop all audible tabs")) {
     API.Tabs.discardNonActiveAudibleTabs(); return true;
   } else if (text.contains("close the current tab") || text.contains("close this tab")) {

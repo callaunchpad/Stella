@@ -4,20 +4,6 @@ function answerQuestion(text) {
   googleSearch(text);
 }
 
-function goToWebsite(text) {
-  var url = text.match(/(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?/gm);
-  if (url) {
-    url = url[0];
-    if (!url.contains("http://")) url = "http://" + url;
-    responseMessage('Going to: ' + url);
-    Tabs.openNew(url, function(tab) {
-      log("New tab at " + url + " created: " + JSON.stringify(tab));
-    });
-  } else {
-    tts.say('Sorry, I cannot find the url you requested.');
-  }
-}
-
 function googleSearch(query) {
   var url = 'http://google.com/search?q=' + query;
   Tabs.openNew(url, function(tab) {
@@ -29,7 +15,7 @@ function googleSearch(query) {
 }
 
 function youtubeSearch(text, custom) {
-  var playPhrases = ["play a video of ", "play some ", "play "];
+  var playPhrases = ["play a video of ", "play the song ", "play some ", "play "];
   for (var i = 0; i < playPhrases.length; i++) {
     if (text.contains(playPhrases[i])) text = text.replace(playPhrases[i], "");
     console.log(text);
@@ -69,7 +55,6 @@ function requestSearch(text, engine) {
 
 API.Search = {
   answerQuestion: answerQuestion,
-  goToWebsite: goToWebsite,
   googleSearch: googleSearch,
   youtubeSearch: youtubeSearch,
   requestSearch: requestSearch

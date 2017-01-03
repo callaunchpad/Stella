@@ -45,16 +45,16 @@ function getCurrentTab(callback) {
 }
 
 function openEmptyTab(callback) {
-    chrome.tabs.create({}, function(tab) {
-        callback(tab);
-    });
+  chrome.tabs.create({}, function(tab) {
+      callback(tab);
+  });
 }
 
 function openNewTab(url, callback) {
-    var props = { url: url };
-    chrome.tabs.create(props, function(tab) {
-        callback(tab);
-    });
+  var props = { url: url };
+  chrome.tabs.create(props, function(tab) {
+    callback(tab);
+  });
 }
 
 function duplicateTab(tabId, callback) {
@@ -194,6 +194,15 @@ function openSpecificTab(index, callback) {
   });
 }
 
+function reopen(num, callback) {
+  var query = { text: '', maxResults: num };
+  chrome.history.search(query, function(results) {
+    for (var i = 0; i < results.length; i++) {
+      openNewTab(results[i].url, callback);
+    }
+  })
+}
+
 document.addEventListener('DOMContentLoaded', function() {
   getCurrentTab(function(tab) {
     renderStatus('Current Tab URL: ' + tab.url);
@@ -214,5 +223,6 @@ var Tabs = {
   closeNextTabs: closeNextTabs,
   closePrevTabs: closePreviousTabs,
   closeSpecificTabs: closeSpecificTabs,
-  openSpecificTab: openSpecificTab
+  openSpecificTab: openSpecificTab,
+  reopen: reopen
 }

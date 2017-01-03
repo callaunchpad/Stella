@@ -1,3 +1,17 @@
+function goToWebsite(text) {
+  var url = text.match(/(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?/gm);
+  if (url) {
+    url = url[0];
+    if (!url.contains("http://")) url = "http://" + url;
+    responseMessage('Going to: ' + url);
+    Tabs.openNew(url, function(tab) {
+      log("New tab at " + url + " created: " + JSON.stringify(tab));
+    });
+  } else {
+    tts.say('Sorry, I cannot find the url you requested.');
+  }
+}
+
 function openEmptyTab() {
   Tabs.openEmpty(function(tab) {
     log("New Empty Tab Created: " + JSON.stringify(tab));
@@ -134,7 +148,21 @@ function discardNonActiveTabs() {
   });
 }
 
+function reopenTabs(text) {
+  var num = text.match(/[0-9]+\s(tabs)/g);
+  if (num) {
+    num = num[0].replace(" tabs", "");
+  } else {
+    var textArr = text.split(" ");
+    num = textTonum(textArr[textArr.indexOf("last") + 1]);
+  }
+  Tabs.reopen(num, function (tab) {
+    log("Reopened site: " + tab.url);
+  });
+}
+
 API.Tabs = {
+  goToWebsite: goToWebsite,
   openEmptyTab: openEmptyTab,
   openSpecificTab: openSpecificTab,
   discardNonActiveAudibleTabs: discardNonActiveAudibleTabs,
@@ -149,5 +177,6 @@ API.Tabs = {
   closeNextTabs: closeNextTabs,
   closeSpecificTab: closeSpecificTab,
   closeSpecificTabs: closeSpecificTabs,
-  discardNonActiveTabs: discardNonActiveTabs
+  discardNonActiveTabs: discardNonActiveTabs,
+  reopenTabs: reopenTabs
 }

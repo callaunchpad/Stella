@@ -21,6 +21,7 @@
     "notifications",
     "tabs",
     "tts",
+    "history",
     "<all_urls>"
   ],
   "background": {
