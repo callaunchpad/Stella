@@ -40,5 +40,4 @@ for (var i = 0; i < possibleElements.length; i++) {
   }
 }
 
-clickLinkContent = null;
 elementInView = null;

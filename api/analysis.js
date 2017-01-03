@@ -1,6 +1,7 @@
 function takeAction(text) {
-  var text = text.toLowerCase().remove(TRIGGER_NAME + " ");
+  text = text.toLowerCase();
   var didAction = doCoreAction(text);
+  text = text.toLowerCase().remove(TRIGGER_NAME + " ");
   if (!didAction) didAction = doInteractAction(text);
   if (!didAction) didAction = doBrowserAction(text);
   if (!didAction) didAction = doSearchAction(text);

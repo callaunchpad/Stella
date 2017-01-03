@@ -62,7 +62,7 @@ var Scroll = {
 
 function clickLink(content) {
   chrome.tabs.executeScript(null, { file: "scripts/jquery.min.js" }, function() {
-    var contentString = "var query = 'a:casecontains(" + clickLinkContent + ")'; var elementInView = true;";
+    var contentString = "var query = 'a:casecontains(" + content + ")'; var elementInView = true;";
     console.log(contentString);
     chrome.tabs.executeScript(null, { code: contentString }, function() {
       chrome.tabs.executeScript(null, { file: "dom/click.js" });
