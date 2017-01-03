@@ -1,6 +1,8 @@
 # STELLA
 A Launchpad Chrome Extension that browses the web using your voice
 
+<img width="120px" src="public/img/stella.png" />
+
 Supported Commands:
 <table class="table" cellspacing="0">
         <colgroup>
