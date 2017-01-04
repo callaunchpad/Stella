@@ -26,6 +26,7 @@ function doCoreAction(text) {
 }
 
 function doSearchAction(text) {
+  console.log(text);
   if (!text.contains("youtube") && (text.contains("search") || text.contains("look up") || text.contains("google"))) {
     API.Search.requestSearch(text, "google"); return true;
   } else if (!text.contains("google") && (text.contains("search") || text.contains("look up") || text.contains("youtube"))) {

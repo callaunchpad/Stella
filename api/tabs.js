@@ -1,5 +1,5 @@
 function refocus(callback) {
-  var query = { url: "chrome-extension://ecbiglglpcmpjmdplphadimldeldkpbl/index.html" };
+  var query = { url: APP_URL };
   chrome.tabs.query(query, function(tabs) {
     var tab = tabs[0];
     chrome.tabs.update(tab.id, { active: true, highlighted: true }, function(tab) {
@@ -79,7 +79,7 @@ function closeFirstTabs(num, callback) {
   chrome.tabs.query(query, function(tabs) {
     while (num > 0) {
       var tab = tabs[num];
-      if (tab.url != "chrome-extension://ecbiglglpcmpjmdplphadimldeldkpbl/index.html") {
+      if (tab.url != APP_URL) {
         if (callback) callback(tab);
         chrome.tabs.remove(tab.id, function() {
           log("Tab removed: " + JSON.stringify(tab));
@@ -96,7 +96,7 @@ function closeLastTabs(num, callback) {
     var counter = 0;
     while (counter < num && counter < tabs.length - 1) {
       var tab = tabs[tabs.length - 1 - counter];
-      if (tab.url != "chrome-extension://ecbiglglpcmpjmdplphadimldeldkpbl/index.html") {
+      if (tab.url != APP_URL) {
         if (callback) callback(tab);
         chrome.tabs.remove(tab.id, function() {
           log("Tab removed: " + JSON.stringify(tab));
@@ -123,7 +123,7 @@ function closeNextTabs(num, callback) {
        while (num > 0) {
          if (activeTabIndex + num < tabs.length) {
            var tab = tabs[activeTabIndex + num];
-           if (tab.url != "chrome-extension://ecbiglglpcmpjmdplphadimldeldkpbl/index.html") {
+           if (tab.url != APP_URL) {
              if (callback) callback(tab);
              chrome.tabs.remove(tab.id, function() {
                log("Tab removed: " + JSON.stringify(tab));
@@ -152,7 +152,7 @@ function closePreviousTabs(num, callback) {
        while (num > 0) {
          if (activeTabIndex > num) {
            var tab = tabs[activeTabIndex - num];
-           if (tab.url != "chrome-extension://ecbiglglpcmpjmdplphadimldeldkpbl/index.html") {
+           if (tab.url != APP_URL) {
              if (callback) callback(tab);
              chrome.tabs.remove(tab.id, function() {
                log("Tab removed: " + JSON.stringify(tab));
@@ -171,7 +171,7 @@ function closeSpecificTabs(start, end, callback) {
     for (var i = start; i <= end; i++) {
       var tab = tabs[i];
       if (start > 0 && end < tabs.length) {
-        if (tab.url != "chrome-extension://ecbiglglpcmpjmdplphadimldeldkpbl/index.html") {
+        if (tab.url != APP_URL) {
           if (callback) callback(tab);
           chrome.tabs.remove(tab.id, function() {
             log("Tab removed: " + JSON.stringify(tab));
