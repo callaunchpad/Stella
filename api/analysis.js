@@ -104,7 +104,7 @@ function doTabAction(text) {
     API.Tabs.closeSpecificTab(text); return true; // If not voice web
   } else if ((text.contains("close the ") && text.contains("tabs")) || (text.contains("closed the ") && text.contains("tabs"))) {
     API.Tabs.closeSpecificTabs(text); return true; // If not voice web
-  } else if (text.contains("enter memory save mode")) {
+  } else if (text.contains("enter memory save mode") || text.contains("enter memory safe mode") || text.contains("enter memories safe mode") || text.contains("enter memories save mode")) {
     API.Tabs.discardNonActiveTabs(); return true;
   }
   API.Core.dontUnderstand();
