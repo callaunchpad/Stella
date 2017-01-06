@@ -11,7 +11,7 @@ function capitalize(s) { return s.replace(/\S/, function(m) { return m.toUpperCa
 String.prototype.contains = function(substr) { return this.indexOf(substr) != -1; }
 String.prototype.getWords = function(startIndex, endIndex) { return this.split(" ").slice(startIndex, endIndex).join(" "); }
 String.prototype.remove = function(substr) { return this.replace(substr, ""); };
-String.prototype.isQuestion = function() { return ["are", "who", "what", "when", "where", "why", "will", "how", "whom", "whose", "which", "is", "did"].includes(this.getWords(0, 1)); }
+String.prototype.isQuestion = function() { return ["are", "who", "what", "when", "where", "why", "will", "how", "whom", "whose", "which", "is", "did", "can", "could", "would", "may"].includes(this.getWords(0, 1)); }
 
 function ordinalToNum(text) {
   if (text.contains("first")) text = text.replace("first", "1");
