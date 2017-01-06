@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
-  "name": "Voice Web",
-  "description": "A Launchpad app that browses the web using your voice",
+  "name": "Stella Voice Control",
+  "description": "A Launchpad app that allows users to browse the web through voice control",
   "version": "1.0",
   "icons": {
     "16": "public/img/favicon-16x16.png",

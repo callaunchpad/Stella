@@ -50,7 +50,7 @@ function requestSearch(text, engine) {
     query = text.replace("google", "");
   }
   if (engine == "youtube") youtubeSearch(text, query)
-  else googleSearch(query);
+    else googleSearch(query);
 }
 
 API.Search = {

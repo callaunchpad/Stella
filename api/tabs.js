@@ -9,29 +9,29 @@ function refocus(callback) {
 }
 
 function discardAllAudibleTabs(callback) {
-    var query = { audible: true };
-    chrome.tabs.query(query, function(tabs) {
-        for (var i = 0; i < tabs.length; i++) {
-            var tab = tabs[i];
-            chrome.tabs.discard(tab.id, function(tab) {
-                log("Removed tab from memory. Click tab again to reload." + JSON.stringify(tab));
-            });
-        }
-        callback(tabs);
-    });
+  var query = { audible: true };
+  chrome.tabs.query(query, function(tabs) {
+    for (var i = 0; i < tabs.length; i++) {
+      var tab = tabs[i];
+      chrome.tabs.discard(tab.id, function(tab) {
+        log("Removed tab from memory. Click tab again to reload." + JSON.stringify(tab));
+      });
+    }
+    callback(tabs);
+  });
 }
 
 function memorySaveMode(callback) {
-    var query = { active: false }
-    chrome.tabs.query(query, function(tabs) {
-        for (var i = 0; i < tabs.length; i++) {
-            var tab = tabs[i];
-            chrome.tabs.discard(tab.id, function(tab) {
-                log("Removed tab from memory. Click tab again to reload." + JSON.stringify(tab));
-            });
-        }
-        callback(tabs);
-    });
+  var query = { active: false }
+  chrome.tabs.query(query, function(tabs) {
+    for (var i = 0; i < tabs.length; i++) {
+      var tab = tabs[i];
+      chrome.tabs.discard(tab.id, function(tab) {
+        log("Removed tab from memory. Click tab again to reload." + JSON.stringify(tab));
+      });
+    }
+    callback(tabs);
+  });
 }
 
 function getCurrentTab(callback) {
@@ -46,7 +46,7 @@ function getCurrentTab(callback) {
 
 function openEmptyTab(callback) {
   chrome.tabs.create({}, function(tab) {
-      callback(tab);
+    callback(tab);
   });
 }
 
@@ -60,55 +60,55 @@ function openNewTab(url, callback) {
 function duplicateTab(tabId, callback) {
     // tabId: integer
     chrome.tabs.duplicate(tabId, function(tab) {
-        callback(tab);
+      callback(tab);
     });
-}
+  }
 
-function closeCurrentTab(callback) {
-  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+  function closeCurrentTab(callback) {
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
      var tab = tabs[0];
      chrome.tabs.remove(tab.id, function() {
        log("Tab removed: " + JSON.stringify(tab));
        if (callback) callback(tab);
      });
-  });
-}
+   });
+  }
 
-function closeFirstTabs(num, callback) {
-  var query = { currentWindow: true };
-  chrome.tabs.query(query, function(tabs) {
-    while (num > 0) {
-      var tab = tabs[num];
-      if (tab.url != APP_URL) {
-        if (callback) callback(tab);
-        chrome.tabs.remove(tab.id, function() {
-          log("Tab removed: " + JSON.stringify(tab));
-        });
+  function closeFirstTabs(num, callback) {
+    var query = { currentWindow: true };
+    chrome.tabs.query(query, function(tabs) {
+      while (num > 0) {
+        var tab = tabs[num];
+        if (tab.url != APP_URL) {
+          if (callback) callback(tab);
+          chrome.tabs.remove(tab.id, function() {
+            log("Tab removed: " + JSON.stringify(tab));
+          });
+        }
+        num--;
       }
-      num--;
-    }
-  });
-}
+    });
+  }
 
-function closeLastTabs(num, callback) {
-  var query = { currentWindow: true };
-  chrome.tabs.query(query, function(tabs) {
-    var counter = 0;
-    while (counter < num && counter < tabs.length - 1) {
-      var tab = tabs[tabs.length - 1 - counter];
-      if (tab.url != APP_URL) {
-        if (callback) callback(tab);
-        chrome.tabs.remove(tab.id, function() {
-          log("Tab removed: " + JSON.stringify(tab));
-        });
+  function closeLastTabs(num, callback) {
+    var query = { currentWindow: true };
+    chrome.tabs.query(query, function(tabs) {
+      var counter = 0;
+      while (counter < num && counter < tabs.length - 1) {
+        var tab = tabs[tabs.length - 1 - counter];
+        if (tab.url != APP_URL) {
+          if (callback) callback(tab);
+          chrome.tabs.remove(tab.id, function() {
+            log("Tab removed: " + JSON.stringify(tab));
+          });
+        }
+        counter++;
       }
-      counter++;
-    }
-  });
-}
+    });
+  }
 
-function closeNextTabs(num, callback) {
-  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+  function closeNextTabs(num, callback) {
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
      var activeTab = tabs[0];
      var query = { currentWindow: true };
      chrome.tabs.query(query, function(tabs) {
@@ -133,11 +133,11 @@ function closeNextTabs(num, callback) {
          num--;
        }
      });
-  });
-}
+   });
+  }
 
-function closePreviousTabs(num, callback) {
-  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+  function closePreviousTabs(num, callback) {
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
      var activeTab = tabs[0];
      var query = { currentWindow: true };
      chrome.tabs.query(query, function(tabs) {
@@ -162,67 +162,67 @@ function closePreviousTabs(num, callback) {
          num--;
        }
      });
-  });
-}
+   });
+  }
 
-function closeSpecificTabs(start, end, callback) {
-  var query = { currentWindow: true };
-  chrome.tabs.query(query, function(tabs) {
-    for (var i = start; i <= end; i++) {
-      var tab = tabs[i];
-      if (start > 0 && end < tabs.length) {
-        if (tab.url != APP_URL) {
-          if (callback) callback(tab);
-          chrome.tabs.remove(tab.id, function() {
-            log("Tab removed: " + JSON.stringify(tab));
-          });
+  function closeSpecificTabs(start, end, callback) {
+    var query = { currentWindow: true };
+    chrome.tabs.query(query, function(tabs) {
+      for (var i = start; i <= end; i++) {
+        var tab = tabs[i];
+        if (start > 0 && end < tabs.length) {
+          if (tab.url != APP_URL) {
+            if (callback) callback(tab);
+            chrome.tabs.remove(tab.id, function() {
+              log("Tab removed: " + JSON.stringify(tab));
+            });
+          }
         }
       }
-    }
+    });
+  }
+
+  function openSpecificTab(index, callback) {
+    var query = { currentWindow: true };
+    chrome.tabs.query(query, function(tabs) {
+      if (index > 0 && index < tabs.length) {
+        var tab = tabs[index];
+        chrome.tabs.update(tab.id, { active: true, highlighted: true }, function(tab) {
+          callback(tab);
+        });
+      }
+    });
+  }
+
+  function reopen(num, callback) {
+    var query = { text: '', maxResults: num };
+    chrome.history.search(query, function(results) {
+      for (var i = 0; i < results.length; i++) {
+        openNewTab(results[i].url, callback);
+      }
+    })
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    getCurrentTab(function(tab) {
+      renderStatus('Current Tab URL: ' + tab.url);
+    });
   });
-}
 
-function openSpecificTab(index, callback) {
-  var query = { currentWindow: true };
-  chrome.tabs.query(query, function(tabs) {
-    if (index > 0 && index < tabs.length) {
-      var tab = tabs[index];
-      chrome.tabs.update(tab.id, { active: true, highlighted: true }, function(tab) {
-        callback(tab);
-      });
-    }
-  });
-}
-
-function reopen(num, callback) {
-  var query = { text: '', maxResults: num };
-  chrome.history.search(query, function(results) {
-    for (var i = 0; i < results.length; i++) {
-      openNewTab(results[i].url, callback);
-    }
-  })
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-  getCurrentTab(function(tab) {
-    renderStatus('Current Tab URL: ' + tab.url);
-  });
-});
-
-var Tabs = {
-  refocus: refocus,
-  muteTabs: discardAllAudibleTabs,
-  memSave: memorySaveMode,
-  getCurrent: getCurrentTab,
-  openEmpty: openEmptyTab,
-  openNew: openNewTab,
-  duplicate: duplicateTab,
-  closeCurrent: closeCurrentTab,
-  closeFirstTabs: closeFirstTabs,
-  closeLastTabs: closeLastTabs,
-  closeNextTabs: closeNextTabs,
-  closePrevTabs: closePreviousTabs,
-  closeSpecificTabs: closeSpecificTabs,
-  openSpecificTab: openSpecificTab,
-  reopen: reopen
-}
+  var Tabs = {
+    refocus: refocus,
+    muteTabs: discardAllAudibleTabs,
+    memSave: memorySaveMode,
+    getCurrent: getCurrentTab,
+    openEmpty: openEmptyTab,
+    openNew: openNewTab,
+    duplicate: duplicateTab,
+    closeCurrent: closeCurrentTab,
+    closeFirstTabs: closeFirstTabs,
+    closeLastTabs: closeLastTabs,
+    closeNextTabs: closeNextTabs,
+    closePrevTabs: closePreviousTabs,
+    closeSpecificTabs: closeSpecificTabs,
+    openSpecificTab: openSpecificTab,
+    reopen: reopen
+  }

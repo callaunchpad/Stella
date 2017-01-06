@@ -1,5 +1,5 @@
 chrome.browserAction.onClicked.addListener(function(activeTab) {
-  var query = { url: "chrome-extension://fkejanlfomiednfigechphohcjaklelo/index.html" };
+  var query = { url: "chrome-extension://" + chrome.runtime.id + "/index.html" };
   chrome.tabs.query(query, function(tabs) {
     if (tabs.length == 0) {
       // var windowSpecs = {width: 620, height: 430, type: 'normal', state: 'normal', focused: true, url: APP_URL};
