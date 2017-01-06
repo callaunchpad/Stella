@@ -41,6 +41,15 @@ function ordinalToNum(text) {
   if (text.contains("fourty")) text = text.replace("fourty", "4");
   if (text.contains("fiftieth")) text = text.replace("fiftieth", "50");
   if (text.contains("fifty")) text = text.replace("fifty", "5");
+  if (text.contains("sixtieth")) text = text.replace("sixtieth", "60");
+  if (text.contains("sixty")) text = text.replace("sixty", "6");
+  if (text.contains("seventieth")) text = text.replace("seventieth", "70");
+  if (text.contains("seventy")) text = text.replace("seventy", "7");
+  if (text.contains("eightieth")) text = text.replace("eightieth", "80");
+  if (text.contains("eighty")) text = text.replace("eighty", "8");
+  if (text.contains("ninetieth")) text = text.replace("ninetieth", "90");
+  if (text.contains("ninety")) text = text.replace("ninety", "9");
+  if (text.contains("hundredth")) text = text.replace("hundredth", "100");
   text = text.replace(" ", "");
   return parseInt(text);
 }
