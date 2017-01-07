@@ -145,6 +145,7 @@ function closeSpecificTabs(text) {
 function discardNonActiveTabs() {
   Tabs.memSave(function (tabs) {
     log("Dicarded the following tabs from memory: " + tabs);
+    tts.say("Background chrome tabs have been unloaded from memory. Simply click on them to reload.")
   });
 }
 
