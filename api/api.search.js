@@ -8,7 +8,7 @@ function googleSearch(query) {
   var url = 'http://google.com/search?q=' + query;
   Tabs.openNew(url, function(tab) {
     log("Searched Google for " + query);
-    chrome.tabs.executeScript(null, { file: "dom/preview.js" }, function(result) {
+    chrome.tabs.executeScript(null, { file: "api/dom/preview.js" }, function(result) {
       console.log("Previews Google feature text");
     });
   });
@@ -24,8 +24,8 @@ function youtubeSearch(text, custom) {
   var url = 'http://youtube.com/search?q=' + query;
   Tabs.openNew(url, function(tab) {
     log("Searched Youtube for " + query);
-    if (!custom) Click.clickYoutube(true, null);
-    else CLick.clickYoutube(false, custom);
+    if (!custom) Click.youtube(true, null);
+    else CLick.youtube(false, custom);
   });
 }
 

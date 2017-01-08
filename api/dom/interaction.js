@@ -62,10 +62,11 @@ var Scroll = {
 
 function clickLink(content) {
   chrome.tabs.executeScript(null, { file: "scripts/jquery.min.js" }, function() {
-    var contentString = "var query = 'a:casecontains(" + content + ")'; var elementInView = true;";
-    console.log(contentString);
-    chrome.tabs.executeScript(null, { code: contentString }, function() {
-      chrome.tabs.executeScript(null, { file: "dom/click.js" });
+    var command = "var query = 'a:casecontains(" + content + ")'; var elementInView = true;";
+    chrome.tabs.executeScript(null, { code: command }, function() {
+      chrome.tabs.executeScript(null, { file: "api/dom/utils.js" }, function() {
+        chrome.tabs.executeScript(null, { file: "api/dom/click.js" });
+      });
     });
   });
 }
@@ -73,18 +74,45 @@ function clickLink(content) {
 function clickYoutubeLink(first, custom) {
   chrome.tabs.executeScript(null, { file: "scripts/jquery.min.js" }, function() {
     if (first) {
-      var contentString = "var videos = $('a.yt-uix-tile-link.yt-ui-ellipsis.yt-ui-ellipsis-2.yt-uix-sessionlink.spf-link[href*=\"/watch?v=\"]'); if (videos.length > 0) videos[0].click();";
-      chrome.tabs.executeScript(null, { code: contentString }, function() {});
+      var command = "var videos = $('a.yt-uix-tile-link.yt-ui-ellipsis.yt-ui-ellipsis-2.yt-uix-sessionlink.spf-link[href*=\"/watch?v=\"]'); if (videos.length > 0) videos[0].click();";
+      chrome.tabs.executeScript(null, { code: command }, function() {});
     } else if (custom) {
-      var contentString = "var query = 'a.yt-uix-tile-link.yt-ui-ellipsis.yt-ui-ellipsis-2.yt-uix-sessionlink.spf-link[href*=\"/watch?v=\"]:casecontains(" + custom + ")'; var elementInView = false;"
-      chrome.tabs.executeScript(null, { code: contentString }, function() {
-        chrome.tabs.executeScript(null, { file: "dom/click.js" });
+      var command = "var query = 'a.yt-uix-tile-link.yt-ui-ellipsis.yt-ui-ellipsis-2.yt-uix-sessionlink.spf-link[href*=\"/watch?v=\"]:casecontains(" + custom + ")'; var elementInView = false;"
+      chrome.tabs.executeScript(null, { code: command }, function() {
+        chrome.tabs.executeScript(null, { file: "api/dom/utils.js" }, function() {
+          chrome.tabs.executeScript(null, { file: "api/dom/click.js" });
+        });
       });
     }
   });
 }
 
 var Click = {
-  refLink: clickLink,
-  clickYoutube: clickYoutubeLink
+  link: clickLink,
+  youtube: clickYoutubeLink
+}
+
+// Typing
+
+function typeInTextbox(input, label) {
+  chrome.tabs.executeScript(null, { file: "scripts/jquery.min.js" }, function() {
+    console.log("Input: " + input);
+    console.log("Label: " + label);
+    chrome.tabs.executeScript(null, { file: "api/dom/utils.js" }, function() {
+      var command = "var input = \"" + input + "\"; var label = \"" + label + "\";";
+      chrome.tabs.executeScript(null, { code: command }, function() {
+        chrome.tabs.executeScript(null, { file: "api/dom/type.js" }, function(result) {
+          console.log("Result: " + result);
+          if (result == "false") {
+            tts.say("I couldn't find the textbox. However, I relabeled the textboxes. Please ask again!");
+            console.log("Couldn't find textbox!");
+          }
+        });
+      });
+    });
+  });
+}
+
+var Type = {
+  textbox: typeInTextbox
 }

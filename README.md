@@ -43,6 +43,10 @@ Supported Commands:
     <td class="action">Clicks on the first visible link on screen that contains the specified <i>text</i></td>
   </tr>
   <tr>
+    <td class="command">Type <i>phrase</i> in a box <i>label</i></td>
+    <td class="action">Types the phrase into the text box with the matching label</td>
+  </tr>
+  <tr>
     <td class="command">Scroll up&nbsp;/&nbsp;down a little</td>
     <td class="action">Scrolls any webpage up&nbsp;/&nbsp;down 200 pixels</td>
   </tr>
