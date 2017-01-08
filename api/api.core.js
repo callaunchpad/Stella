@@ -13,18 +13,18 @@ function goToSleep() {
 
 function focus() {
   Tabs.refocus(function(tab) {
-    log(TRIGGER_NAME + " refocused: " + tab.id);
+    Debug.log(TRIGGER_NAME + " refocused: " + tab.id);
     tts.say("Hello, what would you like me to do?");
   })
 }
 
 function openDocumentation() {
   $('.chat-container').stop().animate({ left: '50%' }, '6000', 'swing', function() {
-    console.log('Finished animating');
+    Debug.log('Finished animating');
   });
   setTimeout(function() {
     $('.table-container').stop().animate({ top: '0' }, '3000', 'swing', function() {
-      console.log('Finished animating');
+      Debug.log('Finished animating');
     });
   }, 100);
   tts.say("Here are some things I can do.");
@@ -32,13 +32,13 @@ function openDocumentation() {
 }
 
 function closeDocumentation() {
-  console.log("CLOSING DOCS");
+  Debug.log("CLOSING DOCS");
   $('.table-container').stop().animate({ top: '100%' }, '2000', 'swing', function() {
-    console.log('Finished animating');
+    Debug.log('Finished animating');
   });
   setTimeout(function() {
     $('.chat-container').stop().animate({ left: '25%' }, '50000', 'swing', function() {
-      console.log('Finished animating');
+      Debug.log('Finished animating');
     });
   }, 100);
 }

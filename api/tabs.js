@@ -14,7 +14,7 @@ function discardAllAudibleTabs(callback) {
     for (var i = 0; i < tabs.length; i++) {
       var tab = tabs[i];
       chrome.tabs.discard(tab.id, function(tab) {
-        log("Removed tab from memory. Click tab again to reload." + JSON.stringify(tab));
+        Debug.log("Removed tab from memory. Click tab again to reload." + JSON.stringify(tab));
       });
     }
     callback(tabs);
@@ -27,7 +27,7 @@ function memorySaveMode(callback) {
     for (var i = 0; i < tabs.length; i++) {
       var tab = tabs[i];
       chrome.tabs.discard(tab.id, function(tab) {
-        log("Removed tab from memory. Click tab again to reload." + JSON.stringify(tab));
+        Debug.log("Removed tab from memory. Click tab again to reload." + JSON.stringify(tab));
       });
     }
     callback(tabs);
@@ -68,7 +68,7 @@ function duplicateTab(tabId, callback) {
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
      var tab = tabs[0];
      chrome.tabs.remove(tab.id, function() {
-       log("Tab removed: " + JSON.stringify(tab));
+       Debug.log("Tab removed: " + JSON.stringify(tab));
        if (callback) callback(tab);
      });
    });
@@ -82,7 +82,7 @@ function duplicateTab(tabId, callback) {
         if (tab.url != APP_URL) {
           if (callback) callback(tab);
           chrome.tabs.remove(tab.id, function() {
-            log("Tab removed: " + JSON.stringify(tab));
+            Debug.log("Tab removed: " + JSON.stringify(tab));
           });
         }
         num--;
@@ -99,7 +99,7 @@ function duplicateTab(tabId, callback) {
         if (tab.url != APP_URL) {
           if (callback) callback(tab);
           chrome.tabs.remove(tab.id, function() {
-            log("Tab removed: " + JSON.stringify(tab));
+            Debug.log("Tab removed: " + JSON.stringify(tab));
           });
         }
         counter++;
@@ -126,7 +126,7 @@ function duplicateTab(tabId, callback) {
            if (tab.url != APP_URL) {
              if (callback) callback(tab);
              chrome.tabs.remove(tab.id, function() {
-               log("Tab removed: " + JSON.stringify(tab));
+               Debug.log("Tab removed: " + JSON.stringify(tab));
              });
            }
          }
@@ -155,7 +155,7 @@ function duplicateTab(tabId, callback) {
            if (tab.url != APP_URL) {
              if (callback) callback(tab);
              chrome.tabs.remove(tab.id, function() {
-               log("Tab removed: " + JSON.stringify(tab));
+               Debug.log("Tab removed: " + JSON.stringify(tab));
              });
            }
          }
@@ -174,7 +174,7 @@ function duplicateTab(tabId, callback) {
           if (tab.url != APP_URL) {
             if (callback) callback(tab);
             chrome.tabs.remove(tab.id, function() {
-              log("Tab removed: " + JSON.stringify(tab));
+              Debug.log("Tab removed: " + JSON.stringify(tab));
             });
           }
         }

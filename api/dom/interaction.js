@@ -12,7 +12,7 @@ function scrollUp(amount) {
           '1000',
           'swing',
           function() {
-            console.log('Finished animating');
+            Debug.log('Finished animating');
           });
       } else {
         chrome.tabs.executeScript(null, { file: "scripts/jquery.min.js" }, function() {
@@ -35,7 +35,7 @@ function scrollDown(amount) {
           '1000',
           'swing',
           function() {
-            console.log('Finished animating');
+            Debug.log('Finished animating');
           });
       } else {
         chrome.tabs.executeScript(null, { file: "scripts/jquery.min.js" }, function() {
@@ -96,16 +96,16 @@ var Click = {
 
 function typeInTextbox(input, label) {
   chrome.tabs.executeScript(null, { file: "scripts/jquery.min.js" }, function() {
-    console.log("Input: " + input);
-    console.log("Label: " + label);
+    Debug.log("Input: " + input);
+    Debug.log("Label: " + label);
     chrome.tabs.executeScript(null, { file: "api/dom/utils.js" }, function() {
       var command = "var input = \"" + input + "\"; var label = \"" + label + "\";";
       chrome.tabs.executeScript(null, { code: command }, function() {
         chrome.tabs.executeScript(null, { file: "api/dom/client/type.js" }, function(result) {
-          console.log("Result: " + result);
+          Debug.log("Result: " + result);
           if (result == "false") {
             tts.say("I couldn't find the textbox. However, I relabeled the textboxes. Please ask again!");
-            console.log("Couldn't find textbox!");
+            Debug.log("Couldn't find textbox!");
           }
         });
       });

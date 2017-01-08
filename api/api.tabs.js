@@ -5,7 +5,7 @@ function goToWebsite(text) {
     if (!url.contains("http://")) url = "http://" + url;
     responseMessage('Going to: ' + url);
     Tabs.openNew(url, function(tab) {
-      log("New tab at " + url + " created: " + JSON.stringify(tab));
+      Debug.log("New tab at " + url + " created: " + JSON.stringify(tab));
     });
   } else {
     tts.say('Sorry, I cannot find the url you requested.');
@@ -14,7 +14,7 @@ function goToWebsite(text) {
 
 function openEmptyTab() {
   Tabs.openEmpty(function(tab) {
-    log("New Empty Tab Created: " + JSON.stringify(tab));
+    Debug.log("New Empty Tab Created: " + JSON.stringify(tab));
   });
 }
 
@@ -30,7 +30,7 @@ function openSpecificTab(text) {
 function discardNonActiveAudibleTabs() {
   responseMessage('Muted all audible tabs.');
   Tabs.muteTabs(function(tabs) {
-    log("Muted all audible tabs " + tabs);
+    Debug.log("Muted all audible tabs " + tabs);
   });
 }
 
@@ -79,7 +79,7 @@ function closeRecentTabs(text) {
 }
 
 function closePreviousTab() {
-  console.log('closing previous tab');
+  Debug.log('closing previous tab');
   Tabs.closePrevTabs(1, function(tab) {
     responseMessage("Closed tab: " + tab.url);
   });
@@ -93,14 +93,14 @@ function closePreviousTabs(text) {
     var textArr = text.split(" ");
     num = textTonum(textArr[textArr.indexOf("previous") + 1]);
   }
-  console.log('closing previous' + num + 'tabs');
+  Debug.log('closing previous' + num + 'tabs');
   Tabs.closePrevTabs(num, function(tab) {
     responseMessage("Closed tab: " + tab.url);
   });
 }
 
 function closeNextTab() {
-  console.log('closing next tab');
+  Debug.log('closing next tab');
   Tabs.closeNextTabs(1, function(tab) {
     responseMessage("Closed tab: " + tab.url);
   });
@@ -114,7 +114,7 @@ function closeNextTabs(text) {
     var textArr = text.split(" ");
     num = textTonum(textArr[textArr.indexOf("next") + 1]);
   }
-  console.log('closing next' + num + 'tabs');
+  Debug.log('closing next' + num + 'tabs');
   Tabs.closeNextTabs(num, function(tab) {
     responseMessage("Closed tab: " + tab.url);
   });
@@ -123,7 +123,7 @@ function closeNextTabs(text) {
 function closeSpecificTab(text) {
   var textArr = text.split(" ");
   var num = ordinalToNum(textArr[textArr.indexOf("tab") - 1]);
-  console.log('closing the ' + (textArr[textArr.indexOf("tab") - 1]) + ' tab');
+  Debug.log('closing the ' + (textArr[textArr.indexOf("tab") - 1]) + ' tab');
   var index = num - 1;
   Tabs.closeSpecificTabs(index, index, function(tab) {
     responseMessage("Closed tab: " + tab.url);
@@ -134,7 +134,7 @@ function closeSpecificTabs(text) {
   var textArr = text.split(" ");
   var startNum = ordinalToNum(textArr[textArr.indexOf("the") + 1]);
   var endNum = ordinalToNum(textArr[textArr.indexOf("tabs") - 1]);
-  console.log('closing the ' + (textArr[textArr.indexOf("the") + 1]) + ' to ' + (textArr[textArr.indexOf("tabs") - 1]) + 'tabs');
+  Debug.log('closing the ' + (textArr[textArr.indexOf("the") + 1]) + ' to ' + (textArr[textArr.indexOf("tabs") - 1]) + 'tabs');
   var start = startNum - 1;
   var end = endNum - 1;
   Tabs.closeSpecificTabs(start, end, function(tab) {
@@ -144,7 +144,7 @@ function closeSpecificTabs(text) {
 
 function discardNonActiveTabs() {
   Tabs.memSave(function (tabs) {
-    log("Dicarded the following tabs from memory: " + tabs);
+    Debug.log("Dicarded the following tabs from memory: " + tabs);
     tts.say("Background chrome tabs have been unloaded from memory. Simply click on them to reload.")
   });
 }
@@ -158,7 +158,7 @@ function reopenTabs(text) {
     num = textTonum(textArr[textArr.indexOf("last") + 1]);
   }
   Tabs.reopen(num, function (tab) {
-    log("Reopened site: " + tab.url);
+    Debug.log("Reopened site: " + tab.url);
   });
 }
 

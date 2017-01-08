@@ -1,5 +1,5 @@
 function answerQuestion(text) {
-  log('Searching Google for ' + text);
+  Debug.log('Searching Google for ' + text);
   tts.say('Searching Google for ' + text);
   googleSearch(text);
 }
@@ -7,9 +7,9 @@ function answerQuestion(text) {
 function googleSearch(query) {
   var url = 'http://google.com/search?q=' + query;
   Tabs.openNew(url, function(tab) {
-    log("Searched Google for " + query);
+    Debug.log("Searched Google for " + query);
     chrome.tabs.executeScript(null, { file: "api/dom/preview.js" }, function(result) {
-      console.log("Previews Google feature text");
+      Debug.log("Previews Google feature text");
     });
   });
 }
@@ -18,21 +18,21 @@ function youtubeSearch(text, custom) {
   var playPhrases = ["play a video of ", "play the song ", "play some ", "play "];
   for (var i = 0; i < playPhrases.length; i++) {
     if (text.contains(playPhrases[i])) text = text.replace(playPhrases[i], "");
-    console.log(text);
+    Debug.log(text);
   }
   var query = text;
   var url = 'http://youtube.com/search?q=' + query;
   Tabs.openNew(url, function(tab) {
-    log("Searched Youtube for " + query);
+    Debug.log("Searched Youtube for " + query);
     if (!custom) Click.youtube(true, null);
-    else CLick.youtube(false, custom);
+    else Click.youtube(false, custom);
   });
 }
 
 function requestSearch(text, engine) {
   var textArr = text.split(" ");
   var query = '';
-  console.log(textArr);
+  Debug.log(textArr);
   if (textArr[0] == "look" && textArr[1] == "up") {
     query = text.replace("look up", "");
   } else if (textArr[0] == "search") {

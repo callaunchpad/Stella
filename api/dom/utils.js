@@ -34,5 +34,4 @@ Utils.prototype = {
     }
   }
 };
-
 var Utils = new Utils();

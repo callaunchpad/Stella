@@ -1,7 +1,6 @@
 var textboxes = $('input:attributecasecontains(placeholder,' + label + ')');
 if (textboxes.length > 0) {
    var textbox = textboxes[0];
-   console.log(textbox);
    textbox.value = input;
    true;
 } else {

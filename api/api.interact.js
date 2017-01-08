@@ -3,7 +3,7 @@ function handleLink(text) {
   content = content.replace("click the link that says ", "");
   content = content.replace("click on the link that contains ", "");
   content = content.replace("click the link that contains ", "");
-  console.log("Trying to click on link containing: " + content);
+  Debug.log("Trying to click on link containing: " + content);
   Click.link(content);
 }
 
@@ -16,7 +16,7 @@ function handleTextbox(text) {
   } else {
     label = phrase.slice(phrase.indexOf("input") + 1, phrase.length).join(" ");
   }
-  console.log("Parsed text!");
+  Debug.log("Parsed text!");
   Type.textbox(input, label);
 }
 
