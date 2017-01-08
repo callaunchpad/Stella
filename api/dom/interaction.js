@@ -65,7 +65,7 @@ function clickLink(content) {
     var command = "var query = 'a:casecontains(" + content + ")'; var elementInView = true;";
     chrome.tabs.executeScript(null, { code: command }, function() {
       chrome.tabs.executeScript(null, { file: "api/dom/utils.js" }, function() {
-        chrome.tabs.executeScript(null, { file: "api/dom/click.js" });
+        chrome.tabs.executeScript(null, { file: "api/dom/client/click.js" });
       });
     });
   });
@@ -80,7 +80,7 @@ function clickYoutubeLink(first, custom) {
       var command = "var query = 'a.yt-uix-tile-link.yt-ui-ellipsis.yt-ui-ellipsis-2.yt-uix-sessionlink.spf-link[href*=\"/watch?v=\"]:casecontains(" + custom + ")'; var elementInView = false;"
       chrome.tabs.executeScript(null, { code: command }, function() {
         chrome.tabs.executeScript(null, { file: "api/dom/utils.js" }, function() {
-          chrome.tabs.executeScript(null, { file: "api/dom/click.js" });
+          chrome.tabs.executeScript(null, { file: "api/dom/client/click.js" });
         });
       });
     }
@@ -101,7 +101,7 @@ function typeInTextbox(input, label) {
     chrome.tabs.executeScript(null, { file: "api/dom/utils.js" }, function() {
       var command = "var input = \"" + input + "\"; var label = \"" + label + "\";";
       chrome.tabs.executeScript(null, { code: command }, function() {
-        chrome.tabs.executeScript(null, { file: "api/dom/type.js" }, function(result) {
+        chrome.tabs.executeScript(null, { file: "api/dom/client/type.js" }, function(result) {
           console.log("Result: " + result);
           if (result == "false") {
             tts.say("I couldn't find the textbox. However, I relabeled the textboxes. Please ask again!");

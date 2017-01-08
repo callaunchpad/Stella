@@ -3,7 +3,7 @@ function handleLink(text) {
   content = content.replace("click the link that says ", "");
   content = content.replace("click on the link that contains ", "");
   content = content.replace("click the link that contains ", "");
-  console.log("Trying to click on link containing:" + content);
+  console.log("Trying to click on link containing: " + content);
   Click.link(content);
 }
 
