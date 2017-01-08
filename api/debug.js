@@ -2,7 +2,7 @@
 
 function Debug() {}
 Debug.prototype = {
-	activated: false,
+	activated: true,
 	log: function(message) {
 		if (this.activated) {
 			console.log(message);

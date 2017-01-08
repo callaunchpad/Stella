@@ -16,16 +16,23 @@ function googleSearch(query) {
 
 function youtubeSearch(text, custom) {
   var playPhrases = ["play a video of ", "play the song ", "play some ", "play "];
+  var playVideo = false;
   for (var i = 0; i < playPhrases.length; i++) {
-    if (text.contains(playPhrases[i])) text = text.replace(playPhrases[i], "");
+    if (text.contains(playPhrases[i])) {
+      custom = text.replace(playPhrases[i], "");
+      playVideo = true;
+    }
     Debug.log(text);
   }
-  var query = text;
+  var query = custom;
   var url = 'http://youtube.com/search?q=' + query;
   Tabs.openNew(url, function(tab) {
     Debug.log("Searched Youtube for " + query);
-    if (!custom) Click.youtube(true, null);
-    else Click.youtube(false, custom);
+    if (playVideo) {
+      Click.youtube(true, null)
+    }
+    // if (!custom) Click.youtube(true, null);
+    // else Click.youtube(false, custom);
   });
 }
 
@@ -49,6 +56,7 @@ function requestSearch(text, engine) {
   } else if (textArr[0] == "google") {
     query = text.replace("google", "");
   }
+  Debug.log("Parsed query: " + query);
   if (engine == "youtube") youtubeSearch(text, query)
     else googleSearch(query);
 }
