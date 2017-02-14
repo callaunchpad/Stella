@@ -16,6 +16,10 @@
     "url": "https://github.com/callaunchpad/VoiceWeb/issues"
   },
   "homepage": "https://github.com/callaunchpad/VoiceWeb#readme",
-  "dependencies": {},
+  "dependencies": {
+    "lapack": "^0.1.0",
+    "natural": "^0.5.0",
+    "wordnet-db": "^3.1.2"
+  },
   "devDependencies": {}
 }
