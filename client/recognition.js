@@ -28,8 +28,8 @@ if (!('webkitSpeechRecognition' in window)) {
     if (event.error == 'not-allowed') {
       if (event.timeStamp - start_timestamp < 100) {
         showInfo('info_blocked');
-        log('Mic recording not allowed');
-        chrome.tabs.create({active: false, url: APP_URL}, function(tab) { log("Premissions tab created: " + tab); });
+        Debug.log('Mic recording not allowed');
+        chrome.tabs.create({active: false, url: APP_URL}, function(tab) { Debug.log("Premissions tab created: " + tab); });
       } else {
         showInfo('info_denied');
       }
@@ -50,7 +50,7 @@ if (!('webkitSpeechRecognition' in window)) {
       return;
     }
     showInfo('');
-    log("Finished Speaking: " + final_transcript);
+    Debug.log("Finished Speaking: " + final_transcript);
     if (window.getSelection) {
       window.getSelection().removeAllRanges();
       var range = document.createRange();
@@ -88,7 +88,7 @@ if (!('webkitSpeechRecognition' in window)) {
 
 function toggleRecognition(event) {
   if (recognizing) {
-    log("Turning Mic Off");
+    Debug.log("Turning Mic Off");
     recognition.stop();
     return false;
   }
@@ -107,7 +107,7 @@ function toggleRecognition(event) {
 function forceStop() {
   forced_stop = true;
   if (recognizing) {
-    log("Forcing Mic Off");
+    Debug.log("Forcing Mic Off");
     recognition.stop();
     return;
   }

@@ -1,5 +1,5 @@
 function answerQuestion(text) {
-  log('Searching Google for ' + text);
+  Debug.log('Searching Google for ' + text);
   tts.say('Searching Google for ' + text);
   googleSearch(text);
 }
@@ -7,32 +7,39 @@ function answerQuestion(text) {
 function googleSearch(query) {
   var url = 'http://google.com/search?q=' + query;
   Tabs.openNew(url, function(tab) {
-    log("Searched Google for " + query);
-    chrome.tabs.executeScript(null, { file: "dom/preview.js" }, function(result) {
-      console.log("Previews Google feature text");
+    Debug.log("Searched Google for " + query);
+    chrome.tabs.executeScript(null, { file: "api/dom/preview.js" }, function(result) {
+      Debug.log("Previews Google feature text");
     });
   });
 }
 
 function youtubeSearch(text, custom) {
   var playPhrases = ["play a video of ", "play the song ", "play some ", "play "];
+  var playVideo = false;
   for (var i = 0; i < playPhrases.length; i++) {
-    if (text.contains(playPhrases[i])) text = text.replace(playPhrases[i], "");
-    console.log(text);
+    if (text.contains(playPhrases[i])) {
+      custom = text.replace(playPhrases[i], "");
+      playVideo = true;
+    }
+    Debug.log(text);
   }
-  var query = text;
+  var query = custom;
   var url = 'http://youtube.com/search?q=' + query;
   Tabs.openNew(url, function(tab) {
-    log("Searched Youtube for " + query);
-    if (!custom) Click.clickYoutube(true, null);
-    else CLick.clickYoutube(false, custom);
+    Debug.log("Searched Youtube for " + query);
+    if (playVideo) {
+      Click.youtube(true, null)
+    }
+    // if (!custom) Click.youtube(true, null);
+    // else Click.youtube(false, custom);
   });
 }
 
 function requestSearch(text, engine) {
   var textArr = text.split(" ");
   var query = '';
-  console.log(textArr);
+  Debug.log(textArr);
   if (textArr[0] == "look" && textArr[1] == "up") {
     query = text.replace("look up", "");
   } else if (textArr[0] == "search") {
@@ -49,6 +56,7 @@ function requestSearch(text, engine) {
   } else if (textArr[0] == "google") {
     query = text.replace("google", "");
   }
+  Debug.log("Parsed query: " + query);
   if (engine == "youtube") youtubeSearch(text, query)
     else googleSearch(query);
 }

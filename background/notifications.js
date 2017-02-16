@@ -2,7 +2,7 @@ var running = {};
 
 function clearNotification(notificationId) {
   chrome.notifications.clear(notificationId, function(cleared) {
-    log("Notification " + notificationId + " was cleared: " + cleared);
+    Debug.log("Notification " + notificationId + " was cleared: " + cleared);
     if (cleared) delete running[notificationId];
   })
 }
@@ -13,7 +13,7 @@ function getAllSessionNotifications() {
 
 function getAllSystemNotifications() {
   chrome.notifications.getAll(function(notifications) {
-    log(notifications);
+    Debug.log(notifications);
   });
 }
 
@@ -28,10 +28,10 @@ function createNotification(title, message, contextMessage) {
   }
 
   chrome.notifications.create(options, function(id) {
-    log("Notification created: " + id);
+    Debug.log("Notification created: " + id);
     running[id] = true;
     var timeout = setTimeout(clearNotification, 1500, id);
-    log("Last error:", chrome.runtime.lastError);
+    Debug.log("Last error:", chrome.runtime.lastError);
   })
 }
 

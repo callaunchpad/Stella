@@ -1,11 +1,26 @@
 chrome.runtime.onMessage.addListener(function(request) { sayParagraph(request.speechText); });
 
 function say(text) {
-  console.log("say: " + text);
+  Debug.log("say: " + text);
   responseMessage(text);
-  chrome.tts.isSpeaking(function(speaking) { console.log("Is speaking: " + speaking);});
-  var options = { enqueue: true, gender: 'female', lang: 'en-GB', pitch: 0.8, rate: 0.85, onEvent: function(event) { console.log('Event ' + event.type + ' at position ' + event.charIndex); if (event.type == 'error') console.log('Error: ' + event.errorMessage); } };
-  function catchError() { if (chrome.runtime.lastError) console.log('Error: ' + chrome.runtime.lastError.message); }
+  chrome.tts.isSpeaking(function(speaking) {
+    Debug.log("Is speaking: " + speaking);
+  });
+  var options = {
+    enqueue: true,
+    gender: 'female',
+    lang: 'en-GB',
+    pitch: 0.8,
+    rate: 0.85,
+    onEvent: function(event) {
+      Debug.log('Event ' + event.type + ' at position ' + event.charIndex);
+      if (event.type == 'error') Debug.log('Error: ' + event.errorMessage);
+    }
+  };
+  function catchError() { 
+    if (chrome.runtime.lastError)
+      Debug.log('Error: ' + chrome.runtime.lastError.message);
+  }
   chrome.tts.speak(text, options, catchError);
 }
 
@@ -16,7 +31,9 @@ function sayParagraph(paragraph) {
   }
 }
 
-function stop() { return chrome.tts.stop(); }
+function stop() {
+  return chrome.tts.stop();
+}
 
 var tts = {
   say: say,

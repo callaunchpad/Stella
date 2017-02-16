@@ -26,7 +26,7 @@ function doCoreAction(text) {
 }
 
 function doSearchAction(text) {
-  console.log(text);
+  Debug.log(text);
   if (!text.contains("youtube") && (text.contains("search") || text.contains("look up") || text.contains("google"))) {
     API.Search.requestSearch(text, "google"); return true;
   } else if (!text.contains("google") && (text.contains("search") || text.contains("look up") || text.contains("youtube"))) {
@@ -53,7 +53,9 @@ function doInteractAction(text) {
   } else if (text.contains("scroll down") || text.contains("scroll down more")) {
     API.Interact.Scroll.medDown(); return true;
   } else if (text.contains("click on the link that contains") || text.contains("click the link that contains") || text.contains("click on the link that says") || text.contains("click the link that says")) {
-    API.Interact.Click.handleLinkClick(text); return true;
+    API.Interact.Click.handleLink(text); return true;
+  } else if (text.contains("type") && (text.contains("in the box") || text.contains("in box") || text.contains("in the input") || text.contains("in input"))) {
+    API.Interact.Type.handleTextbox(text); return true;
   }
   return false;
 }
