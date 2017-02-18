@@ -109,6 +109,8 @@ function forceStop() {
   if (recognizing) {
     Debug.log("Forcing Mic Off");
     recognition.stop();
+    console.log(final_transcript);
+    takeAction(final_transcript);
     return;
   }
 }

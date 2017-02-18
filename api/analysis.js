@@ -1,5 +1,26 @@
 function takeAction(text) {
   text = text.toLowerCase();
+  console.log(text);
+  var tokens = natural.tokenizeAndStem(text);
+  var action;
+  console.log(tokens);
+  if (text.contains('tab')) {
+    var action = natural.tabClassifier.classify(tokens);
+    console.log(action);
+    natural.tabActionMap[action]();
+  } else if (text.contains('search')) {
+    var action = natural.searchClassifier.classify(tokens);
+    console.log(action);
+    natural.searchActionMap[action]();
+  } else {
+    var action = natural.otherClassifier.classify(tokens);
+    console.log(action);
+    natural.functionMap[action]();
+  }
+}
+
+function oldTakeAction(text) {
+  text = text.toLowerCase();
   var didAction = doCoreAction(text);
   text = text.toLowerCase().remove(TRIGGER_NAME + " ");
   if (!didAction) didAction = doInteractAction(text);
