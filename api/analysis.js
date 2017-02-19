@@ -9,11 +9,11 @@ function takeAction(text) {
 }
 
 function doCoreAction(text) {
-  natural.parseCommand(text);
-  if (text.contains("what can you do") || text.contains("open help menu") || text.contains("open help")) {
-    API.Core.openDocumentation(); return true;
-  } else if (text.contains("close help menu") || text.contains("close help")) {
+  if (text.contains("close help menu") || text.contains("close help")) {
     API.Core.closeDocumentation(); return true;
+  } else if(natural.shouldOpenHelp(text)){
+    // if (text.contains("what can you do") || text.contains("open help menu") || text.contains("open help")) {
+    API.Core.openDocumentation(); return true;
   } else if (text.contains("hello " + TRIGGER_NAME)) {
     API.Core.focus(); return true;
   } else if (text.contains(TRIGGER_NAME + " go to sleep")) {
