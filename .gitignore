@@ -1,3 +1,6 @@
 key/*
 node_modules/*
 .idea/*
+
+#because this file is recompiled each time changes are made, we can gitignore it
+npm/bundle.js
