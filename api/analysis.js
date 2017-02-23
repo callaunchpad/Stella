@@ -1,20 +1,14 @@
 function takeAction(text) {
   text = text.toLowerCase();
-  console.log(text);
   var tokens = natural.tokenizeAndStem(text);
-  var action;
-  console.log(tokens);
   if (text.contains('tab')) {
     var action = natural.tabClassifier.classify(tokens);
-    console.log(action);
     natural.tabActionMap[action]();
   } else if (text.contains('search')) {
     var action = natural.searchClassifier.classify(tokens);
-    console.log(action);
     natural.searchActionMap[action]();
   } else {
     var action = natural.otherClassifier.classify(tokens);
-    console.log(action);
     natural.functionMap[action]();
   }
 }
@@ -29,22 +23,22 @@ function oldTakeAction(text) {
   if (!didAction) didAction = doTabAction(text);
 }
 
-function doCoreAction(text) {
-  if (text.contains("what can you do") || text.contains("open help menu") || text.contains("open help")) {
-    API.Core.openDocumentation(); return true;
-  } else if (text.contains("close help menu") || text.contains("close help")) {
-    API.Core.closeDocumentation(); return true;
-  } else if (text.contains("hello " + TRIGGER_NAME)) {
-    API.Core.focus(); return true;
-  } else if (text.contains(TRIGGER_NAME + " go to sleep")) {
-    API.Core.goToSleep(); return true;
-  } else if (text.contains("continuous analysis")) {
-    API.Core.toggleContinuousAnalysis(text); return true;
-  } else if (text.contains("be quiet") || text.contains("stop speaking") || text.contains("shut up")) {
-    API.Core.stopSpeaking(); return true;
-  }
-  return false;
-}
+// function doCoreAction(text) {
+//   if (text.contains("what can you do") || text.contains("open help menu") || text.contains("open help")) {
+//     API.Core.openDocumentation(); return true;
+//   } else if (text.contains("close help menu") || text.contains("close help")) {
+//     API.Core.closeDocumentation(); return true;
+//   } else if (text.contains("hello " + TRIGGER_NAME)) {
+//     API.Core.focus(); return true;
+//   } else if (text.contains(TRIGGER_NAME + " go to sleep")) {
+//     API.Core.goToSleep(); return true;
+//   } else if (text.contains("continuous analysis")) {
+//     API.Core.toggleContinuousAnalysis(text); return true;
+//   } else if (text.contains("be quiet") || text.contains("stop speaking") || text.contains("shut up")) {
+//     API.Core.stopSpeaking(); return true;
+//   }
+//   return false;
+// }
 
 function doSearchAction(text) {
   Debug.log(text);
