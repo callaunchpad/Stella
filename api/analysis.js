@@ -9,11 +9,9 @@ function takeAction(text) {
   console.log(tokens);
   if (text.contains('tab') && !checkQuestion(text)) {
     var action = natural.tabClassifier.classify(tokens);
-    console.log(action);
     natural.tabActionMap[action]();
   } else if (text.contains('search')) {
     var action = natural.searchClassifier.classify(tokens);
-    console.log(action);
     natural.searchActionMap[action]();
   } else if (checkQuestion(text, tokens)){ 
   //a very hardcoded way to check if the user asked a general question to be searched
@@ -22,7 +20,6 @@ function takeAction(text) {
   } 
   else {
     var action = natural.otherClassifier.classify(tokens);
-    console.log(action);
     natural.functionMap[action]();
   }
 }
