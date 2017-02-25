@@ -26,18 +26,18 @@ var coreActionCommands = {
 };
 
 var searchActionMap = {
-  'request-search': API.Search.requestSearch,
+  // 'request-search': API.Search.requestSearch,
   'youtube-search': API.Search.youtubeSearch,
   'google-search': API.Search.googleSearch
 };
 
 var searchActionCommands = {
   //search
-  'request-search': ['search', 'look up', 'find', 'identify'],
+  // 'request-search': ['search', 'look up', 'find', 'identify'],
   // google search
   'google': ['google', 'online'],
   //youtube search
-  'youtube-search': ['play', 'video']
+  'youtube-search': ['play', 'video', 'youtube']
   //answerQuestion
 };
 

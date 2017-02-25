@@ -14,16 +14,23 @@ function googleSearch(query) {
   });
 }
 
-function youtubeSearch(text, custom) {
-  var playPhrases = ["play a video of ", "play the song ", "play some ", "play "];
+function youtubeSearch(text) {
+  var custom
+  if (text.contains("stella")){
+    text.replace("stella", "")
+  }
+  var playPhrases = ["play a video of ", "play the song ", "play some ", "play ", "look up"];
+  var endingPhrase = "on youtube"
   var playVideo = false;
   for (var i = 0; i < playPhrases.length; i++) {
     if (text.contains(playPhrases[i])) {
       custom = text.replace(playPhrases[i], "");
       playVideo = true;
+      break;
     }
     Debug.log(text);
   }
+  custom = custom.replace(endingPhrase, "")
   var query = custom;
   var url = 'http://youtube.com/search?q=' + query;
   Tabs.openNew(url, function(tab) {
