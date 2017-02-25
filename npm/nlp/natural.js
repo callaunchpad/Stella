@@ -51,7 +51,7 @@ function phonemifyAndTrigger(final_transcript) {
     //number of words per ngram  = 2
     var nGramSet = NGrams.ngrams(concatList.join(" "), 2);
 
-    if (setContainsListMember(concatList, apiWords)) {
+    if (setContainsListMember(concatList, coreWords)) {
         evaluateCoreExp(concatList);
     } else if (setContainsListMember(concatList, searchWords)) {
         evaluateSearchExp(concatList);
@@ -112,7 +112,7 @@ function stringDistance(str1, str2){
 function setContainsListMember(lst, dict) {
     var i = 0;
     for (i = 0; i < lst.length; i++) {
-        if (dict.contains(lst[i])) {
+        if (lst[i] in dict) {
             return true;
         }
     }
