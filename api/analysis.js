@@ -1,6 +1,5 @@
 function takeAction(text) {
   text = text.toLowerCase();
-  console.log(text);
   var tokens = natural.tokenizeAndStem(text);
   var action;
   for(var i = 0; i < tokens.length; i +=1){
@@ -12,7 +11,6 @@ function takeAction(text) {
   console.log(tokens);
   if (text.contains('tab')) {
     var action = natural.tabClassifier.classify(tokens);
-    console.log(action);
     natural.tabActionMap[action]();
   } else if (text.contains('search') || text.contains('look up')) {
     var action = natural.searchClassifier.classify(tokens);
@@ -20,7 +18,6 @@ function takeAction(text) {
     natural.searchActionMap[action](text);
   } else {
     var action = natural.otherClassifier.classify(tokens);
-    console.log(action);
     natural.functionMap[action]();
   }
 }

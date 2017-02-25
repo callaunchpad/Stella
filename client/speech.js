@@ -41,3 +41,16 @@ setTimeout(function() {
   tts.say("Hello, I'm Stella! Ask me anything.");
   tts.say('Say "Stella, open help menu" for assistance');
 }, 300);
+
+$(document).ready(function() {
+  $("#message_input").keypress(function(e) {
+    if (e.keyCode === 13) {
+      e.preventDefault();
+
+      var contents = $("#message_input").val();
+      $("#message_input").val("");
+
+      takeAction(contents);
+    }
+  });
+});
