@@ -13,11 +13,11 @@ console.log(tokenizer.tokenize("your dog has fleas."));
 
 natural.PorterStemmer.attach();
 
-var coreWords = {"HLP", "AST", "TKMNTXN", "SLP", "KT", "KNTNS", "ANLS"}; //help, assist, documentation, sleep, quiet, continuous, analysis
-var searchWords = {"SRX", "LK", "KKL", "ATP"};//search, look, google, youtube
-var interactWords = {"SKL", "KLK"};//scroll, click
-var browserWords = {"PK", "FRRT", "RFRX"};//back, forward, refresh
-var tabWords = {"TP"};//tab
+var coreWords = {"HLP":1, "AST":1, "TKMNTXN":1, "SLP":1, "KT":1, "KNTNS":1, "ANLS":1}; //help, assist, documentation, sleep, quiet, continuous, analysis
+var searchWords = {"SRX":2, "LK":2, "KKL":2, "ATP":2}; //search, look, google, youtube
+var interactWords = {"SKL":3, "KLK":3}; //scroll, click
+var browserWords = {"PK":4, "FRRT":4, "RFRX":4};//back, forward, refresh
+var tabWords = {"TP":5};//tab
 
 
 function phonemifyAndTrigger(final_transcript) {
@@ -44,7 +44,7 @@ function phonemifyAndTrigger(final_transcript) {
         }
     }
 
-    Debug.log("help phonemes: " + apiWords);
+    // Debug.log("help phonemes: " + apiWords);
     Debug.log("token phonemes: " + concatList);
     
     var NGrams = natural.NGrams;
@@ -67,10 +67,10 @@ function phonemifyAndTrigger(final_transcript) {
 
 function evaluateCoreExp(concatList) {
     //open and close documentation
-    var helpWords = {"HLP", "AST", "TKMNTXN"};
-    var focusWords = {"HL"}; //hello
-    var sleepWords = {"SLP"}; //sleep
-    var quietWords = {"KT", "SHT", "STP"}; //quiet, shut, stop
+    var helpWords = {"HLP":1, "AST":1, "TKMNTXN":1};
+    var focusWords = {"HL":2}; //hello
+    var sleepWords = {"SLP":3}; //sleep
+    var quietWords = {"KT":4, "SHT":4, "STP":4}; //quiet, shut, stop
 
     if (hasSimilarity(concatList, helpWords)) {
         if (hasSimilarity(concatList, ["KLS"]))
@@ -140,5 +140,5 @@ function hasSimilarity(commandWords, apiWords){
 
 
 module.exports = {
-    phonemifyAndTrigger: phonemifyAndTrigger;
+    phonemifyAndTrigger: phonemifyAndTrigger
 };
