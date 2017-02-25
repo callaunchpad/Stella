@@ -6,7 +6,16 @@ function tokenizeAndStem(command) {
   natural.PorterStemmer.attach();
   return command.tokenizeAndStem();
 }
-
+function tokenizeThenStem(command) {
+  var tokenized = tokenizer.tokenize(command);
+  var tokens = [];
+  for(i=0; i<tokenized.length; i++){
+    var val = stemmer.stem(tokenized[i])
+    if(val != '')
+      tokens.push(val);
+  }
+  return tokens;
+}
 var coreActionMap = {
   'open-documentation': API.Core.openDocumentation,
   'close-documentation': API.Core.closeDocumentation,
@@ -17,7 +26,7 @@ var coreActionMap = {
 };
 
 var coreActionCommands = {
-  'open-documentation': ['open', 'start', 'menu', 'docs', 'documentation', 'help'],
+  'open-documentation': ['open', 'start', 'menu', 'docs', 'documentation', 'help', 'can', 'do'],
   'close-documentation': ['close', 'exit', 'menu', 'docs', 'documentation', 'help'],
   'focus': ['wake', 'up', 'hello', TRIGGER_NAME],
   'sleep': ['exit', 'die', 'sleep', TRIGGER_NAME],
@@ -62,6 +71,8 @@ var interactActionCommands = {
   'click-link': ['click', 'link'],
   'type': ['type', 'box', 'input']
 };
+
+//determine scroll function
 
 var browserActionMap = {
   'go-back': API.Browser.Window.back,
@@ -139,5 +150,5 @@ var otherClassifier = trainNaiveBayes(commandMap);
 console.log(tabClassifier.classify(['new', 'tab']));
 
 module.exports = {
-  searchClassifier, tabClassifier, otherClassifier, tokenizeAndStem, tabActionMap, searchActionMap, functionMap
+  searchClassifier, tabClassifier, otherClassifier, tokenizeAndStem, tabActionMap, searchActionMap, functionMap, tokenizeThenStem
 };
