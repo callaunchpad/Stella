@@ -47,9 +47,9 @@ function phonemifyAndTrigger(final_transcript) {
     // Debug.log("help phonemes: " + apiWords);
     Debug.log("token phonemes: " + concatList);
     
-    var NGrams = natural.NGrams;
+    // var NGrams = natural.NGrams;
     //number of words per ngram  = 2
-    var nGramSet = NGrams.ngrams(concatList.join(" "), 2);
+    // var nGramSet = NGrams.ngrams(concatList.join(" "), 2);
 
     if (setContainsListMember(concatList, coreWords)) {
         evaluateCoreExp(concatList);
@@ -72,8 +72,10 @@ function evaluateCoreExp(concatList) {
     var sleepWords = {"SLP":3}; //sleep
     var quietWords = {"KT":4, "SHT":4, "STP":4}; //quiet, shut, stop
 
+    Debug.log(concatList);
+
     if (hasSimilarity(concatList, helpWords)) {
-        if (hasSimilarity(concatList, ["KLS"]))
+        if (hasSimilarity(concatList, {"KLS":5}))
             API.Core.closeDocumentation();
         else
             API.Core.openDocumentation();
@@ -105,6 +107,7 @@ function evaluateTabExp(concatList) {
 
 function stringDistance(str1, str2){
     natural = require('natural');
+    Debug.log("str1: " + str1 + " str2: " + str2);
     jwDistance = natural.JaroWinklerDistance(str1, str2);
     return jwDistance;
 }
@@ -120,10 +123,13 @@ function setContainsListMember(lst, dict) {
 }
 
 function hasSimilarity(commandWords, apiWords){
+    // Debug.log("apiWords: " + Object.keys(apiWords)[0]);
+    // Debug.log("commandWords: " + commandWords);
+    // Debug.log("api length: " + Object.keys(apiWords).length + " ###words length: " + commandWords.length);
     var counter = 0;
-    for(var i = 0; i < apiWords.length; i++){
+    for(var i = 0; i < Object.keys(apiWords).length; i++){
         for(var j = 0; j < commandWords.length; j++){
-            if(stringDistance(apiWords[i], commandWords[j]) > 0.85){
+            if(stringDistance(Object.keys(apiWords)[i], commandWords[j]) > 0.85){
                 Debug.log("Similarity found between " + apiWords[i] + " and " + commandWords[j]);
                 counter++;
             }
