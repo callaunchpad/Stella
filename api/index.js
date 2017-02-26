@@ -1,4 +1,4 @@
-const TRIGGER_NAME = "stella";
+const TRIGGER_NAME = "laura";
 const APP_ID = chrome.runtime.id;
 const APP_URL = "chrome-extension://" + APP_ID + "/index.html";
 var API = {};
