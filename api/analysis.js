@@ -18,36 +18,49 @@ function takeAction(text) {
     natural.searchActionMap[action](text);
   } else {
     var action = natural.otherClassifier.classify(tokens);
-    natural.functionMap[action]();
+    action = natural.determineScroll(action, text, tokens);
+    console.log('action is : '+action);
+    natural.functionMap[action](text.replace(TRIGGER_NAME, '').trimLeft().trimRight());
   }
 }
+function checkQuestion(text, tokens){ //this is disgusting
+  return !text.contains('you') && (tokens.length>1 && (tokens[1].isQuestion())|| (tokens.indexOf('stella')<tokens.length-1 && tokens[tokens.indexOf('stella')+1].isQuestion()))
+}
 
-// function oldTakeAction(text) {
-//   text = text.toLowerCase();
-//   var didAction = doCoreAction(text);
-//   text = text.toLowerCase().remove(TRIGGER_NAME + " ");
-//   if (!didAction) didAction = doInteractAction(text);
-//   if (!didAction) didAction = doBrowserAction(text);
-//   if (!didAction) didAction = doSearchAction(text);
-//   if (!didAction) didAction = doTabAction(text);
-// }
+function getQuestion(text){//agh so hardcoded
+  var loc = text.indexOf('stella');
+  if(loc<text.length/2){//if stella is less than half way into text, question is probably second part
+    return text.substring(loc+6).trimLeft();
+  }//else the question is the first part
+  return text.substring(0, loc);
+}
 
-// function doCoreAction(text) {
-//   if (text.contains("what can you do") || text.contains("open help menu") || text.contains("open help")) {
-//     API.Core.openDocumentation(); return true;
-//   } else if (text.contains("close help menu") || text.contains("close help")) {
-//     API.Core.closeDocumentation(); return true;
-//   } else if (text.contains("hello " + TRIGGER_NAME)) {
-//     API.Core.focus(); return true;
-//   } else if (text.contains(TRIGGER_NAME + " go to sleep")) {
-//     API.Core.goToSleep(); return true;
-//   } else if (text.contains("continuous analysis")) {
-//     API.Core.toggleContinuousAnalysis(text); return true;
-//   } else if (text.contains("be quiet") || text.contains("stop speaking") || text.contains("shut up")) {
-//     API.Core.stopSpeaking(); return true;
-//   }
-//   return false;
-// }
+function oldTakeAction(text) {
+  text = text.toLowerCase();
+  var didAction = doCoreAction(text);
+  text = text.toLowerCase().remove(TRIGGER_NAME + " ");
+  if (!didAction) didAction = doInteractAction(text);
+  if (!didAction) didAction = doBrowserAction(text);
+  if (!didAction) didAction = doSearchAction(text);
+  if (!didAction) didAction = doTabAction(text);
+}
+
+function doCoreAction(text) {
+  if (text.contains("what can you do") || text.contains("open help menu") || text.contains("open help")) {
+    API.Core.openDocumentation(); return true;
+  } else if (text.contains("close help menu") || text.contains("close help")) {
+    API.Core.closeDocumentation(); return true;
+  } else if (text.contains("hello " + TRIGGER_NAME)) {
+    API.Core.focus(); return true;
+  } else if (text.contains(TRIGGER_NAME + " go to sleep")) {
+    API.Core.goToSleep(); return true;
+  } else if (text.contains("continuous analysis")) {
+    API.Core.toggleContinuousAnalysis(text); return true;
+  } else if (text.contains("be quiet") || text.contains("stop speaking") || text.contains("shut up")) {
+    API.Core.stopSpeaking(); return true;
+  }
+  return false;
+}
 
 // function doSearchAction(text) {
 //   Debug.log(text);

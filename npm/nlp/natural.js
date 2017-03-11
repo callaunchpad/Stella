@@ -6,6 +6,16 @@ function tokenizeAndStem(command) {
   natural.PorterStemmer.attach();
   return command.tokenizeAndStem();
 }
+function tokenizeThenStem(command) {
+  var tokenized = tokenizer.tokenize(command);
+  var tokens = [];
+  for(i=0; i<tokenized.length; i++){
+    var val = stemmer.stem(tokenized[i])
+    if(val != '')
+      tokens.push(val);
+  }
+  return tokens;
+}
 
 var coreActionMap = {
   'open-documentation': API.Core.openDocumentation,
@@ -17,7 +27,7 @@ var coreActionMap = {
 };
 
 var coreActionCommands = {
-  'open-documentation': ['open', 'start', 'menu', 'docs', 'documentation', 'help'],
+  'open-documentation': ['open', 'start', 'menu', 'docs', 'documentation', 'help', 'can', 'do'],
   'close-documentation': ['close', 'exit', 'menu', 'docs', 'documentation', 'help'],
   'focus': ['wake', 'up', 'hello', TRIGGER_NAME],
   'sleep': ['exit', 'die', 'sleep', TRIGGER_NAME],
@@ -43,7 +53,7 @@ var searchActionCommands = {
 
 var interactActionMap = {
   'scroll-up': API.Interact.Scroll.medUp,
-  'scorll-down': API.Interact.Scroll.medDown,
+  'scroll-down': API.Interact.Scroll.medDown,
   'scroll-up-a-little': API.Interact.Scroll.littleUp,
   'scroll-down-a-little': API.Interact.Scroll.littleDown,
   'scroll-up-a-lot': API.Interact.Scroll.bigUp,
@@ -52,16 +62,37 @@ var interactActionMap = {
   'type': API.Interact.Type.handleTextbox
 };
 
+
 var interactActionCommands = {
-  'scroll-up': ['scroll', 'move', 'up', 'above', 'higher'],
-  'scroll-down':['scroll', 'move', 'down', 'below', 'lower'],
-  'scroll-up-a-little': ['scroll', 'move', 'up', 'above', 'higher', 'little', 'bit', 'tiny', 'tad', 'slightly'],
-  'scroll-down-a-little':['scroll', 'move', 'down', 'below', 'lower','little', 'bit', 'tiny', 'tad', 'slightly'],
-  'scroll-up-a-lot': ['scroll', 'move', 'up', 'above', 'higher','a lot', 'ton', 'way'],
-  'scroll-down-a-lot':['scroll', 'move', 'down', 'below', 'lower','a lot', 'ton', 'way'],
+  'scroll':['scroll', 'move', 'up', 'above', 'higher', 'down', 'below', 'lower'],
   'click-link': ['click', 'link'],
   'type': ['type', 'box', 'input']
 };
+
+var scrollActionDirections = {
+  '-up': ['up', 'above', 'higher'],
+  '-down':['down', 'below', 'lower']
+};
+
+var scrollActionModifiers = {
+  '-a-little': ['little', 'bit', 'tiny', 'tad', 'slightly'],
+  '-a-lot': ['lot', 'ton', 'way', 'bunch', 'large'],
+  '': ['medium', 'decent', 'normal']
+};
+
+//determine scroll function
+function determineScroll(action, text, tokens){
+  //right now all scroll functions map to 'scroll-down-a-little'.
+  //experimenting to fix this issue
+  if(action != 'scroll') return action;
+
+  var direction = scrollDirClassifier.classify(tokens);
+  var modifier = scrollModClassifier.classify(tokens);
+  return action+direction+modifier;
+
+
+
+}
 
 var browserActionMap = {
   'go-back': API.Browser.Window.back,
@@ -136,8 +167,12 @@ var searchClassifier = trainNaiveBayes(searchActionCommands);
 var tabClassifier = trainNaiveBayes(tabActionCommands);
 var otherClassifier = trainNaiveBayes(commandMap);
 
+//scroll functions
+var scrollDirClassifier = trainNaiveBayes(scrollActionDirections);
+var scrollModClassifier = trainNaiveBayes(scrollActionModifiers);
+
 console.log(tabClassifier.classify(['new', 'tab']));
 
 module.exports = {
-  searchClassifier, tabClassifier, otherClassifier, tokenizeAndStem, tabActionMap, searchActionMap, functionMap
+  searchClassifier, tabClassifier, otherClassifier, tokenizeAndStem, tabActionMap, searchActionMap, functionMap, tokenizeThenStem, determineScroll
 };
