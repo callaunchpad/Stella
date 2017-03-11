@@ -1,28 +1,14 @@
 function takeAction(text) {
   text = text.toLowerCase();
-<<<<<<< HEAD
-  var tokens = natural.tokenizeAndStem(text);
-  for (var i = 0; i < tokens.length; i++) {
-    if (tokens[i] === 'youtub') {
-      tokens[i] = 'youtube';
-    }
-  }
-  if (text.contains('tab')) {
-=======
-  console.log(text);
+  natural.storeSpeechInS3(text);
 
   var tokens = natural.tokenizeThenStem(text);
-  console.log('Here are the tokens '+tokens);
   var action;
-  console.log('Heard: '+text);
-  console.log(tokens);
   if (text.contains('tab') && !checkQuestion(text)) {
->>>>>>> 34acfd61d7d93d4ab3a152d32c60c4b2c7166518
     var action = natural.tabClassifier.classify(tokens);
     natural.tabActionMap[action]();
   } else if (text.contains('search')) {
     var action = natural.searchClassifier.classify(tokens);
-    console.log(action);
     natural.searchActionMap[action]();
   } else if (checkQuestion(text, tokens)){ 
   //a very hardcoded way to check if the user asked a general question to be searched
@@ -32,7 +18,6 @@ function takeAction(text) {
   else {
     var action = natural.otherClassifier.classify(tokens);
     action = natural.determineScroll(action, text, tokens);
-    console.log('action is : '+action);
     natural.functionMap[action](text.replace(TRIGGER_NAME, '').trimLeft().trimRight());
   }
 }

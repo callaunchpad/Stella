@@ -1,5 +1,9 @@
 continuous_check.addEventListener('change', toggleRecognition);
 
+navigator.getUserMedia = navigator.getUserMedia ||
+                         navigator.webkitGetUserMedia ||
+                         navigator.mozGetUserMedia;
+
 var final_transcript = '';
 var recognizing = false;
 var ignore_onend;
