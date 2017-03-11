@@ -1,5 +1,6 @@
 function takeAction(text) {
   text = text.toLowerCase();
+<<<<<<< HEAD
   var tokens = natural.tokenizeAndStem(text);
   for (var i = 0; i < tokens.length; i++) {
     if (tokens[i] === 'youtub') {
@@ -7,16 +8,46 @@ function takeAction(text) {
     }
   }
   if (text.contains('tab')) {
+=======
+  console.log(text);
+
+  var tokens = natural.tokenizeThenStem(text);
+  console.log('Here are the tokens '+tokens);
+  var action;
+  console.log('Heard: '+text);
+  console.log(tokens);
+  if (text.contains('tab') && !checkQuestion(text)) {
+>>>>>>> 34acfd61d7d93d4ab3a152d32c60c4b2c7166518
     var action = natural.tabClassifier.classify(tokens);
     natural.tabActionMap[action]();
   } else if (text.contains('search')) {
     var action = natural.searchClassifier.classify(tokens);
     console.log(action);
     natural.searchActionMap[action]();
-  } else {
+  } else if (checkQuestion(text, tokens)){ 
+  //a very hardcoded way to check if the user asked a general question to be searched
+  //needs to be replaced with more legitimate NLP
+    API.Search.answerQuestion(getQuestion(text));
+  } 
+  else {
     var action = natural.otherClassifier.classify(tokens);
-    natural.functionMap[action]();
+    action = natural.determineScroll(action, text, tokens);
+    console.log('action is : '+action);
+    natural.functionMap[action](text.replace(TRIGGER_NAME, '').trimLeft().trimRight());
   }
+}
+
+
+function checkQuestion(text, tokens){ //this is disgusting
+  return !text.contains('you') && (tokens.length>1 && (tokens[1].isQuestion())|| (tokens.indexOf('stella')<tokens.length-1 && tokens[tokens.indexOf('stella')+1].isQuestion()))
+}
+
+function getQuestion(text){//agh so hardcoded
+  var loc = text.indexOf('stella');
+  if(loc<text.length/2){//if stella is less than half way into text, question is probably second part
+    return text.substring(loc+6).trimLeft();
+  }//else the question is the first part
+  return text.substring(0, loc);
 }
 
 function oldTakeAction(text) {

@@ -1,0 +1,4 @@
+key/*
+node_modules/*
+.idea/*
+npm/bundle.js
