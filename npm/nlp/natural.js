@@ -148,6 +148,28 @@ var tabActionCommands = {
   'memory-save': ['memory', 'save', 'reduce']
 };
 
+var textParameterCommands = [
+  //search
+  'API.Search.youtubeSearch',
+  'API.Search.answerQuestion',
+  //tab
+  'API.Tabs.reopenTabs',
+  'API.Tabs.openSpecificTab',
+  'API.Tabs.goToWebsite',
+  'API.Tabs.closePastTabs',
+  'API.Tabs.closeRecentTabs',
+  'API.Tabs.closePreviousTabs',
+  'API.Tabs.closeNextTabs',
+  'API.Tabs.closeSpecificTab',
+  'API.Tabs.closeSpecificTabs',
+  //core 
+  'API.Core.toggleContinuousAnalysis',
+  //interact
+  'API.Interact.Click.handleLink',
+  'API.Interact.Type.handleTextbox',
+  //none for browser
+]
+
 var functionMap = Object.assign({}, coreActionMap, interactActionMap, browserActionMap);
 var commandMap = Object.assign({}, coreActionCommands, interactActionCommands, browserActionCommands);
 
