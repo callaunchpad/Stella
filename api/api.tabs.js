@@ -106,35 +106,72 @@ function closeNextTab() {
   });
 }
 
+// function closeNextTabs(text) {
+//   var num = text.match(/[0-9]+\s(tabs)/g);
+//   if (num) {
+//     num = num[0].replace(" tabs", "");
+//   } else {
+//     var textArr = text.split(" ");
+//     num = textTonum(textArr[textArr.indexOf("next") + 1]);
+//   }
+//   Debug.log('closing next' + num + 'tabs');
+//   Tabs.closeNextTabs(num, function(tab) {
+//     responseMessage("Closed tab: " + tab.url);
+//   });
+// }
 function closeNextTabs(text) {
-  var num = text.match(/[0-9]+\s(tabs)/g);
-  if (num) {
-    num = num[0].replace(" tabs", "");
-  } else {
-    var textArr = text.split(" ");
-    num = textTonum(textArr[textArr.indexOf("next") + 1]);
-  }
+  // var num = text.match(/[0-9]+\s(tabs)/g);
+  // if (num) {
+  //   num = num[0].replace(" tabs", "");
+  // } else {
+  //   var textArr = text.split(" ");
+  //   num = textTonum(textArr[textArr.indexOf("next") + 1]);
+  // }
+  num = textTonum(text);
   Debug.log('closing next' + num + 'tabs');
   Tabs.closeNextTabs(num, function(tab) {
     responseMessage("Closed tab: " + tab.url);
   });
 }
 
+// function closeSpecificTab(text) {
+//   var textArr = text.split(" ");
+//   var num = ordinalToNum(textArr[textArr.indexOf("tab") - 1]);
+//   Debug.log('closing the ' + (textArr[textArr.indexOf("tab") - 1]) + ' tab');
+//   var index = num - 1;
+//   Tabs.closeSpecificTabs(index, index, function(tab) {
+//     responseMessage("Closed tab: " + tab.url);
+//   });
+// }
 function closeSpecificTab(text) {
   var textArr = text.split(" ");
-  var num = ordinalToNum(textArr[textArr.indexOf("tab") - 1]);
-  Debug.log('closing the ' + (textArr[textArr.indexOf("tab") - 1]) + ' tab');
+  var num = textTonum(text)
+  Debug.log('closing the ' + num + ' tab');
   var index = num - 1;
   Tabs.closeSpecificTabs(index, index, function(tab) {
     responseMessage("Closed tab: " + tab.url);
   });
 }
 
+// function closeSpecificTabs(text) {
+//   var textArr = text.split(" ");
+//   var startNum = ordinalToNum(textArr[textArr.indexOf("the") + 1]);
+//   var endNum = ordinalToNum(textArr[textArr.indexOf("tabs") - 1]);
+//   Debug.log('closing the ' + (textArr[textArr.indexOf("the") + 1]) + ' to ' + (textArr[textArr.indexOf("tabs") - 1]) + 'tabs');
+//   var start = startNum - 1;
+//   var end = endNum - 1;
+//   Tabs.closeSpecificTabs(start, end, function(tab) {
+//     responseMessage("Closed tab: " + tab.url);
+//   });
+// }
+
 function closeSpecificTabs(text) {
   var textArr = text.split(" ");
-  var startNum = ordinalToNum(textArr[textArr.indexOf("the") + 1]);
-  var endNum = ordinalToNum(textArr[textArr.indexOf("tabs") - 1]);
-  Debug.log('closing the ' + (textArr[textArr.indexOf("the") + 1]) + ' to ' + (textArr[textArr.indexOf("tabs") - 1]) + 'tabs');
+  var nums = textTonums(text);
+  var startNum = Math.min(num[0], num[1]);
+  var endNum = Math.max(num[0], num[1]);
+  console.log(startNum + " " + endNum);
+  Debug.log('closing the ' + startNum + ' to ' + endNum + 'tabs');
   var start = startNum - 1;
   var end = endNum - 1;
   Tabs.closeSpecificTabs(start, end, function(tab) {
@@ -150,12 +187,16 @@ function discardNonActiveTabs() {
 }
 
 function reopenTabs(text) {
-  var num = text.match(/[0-9]+\s(tabs)/g);
-  if (num) {
-    num = num[0].replace(" tabs", "");
-  } else {
-    var textArr = text.split(" ");
-    num = textTonum(textArr[textArr.indexOf("last") + 1]);
+  // var num = text.match(/[0-9]+\s(tabs)/g);
+  // if (num) {
+  //   num = num[0].replace(" tabs", "");
+  // } else {
+  //   var textArr = text.split(" ");
+  //   num = textTonum(textArr[textArr.indexOf("last") + 1]);
+  // }
+  var num = textTonum(text);
+  if(num == 0){
+    num =1;
   }
   Tabs.reopen(num, function (tab) {
     Debug.log("Reopened site: " + tab.url);

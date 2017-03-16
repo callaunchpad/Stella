@@ -78,7 +78,7 @@ function duplicateTab(tabId, callback) {
     var query = { currentWindow: true };
     chrome.tabs.query(query, function(tabs) {
       while (num > 0) {
-        var tab = tabs[num];
+        var tab = tabs[num-1];
         if (tab.url != APP_URL) {
           if (callback) callback(tab);
           chrome.tabs.remove(tab.id, function() {
@@ -200,7 +200,7 @@ function duplicateTab(tabId, callback) {
       for (var i = 0; i < results.length; i++) {
         openNewTab(results[i].url, callback);
       }
-    })
+    });
   }
 
   document.addEventListener('DOMContentLoaded', function() {
