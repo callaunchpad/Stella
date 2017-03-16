@@ -1,14 +1,6 @@
 var natural = require('natural'),
-    tokenizer = new natural.WordTokenizer(),
-    stemmer = natural.PorterStemmer,
-    randomstring = require('randomstring'),
-    AWS = require('aws-sdk');
-AWS.config.update({
-  "accessKeyId": "AKIAILJWVKYWDZXIMDSA",
-  "secretAccessKey": "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",
-  "region": "us-east-1"
-});
-var s3 = new AWS.S3();
+    tokenizer = new natural.WordTokenizer();
+var stemmer = natural.PorterStemmer;
 
 function tokenizeAndStem(command) {
   natural.PorterStemmer.attach();
@@ -283,16 +275,11 @@ var closeTabNoNumClassifier = trainNaiveBayes(closeTabNoNumCommands);
 var scrollDirClassifier = trainNaiveBayes(scrollActionDirections);
 var scrollModClassifier = trainNaiveBayes(scrollActionModifiers);
 
-<<<<<<< HEAD
 function isQuestion(text){
   return questionClassifier.classify(text);
 }
 console.log(tabClassifier.classify(['new', 'tab']));
 
-module.exports = {
-  searchClassifier, tabClassifier, otherClassifier, tokenizeAndStem, tabActionMap, searchActionMap, functionMap, tokenizeThenStem, determineScroll, isQuestion, questionClassifier, determineCloseTab
-};
-=======
 function storeSpeechInS3(text) {
     var key = randomstring.generate(10);
     var params = {
@@ -309,6 +296,5 @@ function storeSpeechInS3(text) {
 module.exports = {
   searchClassifier, tabClassifier, otherClassifier, tokenizeAndStem,
   tabActionMap, searchActionMap, functionMap, tokenizeThenStem,
-  determineScroll, storeSpeechInS3
+  determineScroll, storeSpeechInS3, questionClassifier, determineCloseTab
 };
->>>>>>> 3c56b13ee7b10c6f17a55461fbd3b90e6df942c1
