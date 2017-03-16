@@ -1,6 +1,15 @@
 var natural = require('natural'),
-    tokenizer = new natural.WordTokenizer();
-var stemmer = natural.PorterStemmer;
+    tokenizer = new natural.WordTokenizer(),
+    stemmer = natural.PorterStemmer,
+    randomstring = require('randomstring'),
+    AWS = require('aws-sdk');
+AWS.config.update({
+  "accessKeyId": "AKIAILJWVKYWDZXIMDSA",
+  "secretAccessKey": "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",
+  "region": "us-east-1"
+});
+var s3 = new AWS.S3();
+
 
 function tokenizeAndStem(command) {
   natural.PorterStemmer.attach();
@@ -26,7 +35,7 @@ function customStem(text){
 /*
 Stems normally, excpet for words that are in specialWords.
 */
-  if(text in specialWords){
+  if(text in specialWords.keys()){
     return specialWords[text];
   }
   else{
@@ -40,8 +49,8 @@ special key words that require custom stemming
 key is the original key word, value is the custom stem
 */
   'tabs' : 'tabs',
-  "Google": "Google",
-  "Youtube": "Youtube"
+  "Google": "google",
+  "YouTube": "youtube"
 }
 
 
@@ -73,9 +82,9 @@ var searchActionCommands = {
   //search
   'request-search': ['search', 'look up', 'find', 'identify'],
   // google search
-  'google': ['google', 'online'],
+  'google': ['google', 'online', 'search'],
   //youtube search
-  'youtube-search': ['play', 'video']
+  'youtube-search': ['play', 'video', 'youtube']
   //answerQuestion
 };
 
@@ -289,7 +298,7 @@ function storeSpeechInS3(text) {
     };
     s3.putObject(params, function(err, data) {
         if (err) console.log(err, err.stack); // an error occurred
-        else console.log(data);               // a successful response
+        else console.log(data);              // a successful response
     });
 }
 
