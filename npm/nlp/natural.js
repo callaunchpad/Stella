@@ -35,7 +35,7 @@ function customStem(text){
 /*
 Stems normally, excpet for words that are in specialWords.
 */
-  if(text in specialWords.keys()){
+  if(text in specialWords){
     return specialWords[text];
   }
   else{
