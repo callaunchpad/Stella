@@ -1,6 +1,14 @@
 var natural = require('natural'),
-    tokenizer = new natural.WordTokenizer();
-var stemmer = natural.PorterStemmer;
+    tokenizer = new natural.WordTokenizer(),
+    stemmer = natural.PorterStemmer,
+    randomstring = require('randomstring'),
+    AWS = require('aws-sdk');
+AWS.config.update({
+  "accessKeyId": "AKIAILJWVKYWDZXIMDSA",
+  "secretAccessKey": "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",
+  "region": "us-east-1"
+});
+var s3 = new AWS.S3();
 
 function tokenizeAndStem(command) {
   natural.PorterStemmer.attach();
@@ -275,6 +283,7 @@ var closeTabNoNumClassifier = trainNaiveBayes(closeTabNoNumCommands);
 var scrollDirClassifier = trainNaiveBayes(scrollActionDirections);
 var scrollModClassifier = trainNaiveBayes(scrollActionModifiers);
 
+<<<<<<< HEAD
 function isQuestion(text){
   return questionClassifier.classify(text);
 }
@@ -283,3 +292,23 @@ console.log(tabClassifier.classify(['new', 'tab']));
 module.exports = {
   searchClassifier, tabClassifier, otherClassifier, tokenizeAndStem, tabActionMap, searchActionMap, functionMap, tokenizeThenStem, determineScroll, isQuestion, questionClassifier, determineCloseTab
 };
+=======
+function storeSpeechInS3(text) {
+    var key = randomstring.generate(10);
+    var params = {
+        Bucket: 'launchpad.stella',
+        Key: `speech/${key}.txt`,
+        Body: text,
+    };
+    s3.putObject(params, function(err, data) {
+        if (err) console.log(err, err.stack); // an error occurred
+        else console.log(data);               // a successful response
+    });
+}
+
+module.exports = {
+  searchClassifier, tabClassifier, otherClassifier, tokenizeAndStem,
+  tabActionMap, searchActionMap, functionMap, tokenizeThenStem,
+  determineScroll, storeSpeechInS3
+};
+>>>>>>> 3c56b13ee7b10c6f17a55461fbd3b90e6df942c1
