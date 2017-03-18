@@ -4,19 +4,20 @@ var natural = require('natural'),
     stemmer = new natural.PorterStemmer();
 
 var userProfile = {};
+var ignoredWords = ['a','the','or','is','and','who'];
 
 /**
  * If an important word in the search query is not in the naive bayes training set
  * then we query the thesaurus to find related words. if a word is found that's related, we add
  * a dictionary entry that establishes the mapping for future uses of the word
  * @author Hank
- * @param importantWords a list of important/relevant words from the search query
+ * @param tokens a list of important/relevant words from the search query
  * @param trainingSet the set of words the naive bayes classifier was trained with
  */
-function buildUnknownWordMapping(importantWords, trainingSet){
-    for(var i = 0; i < importantWords.length; i++){
-        if(!trainingSet.contains(importantWords[i])){
-            var unknownWord = importantWords[i];
+function buildUnknownWordMapping(tokens, trainingSet){
+    for(var i = 0; i < tokens.length; i++){
+        var unknownWord = tokens[i];
+        if(!trainingSet.contains(unknownWord) && !ignoredWords.contains(unknownWord)){
             $.ajax({
                 type: "POST",
                 url: "../../jsonSearcher.py",
@@ -24,7 +25,7 @@ function buildUnknownWordMapping(importantWords, trainingSet){
             }).done(function( o ) {
                 //assuming o is a word found that matched from the JSON file
                 userProfile.put(unknownWord, o);
-                importantWords[i] = o;
+                tokens[i] = o;
             });
         }
     }
