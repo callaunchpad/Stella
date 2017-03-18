@@ -4,12 +4,17 @@ function takeAction(text) {
 
   var tokens = natural.tokenizeThenStem(text);
   var action;
-  if (text.contains('tab') && !checkQuestion(text)) {
+  console.log('Heard: '+text);
+  console.log(tokens);
+  if (text.contains('tab') && !checkQuestion(text, tokens)) {
     var action = natural.tabClassifier.classify(tokens);
-    natural.tabActionMap[action]();
+    action = natural.determineCloseTab(action, text, tokens);
+    console.log('action is : '+action);
+    natural.tabActionMap[action](text);
   } else if (text.contains('search')) {
     var action = natural.searchClassifier.classify(tokens);
-    natural.searchActionMap[action]();
+    console.log('action is : '+action);
+    natural.searchActionMap[action](text);
   } else if (checkQuestion(text, tokens)){ 
   //a very hardcoded way to check if the user asked a general question to be searched
   //needs to be replaced with more legitimate NLP
@@ -24,7 +29,8 @@ function takeAction(text) {
 
 
 function checkQuestion(text, tokens){ //this is disgusting
-  return !text.contains('you') && (tokens.length>1 && (tokens[1].isQuestion())|| (tokens.indexOf('stella')<tokens.length-1 && tokens[tokens.indexOf('stella')+1].isQuestion()))
+  return !text.contains('you') && (tokens.length>1 && (tokens[1].isQuestion()) || 
+    (tokens.indexOf('stella') < tokens.length - 1 && tokens[tokens.indexOf('stella') + 1].isQuestion()))
 }
 
 function getQuestion(text){//agh so hardcoded

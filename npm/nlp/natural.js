@@ -80,12 +80,40 @@ function tokenizeThenStem(command) {
   var tokenized = tokenizer.tokenize(command);
   var tokens = [];
   for(i=0; i<tokenized.length; i++){
-    var val = stemmer.stem(tokenized[i])
+    var val = customStem(tokenized[i]);//stemmer.stem(tokenized[i]);
     if(val != '')
       tokens.push(val);
   }
   return tokens;
 }
+
+/*
+Some special keywords may contain more useful information when they're not stemmed
+or when they're stemmed another way. Put all those words and in specialWords, and 
+use customStem for stemming.
+*/
+function customStem(text){
+/*
+Stems normally, excpet for words that are in specialWords.
+*/
+  if(text in specialWords){
+    return specialWords[text];
+  }
+  else{
+    return stemmer.stem(text);
+  }
+}
+
+var specialWords = {
+/*
+special key words that require custom stemming
+key is the original key word, value is the custom stem
+*/
+  'tabs' : 'tabs',
+  "Google": "google",
+  "YouTube": "youtube"
+}
+
 
 var coreActionMap = {
   'open-documentation': API.Core.openDocumentation,
@@ -97,10 +125,10 @@ var coreActionMap = {
 };
 
 var coreActionCommands = {
-  'open-documentation': ['open', 'start', 'menu', 'docs', 'documentation', 'help', 'can', 'do'],
+  'open-documentation': ['open', 'start', 'menu', 'docs', 'documentation', 'help', 'can', 'do', 'function', 'operate'],
   'close-documentation': ['close', 'exit', 'menu', 'docs', 'documentation', 'help'],
   'focus': ['wake', 'up', 'hello', TRIGGER_NAME],
-  'sleep': ['exit', 'die', 'sleep', TRIGGER_NAME],
+  'sleep': ['exit', 'die', 'sleep', 'off', 'turn', 'power', 'bye', TRIGGER_NAME],
   'continuous-analysis': ['analyse', 'analyze', 'continuous'],
   'stop-speaking': ['stop', 'speak', 'shut', 'up', 'quiet', 'halt', 'hold']
 };
@@ -115,9 +143,9 @@ var searchActionCommands = {
   //search
   'request-search': ['search', 'look up', 'find', 'identify'],
   // google search
-  'google': ['google', 'online'],
+  'google': ['google', 'online', 'search'],
   //youtube search
-  'youtube-search': ['play', 'video']
+  'youtube-search': ['play', 'video', 'youtube']
   //answerQuestion
 };
 
@@ -134,7 +162,7 @@ var interactActionMap = {
 
 
 var interactActionCommands = {
-  'scroll':['scroll', 'move', 'up', 'above', 'higher', 'down', 'below', 'lower'],
+  'scroll':['scroll', 'go', 'show', 'move', 'up', 'above', 'higher', 'down', 'below', 'lower'],
   'click-link': ['click', 'link'],
   'type': ['type', 'box', 'input']
 };
@@ -168,14 +196,14 @@ var browserActionMap = {
   'go-back': API.Browser.Window.back,
   'go-forward': API.Browser.Window.forward,
   'refresh-page': API.Browser.Window.refresh,
-  'refresh-yourself': API.Browser.Window.refreshApp
+  'refresh-yourself': API.Browser.Window.refreshApp 
 };
 
 var browserActionCommands = {
   'go-back': ['go', 'back', 'previous', 'past'],
   'go-forward': ['go', 'forward'],
   'refresh-page': ['refresh', 'reload', 'reset', 'page'],
-  'refresh-yourself': ['refresh', 'reload', 'reset', 'you', 'yourself']
+  'refresh-yourself': ['refresh', 'reload', 'reset', 'you', 'yourself'],
 };
 
 var tabActionMap ={
@@ -183,8 +211,8 @@ var tabActionMap ={
   'reopen-tabs': API.Tabs.reopenTabs,
   'open-specific-tab': API.Tabs.openSpecificTab,
   'go-to-website': API.Tabs.goToWebsite,
-  'discard-non-active': API.Tabs.discardNonActiveAudibleTabs,
-  'close-current-tab': API.Tabs.closeCUrrentTab,
+  'discard-non-active-audible-tabs': API.Tabs.discardNonActiveAudibleTabs,
+  'close-current-tab': API.Tabs.closeCurrentTab,
   'close-last-tab': API.Tabs.closeLastTab,
   'close-first-tab': API.Tabs.closeFirstTab,
   'close-past-tabs': API.Tabs.closePastTabs,
@@ -198,23 +226,73 @@ var tabActionMap ={
   'memory-save': API.Tabs.discardNonActiveTabs
 };
 
+var closeTabNoNumCommands = {
+/*
+No numbers in text
+*/
+  'close-current-tab': ['current', 'tab', 'this'],
+  'close-last-tab': ['last', 'tab', 'previous'],
+  'close-first-tab': ['first', 'tab'],
+  // 'close-past-tabs': ['past', 'tab'],
+  'close-recent-tabs': ['recent', 'tab'],
+  'close-previous-tab': ['previous', 'tab'],
+  // 'close-previous-tabs': ['previous', 'tabs'],
+  'close-next-tab': ['next', 'tab']
+  // 'close-next-tabs': ['next', 'tabs'],
+  // 'close-specific-tab': ['specific', 'tab'],
+  // 'close-specific-tabs': ['tabs']
+}
+
+var closeTabOneNumCommands ={
+  'close-past-tabs': ['past', 'tabs'],
+  'close-specific-tab': ['tab', 'numplace'],
+  'close-previous-tabs': ['previous', 'tabs'],
+  'close-next-tabs': ['next', 'tabs']
+}
+function determineCloseTab(action, text, tokens){
+  if (action!= 'close') return action;
+
+  num = textTonums(text); //get any specific numbers
+  console.log(num);
+  if(num.length > 2){ //if more than two numbers, can't do that
+    tts.say('Please either specify a specific tab or a range of tabs to close.');
+    return null;
+  }
+  else if(num.length == 2){
+    return 'close-specific-tabs';
+  }   
+  else if(num.length == 1){
+    var tks = replaceNum(tokens);
+    action = closeTabOneNumClassifier.classify(tks);
+    console.log(action);
+    return action;
+  }
+  else{
+    action = closeTabNoNumClassifier.classify(tokens);
+    console.log(action);
+    return action;
+  }
+}
+
+function replaceNum(tokens){
+  var tks = [];
+  for (var i = 0; i < tokens.length; i++){
+    if(textTonum(tokens[i]) != 0){
+      tks[i] = 'numplace';
+    }
+    else{
+      tks[i] = tokens[i];
+    }
+  }
+  return tks;
+}
 var tabActionCommands = {
   'open-empty-tab': ['open', 'new', 'tab', 'empty', 'another', 'other'],
   'reopen-tabs': ['reopen', 'last', 're-open', 'open', 'previous', 'tabs'],
   'open-specific-tab': ['go to', 'open', 'go to the', 'tab'],
-  'go-to-website': ['go to', 'open', 'Google', 'Facebook', 'Youtube'],
-  'discard-non-active-audible-tabs': ['discard', 'close', 'non', 'no', 'active', 'audible', 'tabs'],
-  'close-current-tab': ['close', 'current', 'tab', 'this'],
-  'close-last-tab': ['close', 'last', 'tab', 'previous'],
-  'close-first-tab': ['close', 'first', 'tab'],
-  'close-past-tabs': ['close', 'past', 'tab'],
-  'close-recent-tabs': ['close', 'recent', 'tab'],
-  'close-previous-tab': ['close', 'previous', 'tab'],
-  'close-previous-tabs': ['close', 'previous', 'tabs'],
-  'close-next-tab': ['close', 'next', 'tab'],
-  'close-next-tabs': ['close', 'next', 'tabs'],
-  'close-specific-tab': ['close', 'specific', 'tab'],
-  'close-specific-tabs': ['close', 'discard', 'tabs'],
+  'go-to-website': ['go', 'to', 'open', 'visit', 'w', 'dot', 'com', 'org', 'net', 'Google', 'Facebook', 'Youtube'],
+  'discard-non-active-audible-tabs': ['discard',  'non', 'no', 'active', 'audible', 'audio', 'sound', 'noise', 'tab'],
+  'close': ['close', 'remove', 'delete', 'tab', 'exit', 'dispose', 'discard', 'tabs'],
   'memory-save': ['memory', 'save', 'reduce']
 };
 
@@ -240,6 +318,9 @@ var textParameterCommands = [
   //none for browser
 ]
 
+var questionIndicators = {
+  'question' : ["are", "who", "what", "when", "where", "why", "will", "how", "whom", "whose", "which", "is", "did", "can", "could", "would", "may"]
+}
 var functionMap = Object.assign({}, coreActionMap, interactActionMap, browserActionMap);
 var commandMap = Object.assign({}, coreActionCommands, interactActionCommands, browserActionCommands);
 
@@ -254,17 +335,36 @@ function trainNaiveBayes(commands) {
   classifier.train();
   return classifier;
 }
-
+var questionClassifier = trainNaiveBayes(questionIndicators);
 var searchClassifier = trainNaiveBayes(searchActionCommands);
 var tabClassifier = trainNaiveBayes(tabActionCommands);
 var otherClassifier = trainNaiveBayes(commandMap);
-
+var closeTabOneNumClassifier = trainNaiveBayes(closeTabOneNumCommands);
+var closeTabNoNumClassifier = trainNaiveBayes(closeTabNoNumCommands);
 //scroll functions
 var scrollDirClassifier = trainNaiveBayes(scrollActionDirections);
 var scrollModClassifier = trainNaiveBayes(scrollActionModifiers);
 
+function isQuestion(text){
+  return questionClassifier.classify(text);
+}
+console.log(tabClassifier.classify(['new', 'tab']));
+
+function storeSpeechInS3(text) {
+    var key = randomstring.generate(10);
+    var params = {
+        Bucket: 'launchpad.stella',
+        Key: `speech/${key}.txt`,
+        Body: text,
+    };
+    s3.putObject(params, function(err, data) {
+        if (err) console.log(err, err.stack); // an error occurred
+        else console.log(data);              // a successful response
+    });
+}
+
 module.exports = {
   searchClassifier, tabClassifier, otherClassifier, tokenizeAndStem,
   tabActionMap, searchActionMap, functionMap, tokenizeThenStem,
-  determineScroll, storeSpeechInS3, startRecording, stopRecording
+  determineScroll, storeSpeechInS3, questionClassifier, determineCloseTab
 };
