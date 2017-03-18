@@ -38,7 +38,6 @@ def find_synonym(jsonEntry, bayesBank):
 	for s in synonyms:
 		if s in bank:
 			return s
-
 	return "not found"
 
 
