@@ -2,26 +2,27 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.PrintWriter;
-import java.lang.reflect.Field;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 /**
  * Created by mfan on 3/11/17.
  */
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
 
 public class thesaurusToJSON {
 
     public static final String FILE_READ_PATH = "raw_thesaurus.txt";
-    public static final String FILE_WRITE_PATH = "/Users/mfan/Desktop/jsonThesaurus.txt";
+    public static final String FILE_WRITE_PATH = "path";
 
     public static void main(String[] args) {
         readThesaurus();
 
     }
 
+    /**
+     * reads the raw thesaurus and parses it into a list of json objects
+     */
     public static void readThesaurus(){
         String keyString = null;
         try {
@@ -39,7 +40,7 @@ public class thesaurusToJSON {
                     entries[i] = br.readLine();
                 }
                 JSONObject parsed = parseToJSON(key, entries);
-                System.out.println(parsed);
+//                System.out.println(parsed);
                 writer.println(parsed);
             }
             writer.close();
@@ -49,10 +50,15 @@ public class thesaurusToJSON {
         }
     }
 
+    /**
+     *creates a json object representing a thesaurus entry with word w and synonyms s
+     * @param w: keyword in the thesaurus
+     * @param s: list of synonyms to be included in the created json object
+     * @return json object representing the thesaurus entry
+     */
     public static JSONObject parseToJSON(String w, String[] s) {
 
         JSONObject wordSet = new JSONObject();
-
         JSONArray synonyms = new JSONArray();
 
         for (String sList : s) {
