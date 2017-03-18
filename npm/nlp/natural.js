@@ -290,6 +290,8 @@ function replaceNum(tokens){
   }
   return tks;
 }
+
+// NOTE: open-specific-tab can handle "go to /n-th tab" commands trained on the listed words below, except for "go to the first tab" for some reason?
 var tabActionCommands = {
   'open-empty-tab': ['open', 'new', 'tab', 'empty', 'another', 'other'],
   'reopen-tabs': ['reopen', 'last', 're-open', 'open', 'previous', 'tabs'],
