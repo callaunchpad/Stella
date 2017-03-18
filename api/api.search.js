@@ -55,6 +55,8 @@ function youtubeSearch(text) {
 }
 
 function requestSearch(text, engine) {
+  //strip Stella from text
+  text = text.replace(TRIGGER_NAME+' ', '');
   var textArr = text.split(" ");
   var query = '';
   Debug.log(textArr);
@@ -73,6 +75,8 @@ function requestSearch(text, engine) {
     }
   } else if (textArr[0] == "google") {
     query = text.replace("google", "");
+  } else if (textArr[0] == "youtube") {
+    query = text.replace("youtube", "");
   }
   Debug.log("Parsed query: " + query);
   if (engine == "youtube") youtubeSearch(text, query)

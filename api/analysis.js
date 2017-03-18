@@ -36,8 +36,10 @@ function takeAction(text) {
   //   natural.functionMap[action](text.replace(TRIGGER_NAME, '').trimLeft().trimRight());
   // }
 }
+
 function checkQuestion(text, tokens){ //this is disgusting
-  return !text.contains('you') && (tokens.length>1 && (tokens[1].isQuestion())|| (tokens.indexOf('stella')<tokens.length-1 && tokens[tokens.indexOf('stella')+1].isQuestion()))
+  return !text.contains('you') && (tokens.length>1 && (tokens[1].isQuestion()) || 
+    (tokens.indexOf('stella') < tokens.length - 1 && tokens[tokens.indexOf('stella') + 1].isQuestion()))
 }
 
 function getQuestion(text){//agh so hardcoded
