@@ -10,6 +10,68 @@ AWS.config.update({
 });
 var s3 = new AWS.S3();
 
+var key = null;
+var options = {mimeType: 'video/webm;codecs=vp9'};
+var mediaRecorder = null;
+var recordedChunks = [];
+
+navigator.getUserMedia = navigator.getUserMedia ||
+                         navigator.webkitGetUserMedia ||
+                         navigator.mozGetUserMedia;
+
+// sleep time expects milliseconds
+function sleep (time) {
+  return new Promise((resolve) => setTimeout(resolve, time));
+}
+
+function startRecording() {
+  key = randomstring.generate(10);
+  recordedChunks = [];
+  navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+    .then(function(stream) {
+      mediaRecorder = new MediaRecorder(stream, options);
+      mediaRecorder.addEventListener('dataavailable', function(e) {
+        if (e.data.size > 0) {
+          recordedChunks.push(e.data);
+        }
+        var audioContent = new File([new Blob(recordedChunks)], `${key}.webm`);
+        storeAudioInS3(audioContent, key);
+      });
+      mediaRecorder.start();
+    });
+}
+
+function stopRecording(text) {
+  mediaRecorder.stop();
+
+  storeSpeechInS3(text, key);
+}
+
+function storeSpeechInS3(text, key) {
+    var params = {
+        Bucket: 'launchpad.stella',
+        Key: `speech/${key}.txt`,
+        Body: text,
+    };
+    s3.putObject(params, function(err, data) {
+        if (err) console.log(err, err.stack); // an error occurred
+        else console.log(data);               // a successful response
+    });
+}
+
+function storeAudioInS3(audio, key) {
+    var params = {
+        Bucket: 'launchpad.stella',
+        Key: audio.name,
+        Body: `audio/${key}.webm`,
+        ContentType: audio.type,
+    };
+    s3.putObject(params, function(err, data) {
+        if (err) console.log(err, err.stack); // an error occurred
+        else console.log(data);               // a successful response
+    });
+}
+
 function tokenizeAndStem(command) {
   natural.PorterStemmer.attach();
   return command.tokenizeAndStem();
@@ -201,21 +263,8 @@ var otherClassifier = trainNaiveBayes(commandMap);
 var scrollDirClassifier = trainNaiveBayes(scrollActionDirections);
 var scrollModClassifier = trainNaiveBayes(scrollActionModifiers);
 
-function storeSpeechInS3(text) {
-    var key = randomstring.generate(10);
-    var params = {
-        Bucket: 'launchpad.stella',
-        Key: `speech/${key}.txt`,
-        Body: text,
-    };
-    s3.putObject(params, function(err, data) {
-        if (err) console.log(err, err.stack); // an error occurred
-        else console.log(data);               // a successful response
-    });
-}
-
 module.exports = {
   searchClassifier, tabClassifier, otherClassifier, tokenizeAndStem,
   tabActionMap, searchActionMap, functionMap, tokenizeThenStem,
-  determineScroll, storeSpeechInS3
+  determineScroll, storeSpeechInS3, startRecording, stopRecording
 };

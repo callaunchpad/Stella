@@ -20,6 +20,7 @@ if (!('webkitSpeechRecognition' in window)) {
     recognizing = true;
     showInfo('info_speak_now');
     micRec();
+    natural.startRecording();
   };
 
   recognition.onerror = function(event) {

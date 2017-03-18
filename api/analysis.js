@@ -1,6 +1,6 @@
 function takeAction(text) {
   text = text.toLowerCase();
-  natural.storeSpeechInS3(text);
+  natural.stopRecording(text);
 
   var tokens = natural.tokenizeThenStem(text);
   var action;
