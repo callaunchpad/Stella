@@ -7,14 +7,9 @@ function takeAction(text) {
   console.log('Heard: '+text);
   console.log(tokens);
   if ((text.contains('tab') || text.contains('go to') || text.contains('memory')) && !checkQuestion(text, tokens)) {
-    var action = natural.tabClassifier.classify(tokens);
-    action = natural.determineCloseTab(action, text, tokens);
-    console.log('action is : '+action);
-    natural.tabActionMap[action](text);
-  } else if (text.contains('search')) {
-    var action = natural.searchClassifier.classify(tokens);
-    console.log('action is : '+action);
-    natural.searchActionMap[action](text);
+    processTabAction(text, tokens);
+  } else if (text.contains('search') || text.contains('google') || text.contains('youtube')) {
+    processSearchAction(text, tokens);
   } else if (checkQuestion(text, tokens)){ 
   //a very hardcoded way to check if the user asked a general question to be searched
   //needs to be replaced with more legitimate NLP
@@ -24,6 +19,25 @@ function takeAction(text) {
     var action = natural.otherClassifier.classify(tokens);
     action = natural.determineScroll(action, text, tokens);
     natural.functionMap[action](text.replace(TRIGGER_NAME, '').trimLeft().trimRight());
+  }
+}
+
+function processTabAction(text, tokens) {
+  var action = natural.tabClassifier.classify(tokens);
+  action = natural.determineCloseTab(action, text, tokens);
+  console.log('action is : '+action);
+  natural.tabActionMap[action](text);
+}
+
+function processSearchAction(text, tokens) {
+  var action = natural.searchClassifier.classify(tokens);
+  console.log('action is : '+action);
+  if (action == 'google-search') {
+    natural.searchActionMap['request-search'](text, 'google');
+  } else if (action == 'youtube-search') {
+    natural.searchActionMap['request-search'](text, 'youtube');
+  } else {
+    natural.searchActionMap[action](text);
   }
 }
 

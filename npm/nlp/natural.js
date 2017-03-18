@@ -113,7 +113,8 @@ key is the original key word, value is the custom stem
   'google': 'google',
   'youtube': 'youtube',
   'memory': 'memory',
-  'audible': 'audible'
+  'audible': 'audible',
+  'play': 'play'
 
 }
 
@@ -146,9 +147,9 @@ var searchActionCommands = {
   //search
   'request-search': ['search', 'look up', 'find', 'identify'],
   // google search
-  'google': ['google', 'online', 'search'],
+  'google-search': ['google', 'online', 'search'],
   //youtube search
-  'youtube-search': ['play', 'video', 'youtube']
+  'youtube-search': ['play', 'video', 'youtube', 'play a video of', 'play the song', 'play some']
   //answerQuestion
 };
 

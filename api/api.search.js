@@ -37,6 +37,8 @@ function youtubeSearch(text, custom) {
 }
 
 function requestSearch(text, engine) {
+  //strip first word 'stella ' - 7 characters
+  text = text.slice(7)
   var textArr = text.split(" ");
   var query = '';
   Debug.log(textArr);
@@ -55,6 +57,8 @@ function requestSearch(text, engine) {
     }
   } else if (textArr[0] == "google") {
     query = text.replace("google", "");
+  } else if (textArr[0] == "youtube") {
+    query = text.replace("youtube", "");
   }
   Debug.log("Parsed query: " + query);
   if (engine == "youtube") youtubeSearch(text, query)
