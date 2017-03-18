@@ -144,6 +144,17 @@ function hasSimilarity(commandWords, apiWords){
     return false;
 }
 
+function applyProfile(query, profile){
+    //profile is dictionary mapping previously unknown words to works we know, e.g. assist -> help
+    var tokens = tokenize(query);
+    for(var i = 0; i < tokens.length; i++){
+        if(tokens[i] in profile){
+            tokens[i] = profile[tokens[i]];
+        }
+    }
+    return tokens;
+}
+
 
 module.exports = {
     phonemifyAndTrigger: phonemifyAndTrigger
