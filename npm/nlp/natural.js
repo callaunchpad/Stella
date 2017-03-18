@@ -3,6 +3,91 @@ var natural = require('natural'),
     tokenizer = new natural.WordTokenizer(),
     stemmer = new natural.PorterStemmer();
 
+var userProfile = {};
+
+/**
+ * If an important word in the search query is not in the naive bayes training set
+ * then we query the thesaurus to find related words. if a word is found that's related, we add
+ * a dictionary entry that establishes the mapping for future uses of the word
+ * @author Hank
+ * @param importantWords a list of important/relevant words from the search query
+ * @param trainingSet the set of words the naive bayes classifier was trained with
+ */
+function buildUnknownWordMapping(importantWords, trainingSet){
+    for(var i = 0; i < importantWords.length; i++){
+        if(!trainingSet.contains(importantWords[i])){
+            var unknownWord = importantWords[i];
+            $.ajax({
+                type: "POST",
+                url: "../../jsonSearcher.py",
+                data: { param: unknownWord, trainingSet}
+            }).done(function( o ) {
+                //assuming o is a word found that matched from the JSON file
+                userProfile.put(unknownWord, o);
+                importantWords[i] = o;
+            });
+        }
+    }
+
+}
+
+/**
+ * given a user query string, this function tokenizes the query and replaces words in the query
+ * that we have previously established as having a mapping in bayes set
+ * @author Hank
+ * @param query user's raw query string
+ * @param thesaurusMapping dictionary which maps previously unknown words to known words in the bayes set
+ * @returns the tokenized query with all 'learned' words replaced with their known counterpart
+ */
+function applyUnknownWordMapping(query, thesaurusMapping){
+    //profile is dictionary mapping previously unknown words to works we know, e.g. assist -> help
+    var tokens = tokenizeThenStem(query);
+    for(var i = 0; i < tokens.length; i++){
+        if(tokens[i] in thesaurusMapping){
+            //if we've already had to look up the word in the thesaurus,
+            // we should just replace it on all future queries
+            tokens[i] = thesaurusMapping[tokens[i]];
+        }
+    }
+    return tokens;
+}
+
+function tokenizeThenStem(command) {
+    var tokenized = tokenizer.tokenize(command);
+    var tokens = [];
+    for(i=0; i<tokenized.length; i++){
+        var val = customStem(tokenized[i]);//stemmer.stem(tokenized[i]);
+        if(val != '')
+            tokens.push(val);
+    }
+    return tokens;
+}
+
+/*
+ Some special keywords may contain more useful information when they're not stemmed
+ or when they're stemmed another way. Put all those words and in specialWords, and
+ use customStem for stemming.
+ */
+function customStem(text){
+    /*
+     Stems normally, except for words that are in specialWords.
+     */
+    if(text in specialWords){
+        return specialWords[text];
+    }
+    else{
+        return stemmer.stem(text);
+    }
+}
+
+
+
+
+module.exports = {
+    phonemifyAndTrigger: phonemifyAndTrigger
+};
+
+
 //build key word set
 //raw string
 //aggressive stem
@@ -18,7 +103,6 @@ var natural = require('natural'),
 // var browserWords = {"PK":4, "FRRT":4, "RFRX":4};//back, forward, refresh
 // var tabWords = {"TP":5};//tab
 
-var userProfile = {};
 
 // var specialWords = {
 //     /*
@@ -116,67 +200,4 @@ var userProfile = {};
 //     return false;
 // }
 
-function buildProfile(importantWords, trainingSet){
-    for(var i = 0; i < importantWords.length; i++){
-        if(!trainingSet.contains(importantWords[i])){
-            var unknownWord = importantWords[i];
-            $.ajax({
-                type: "POST",
-                url: "../../jsonSearcher.py",
-                data: { param: unknownWord, trainingSet}
-            }).done(function( o ) {
-                //assuming o is a word found that matched from the JSON file
-                userProfile.put(unknownWord, o);
-            });
-        }
-    }
 
-}
-
-function applyProfile(query, userProfile){
-    //profile is dictionary mapping previously unknown words to works we know, e.g. assist -> help
-    var tokens = tokenizeThenStem(query);
-    for(var i = 0; i < tokens.length; i++){
-        if(tokens[i] in userProfile){
-            //if we've already had to look up the word in the thesaurus,
-            // we should just replace it on all future queries
-            tokens[i] = userProfile[tokens[i]];
-        }
-    }
-    return tokens;
-}
-
-function tokenizeThenStem(command) {
-    var tokenized = tokenizer.tokenize(command);
-    var tokens = [];
-    for(i=0; i<tokenized.length; i++){
-        var val = customStem(tokenized[i]);//stemmer.stem(tokenized[i]);
-        if(val != '')
-            tokens.push(val);
-    }
-    return tokens;
-}
-
-/*
- Some special keywords may contain more useful information when they're not stemmed
- or when they're stemmed another way. Put all those words and in specialWords, and
- use customStem for stemming.
- */
-function customStem(text){
-    /*
-     Stems normally, except for words that are in specialWords.
-     */
-    if(text in specialWords){
-        return specialWords[text];
-    }
-    else{
-        return stemmer.stem(text);
-    }
-}
-
-
-
-
-module.exports = {
-    phonemifyAndTrigger: phonemifyAndTrigger
-};
