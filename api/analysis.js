@@ -20,6 +20,7 @@ function takeAction(text) {
   actionMap = tuple['map']
   classifier = tuple['classifier']
   var action = classifier.classify(tokens);
+  action = parseAction(action, command_category, text, tokens)
   console.log('Action is:' + action)
   actionMap[action](text)
   // if (text.contains('tab')) {
@@ -35,6 +36,17 @@ function takeAction(text) {
   //   console.log('action is : '+action);
   //   natural.functionMap[action](text.replace(TRIGGER_NAME, '').trimLeft().trimRight());
   // }
+}
+
+function parseAction(action, command_category, text, tokens) {
+  console.log('Now in parseAction')
+  if (command_category == 'tabActionCommands'){
+    return natural.determineCloseTab(action, text, tokens)
+  } else if (command_category == 'coreActionCommands') {
+    return natural.determineScroll(action, text, tokens)
+  } else {
+    return action
+  }
 }
 
 function checkQuestion(text, tokens){ //this is disgusting
