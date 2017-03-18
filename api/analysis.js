@@ -1,27 +1,40 @@
 function takeAction(text) {
   text = text.toLowerCase();
-  var tokens = natural.tokenizeAndStem(text);
+  var tokens = natural.tokenizeThenStem(text);
   var action;
+  console.log(natural.initialFilter)
   for(var i = 0; i < tokens.length; i +=1){
       if(tokens[i] == "youtub"){
         tokens[i] = "youtube";
-        break;
+        continue
+      }
+      if(tokens[i] == 'googl'){
+        tokens[i] = 'google'
       }
   }
   console.log(tokens);
-  if (text.contains('tab')) {
-    var action = natural.tabClassifier.classify(tokens);
-    natural.tabActionMap[action]();
-  } else if (text.contains('search') || text.contains('look up')) {
-    var action = natural.searchClassifier.classify(tokens);
-    console.log(action);
-    natural.searchActionMap[action](text);
-  } else {
-    var action = natural.otherClassifier.classify(tokens);
-    action = natural.determineScroll(action, text, tokens);
-    console.log('action is : '+action);
-    natural.functionMap[action](text.replace(TRIGGER_NAME, '').trimLeft().trimRight());
-  }
+  command_category = natural.initialFilterClassifier.classify(tokens);
+  console.log('Command is:' + command_category);
+  tuple = natural.initialFilterMap[command_category]
+  console.log(tuple)
+  actionMap = tuple['map']
+  classifier = tuple['classifier']
+  var action = classifier.classify(tokens);
+  console.log('Action is:' + action)
+  actionMap[action](text)
+  // if (text.contains('tab')) {
+  //   var action = natural.tabClassifier.classify(tokens);
+  //   natural.tabActionMap[action]();
+  // } else if (text.contains('search') || text.contains('look up') || text.contains('play')) {
+  //   var action = natural.searchClassifier.classify(tokens);
+  //   console.log(action);
+  //   natural.searchActionMap[action](text);
+  // } else {
+  //   var action = natural.otherClassifier.classify(tokens);
+  //   action = natural.determineScroll(action, text, tokens);
+  //   console.log('action is : '+action);
+  //   natural.functionMap[action](text.replace(TRIGGER_NAME, '').trimLeft().trimRight());
+  // }
 }
 function checkQuestion(text, tokens){ //this is disgusting
   return !text.contains('you') && (tokens.length>1 && (tokens[1].isQuestion())|| (tokens.indexOf('stella')<tokens.length-1 && tokens[tokens.indexOf('stella')+1].isQuestion()))

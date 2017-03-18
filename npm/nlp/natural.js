@@ -45,9 +45,9 @@ var searchActionCommands = {
   //search
   // 'request-search': ['search', 'look up', 'find', 'identify'],
   // google search
-  'google': ['google', 'online'],
+  'google-search': ['google', 'online', 'what', 'when', 'who', 'how', 'where', 'on'],
   //youtube search
-  'youtube-search': ['play', 'video', 'youtube']
+  'youtube-search': ['play', 'video', 'youtube', 'by', 'song', 'on',]
   //answerQuestion
 };
 
@@ -170,6 +170,25 @@ var textParameterCommands = [
   //none for browser
 ]
 
+function combineKeywords(commandsDictionary){
+  keywords = []
+  keys = Object.keys(commandsDictionary)
+  keys.forEach(function(key){
+    keywords = keywords.concat(commandsDictionary[key])
+  })
+  return keywords
+}
+
+var initialFilter = {
+  'searchActionCommands': combineKeywords(searchActionCommands),
+  'coreActionCommands': combineKeywords(coreActionCommands),
+  'interactActionCommands': combineKeywords(interactActionCommands),
+  'browserActionCommands': combineKeywords(browserActionCommands),
+  'tabActionCommands': combineKeywords(tabActionCommands)
+}
+
+
+
 var functionMap = Object.assign({}, coreActionMap, interactActionMap, browserActionMap);
 var commandMap = Object.assign({}, coreActionCommands, interactActionCommands, browserActionCommands);
 
@@ -189,6 +208,31 @@ var searchClassifier = trainNaiveBayes(searchActionCommands);
 var tabClassifier = trainNaiveBayes(tabActionCommands);
 var otherClassifier = trainNaiveBayes(commandMap);
 
+var initialFilterMap = {
+  'coreActionCommands':{
+    'map': coreActionMap,
+    'classifier': otherClassifier
+  },
+  'interactActionCommands': {
+    'map': interactActionMap,
+    'classifier': otherClassifier
+  },
+  'browserActionCommands': {
+    'map': browserActionMap,
+    'classifier': otherClassifier
+  },
+  'tabActionCommands':{
+    'map': tabActionMap,
+    'classifier': tabClassifier
+  },
+  'searchActionCommands':{
+    'map': searchActionMap,
+    'classifier': searchClassifier
+  }
+}
+
+var initialFilterClassifier = trainNaiveBayes(initialFilter)
+
 //scroll functions
 var scrollDirClassifier = trainNaiveBayes(scrollActionDirections);
 var scrollModClassifier = trainNaiveBayes(scrollActionModifiers);
@@ -196,5 +240,5 @@ var scrollModClassifier = trainNaiveBayes(scrollActionModifiers);
 console.log(tabClassifier.classify(['new', 'tab']));
 
 module.exports = {
-  searchClassifier, tabClassifier, otherClassifier, tokenizeAndStem, tabActionMap, searchActionMap, functionMap, tokenizeThenStem, determineScroll
+  initialFilterClassifier, searchClassifier, tabClassifier, otherClassifier, tokenizeAndStem, initialFilterMap, tabActionMap, searchActionMap, functionMap, tokenizeThenStem, determineScroll, initialFilter
 };

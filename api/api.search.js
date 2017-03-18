@@ -4,7 +4,17 @@ function answerQuestion(text) {
   googleSearch(text);
 }
 
-function googleSearch(query) {
+function googleSearch(text) {
+  var endingPhrase = 'on google'
+  var searchPhrases = ['look up ', 'search up ', 'search ', 'google ', 'find ']
+  var query = text
+  for (var i = 0; i < searchPhrases.length; i++) {
+    if (text.contains(searchPhrases[i])) {
+      query = query.replace(searchPhrases[i], '');
+      break;
+    }
+  }
+  query = query.replace(endingPhrase, '')
   var url = 'http://google.com/search?q=' + query;
   Tabs.openNew(url, function(tab) {
     Debug.log("Searched Google for " + query);
@@ -15,23 +25,24 @@ function googleSearch(query) {
 }
 
 function youtubeSearch(text) {
-  var custom
   if (text.contains("stella")){
-    text.replace("stella", "")
+    text = text.replace("stella", "")
   }
-  var playPhrases = ["play a video of ", "play the song ", "play some ", "play ", "look up"];
+  var playPhrases = ["play a video of ", "play the song ", "play some ", "play ", "find ", "look up "];
   var endingPhrase = "on youtube"
   var playVideo = false;
   for (var i = 0; i < playPhrases.length; i++) {
     if (text.contains(playPhrases[i])) {
-      custom = text.replace(playPhrases[i], "");
-      playVideo = true;
+      text = text.replace(playPhrases[i], "");
+      if (playPhrases[i].contains('play')) {
+        playVideo = true;
+      }
       break;
     }
     Debug.log(text);
   }
-  custom = custom.replace(endingPhrase, "")
-  var query = custom;
+  text = text.replace(endingPhrase, "")
+  var query = text;
   var url = 'http://youtube.com/search?q=' + query;
   Tabs.openNew(url, function(tab) {
     Debug.log("Searched Youtube for " + query);
