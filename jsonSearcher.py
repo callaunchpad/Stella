@@ -41,6 +41,16 @@ def find_synonym(jsonEntry, bayesBank):
 	return "not found"
 
 
+def main(key, bayesBank):
+    entry = finder(thesaurus, key)
+    bank = set(bayesBank)
+    return find_synonym(entry, bank)
+
+if __name__ == "__main__":
+    main()
+
+
+
 #tests
 # entry = finder(thesaurus, "assist")
 # bayesBank = ["help"]
