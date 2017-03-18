@@ -72,6 +72,11 @@ function storeAudioInS3(audio, key) {
     });
 }
 
+function tokenizeAndStem(command) {
+  natural.PorterStemmer.attach();
+  return command.tokenizeAndStem();
+}
+
 function tokenizeThenStem(command) {
   /**
   Takes in a command string and returns and
