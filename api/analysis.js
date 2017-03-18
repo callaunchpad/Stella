@@ -6,7 +6,7 @@ function takeAction(text) {
   var action;
   console.log('Heard: '+text);
   console.log(tokens);
-  if (text.contains('tab') && !checkQuestion(text, tokens)) {
+  if ((text.contains('tab') || text.contains('go to') || text.contains('memory')) && !checkQuestion(text, tokens)) {
     var action = natural.tabClassifier.classify(tokens);
     action = natural.determineCloseTab(action, text, tokens);
     console.log('action is : '+action);

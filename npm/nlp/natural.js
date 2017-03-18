@@ -96,7 +96,7 @@ function customStem(text){
 /*
 Stems normally, excpet for words that are in specialWords.
 */
-  if(text in specialWords){
+  if(text in specialWords) {
     return specialWords[text];
   }
   else{
@@ -110,8 +110,11 @@ special key words that require custom stemming
 key is the original key word, value is the custom stem
 */
   'tabs' : 'tabs',
-  "Google": "google",
-  "YouTube": "youtube"
+  'google': 'google',
+  'youtube': 'youtube',
+  'memory': 'memory',
+  'audible': 'audible'
+
 }
 
 
@@ -289,9 +292,9 @@ function replaceNum(tokens){
 var tabActionCommands = {
   'open-empty-tab': ['open', 'new', 'tab', 'empty', 'another', 'other'],
   'reopen-tabs': ['reopen', 'last', 're-open', 'open', 'previous', 'tabs'],
-  'open-specific-tab': ['go to', 'open', 'go to the', 'tab'],
-  'go-to-website': ['go', 'to', 'open', 'visit', 'w', 'dot', 'com', 'org', 'net', 'Google', 'Facebook', 'Youtube'],
-  'discard-non-active-audible-tabs': ['discard',  'non', 'no', 'active', 'audible', 'audio', 'sound', 'noise', 'tab'],
+  'open-specific-tab': ['go to', 'open', 'go to the', 'tab', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth'],
+  'go-to-website': ['go to', 'go', 'open', 'visit', 'w', 'dot', 'com', 'org', 'net', 'google', 'facebook', 'youtube'],
+  'discard-non-active-audible-tabs': ['discard',  'non', 'no', 'active', 'audible', 'audio', 'sound', 'noise', 'tabs', 'mute'],
   'close': ['close', 'remove', 'delete', 'tab', 'exit', 'dispose', 'discard', 'tabs'],
   'memory-save': ['memory', 'save', 'reduce']
 };
@@ -366,5 +369,6 @@ function storeSpeechInS3(text) {
 module.exports = {
   searchClassifier, tabClassifier, otherClassifier, tokenizeAndStem,
   tabActionMap, searchActionMap, functionMap, tokenizeThenStem,
-  determineScroll, storeSpeechInS3, questionClassifier, determineCloseTab
+  determineScroll, storeSpeechInS3, questionClassifier, determineCloseTab,
+  startRecording, stopRecording
 };
