@@ -72,11 +72,13 @@ function storeAudioInS3(audio, key) {
     });
 }
 
-function tokenizeAndStem(command) {
-  natural.PorterStemmer.attach();
-  return command.tokenizeAndStem();
-}
 function tokenizeThenStem(command) {
+  /**
+  Takes in a command string and returns and
+  @author Arsh Zahed
+  @param command -- a string of the command
+  @return array -- the tokenized and stemed version of the input command
+**/
   var tokenized = tokenizer.tokenize(command);
   var tokens = [];
   for(i=0; i<tokenized.length; i++){
@@ -93,9 +95,13 @@ or when they're stemmed another way. Put all those words and in specialWords, an
 use customStem for stemming.
 */
 function customStem(text){
-/*
-Stems normally, excpet for words that are in specialWords.
-*/
+/**
+  Takes in a specific word, and checks if it is in specialWords. If so, return the corresponding
+  special stem. Else, stem normally.
+  @author Arsh Zahed
+  @param text -- a aspecific word to be stemmed
+  @return string -- the stmemmed version of the input word
+**/
   if(text in specialWords){
     return specialWords[text];
   }
@@ -106,8 +112,8 @@ Stems normally, excpet for words that are in specialWords.
 
 var specialWords = {
 /*
-special key words that require custom stemming
-key is the original key word, value is the custom stem
+  special key words that require custom stemming
+  key is the original key word, value is the custom stem
 */
   'tabs' : 'tabs',
   "Google": "google",
@@ -178,10 +184,18 @@ var scrollActionModifiers = {
   '': ['medium', 'decent', 'normal']
 };
 
-//determine scroll function
+
 function determineScroll(action, text, tokens){
-  //right now all scroll functions map to 'scroll-down-a-little'.
-  //experimenting to fix this issue
+/**
+  Takes in an action. If it is 'scroll' it will continue, if not it returns the action.
+  If the the action is 'scroll', use the text and tokens to determine which scroll
+  function is desired by using seperate Naive Bayes classifiers.
+  @author Arsh Zahed
+  @param action -- action to be checked
+  @param text -- text to use for classification
+  @param token -- tokens to use for classification
+  @return string -- the modified action to be executed.
+**/
   if(action != 'scroll') return action;
 
   var direction = scrollDirClassifier.classify(tokens);
@@ -250,6 +264,16 @@ var closeTabOneNumCommands ={
   'close-next-tabs': ['next', 'tabs']
 }
 function determineCloseTab(action, text, tokens){
+/**
+  Takes in an action. If it is 'close' it will continue, if not it returns the action.
+  If the the action is 'close', use the text and tokens to determine which close tab
+  function is desired by using seperate Naive Bayes classifiers.
+  @author Arsh Zahed
+  @param action -- action to be checked
+  @param text -- text to use for classification
+  @param token -- tokens to use for classification
+  @return string -- the modified action to be executed.
+**/
   if (action!= 'close') return action;
 
   num = textTonums(text); //get any specific numbers
@@ -363,8 +387,30 @@ function storeSpeechInS3(text) {
     });
 }
 
+function intersect(a, b) {
+    var t;
+    if (b.length > a.length) t = b, b = a, a = t; // indexOf to loop over shorter
+    return a.filter(function (e) {
+        return b.indexOf(e) > -1;
+    });
+}
+
+function tabClasify(tokens){
+
+}
+
+function searchClassify(tokekns){
+
+}
+
+function otherClassify(tokens){
+
+}
+
+
 module.exports = {
   searchClassifier, tabClassifier, otherClassifier, tokenizeAndStem,
   tabActionMap, searchActionMap, functionMap, tokenizeThenStem,
-  determineScroll, storeSpeechInS3, questionClassifier, determineCloseTab
-};
+  determineScroll, storeSpeechInS3, questionClassifier, determineCloseTab,
+  startRecording, stopRecording, sleep
+}

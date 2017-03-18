@@ -176,6 +176,7 @@ var langs = [['Afrikaans',       ['af-ZA']],
    'decillion':    1000000000000000000000000000000000,
  };
 
+var ordinalIndicators = ['st', 'nd', 'rd', 'th']
  var a, n, g;
 
  function textTonum(s) {
@@ -217,9 +218,15 @@ var langs = [['Afrikaans',       ['af-ZA']],
    else {
      x = Magnitude[w];
      if (x != null) {
-       n = n + g * x
+       n = n + g * x;
        g = 0;
      }
-     else { console.log("Unknown number: "+w); }
+     else{
+       ord = ordinalToNum(w);
+       if(ord > 0){
+          g = ord;
+       }
+       else { console.log("Unknown number: "+w); }
+     }
    }
  }
