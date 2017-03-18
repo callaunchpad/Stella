@@ -1,6 +1,7 @@
 
 var natural = require('natural'),
-    tokenizer = new natural.WordTokenizer();
+    tokenizer = new natural.WordTokenizer(),
+    stemmer = new natural.PorterStemmer();
 console.log(tokenizer.tokenize("your dog has fleas."));
 
 
@@ -18,6 +19,16 @@ var searchWords = {"SRX":2, "LK":2, "KKL":2, "ATP":2}; //search, look, google, y
 var interactWords = {"SKL":3, "KLK":3}; //scroll, click
 var browserWords = {"PK":4, "FRRT":4, "RFRX":4};//back, forward, refresh
 var tabWords = {"TP":5};//tab
+
+var specialWords = {
+    /*
+     special key words that require custom stemming
+     key is the original key word, value is the custom stem
+     */
+    'tabs' : 'tabs',
+    "Google": "google",
+    "YouTube": "youtube"
+}
 
 
 function phonemifyAndTrigger(final_transcript) {
@@ -144,16 +155,48 @@ function hasSimilarity(commandWords, apiWords){
     return false;
 }
 
-function applyProfile(query, profile){
+function applyProfile(query, userProfile){
     //profile is dictionary mapping previously unknown words to works we know, e.g. assist -> help
-    var tokens = tokenize(query);
+    var tokens = tokenizeThenStem(query);
     for(var i = 0; i < tokens.length; i++){
-        if(tokens[i] in profile){
-            tokens[i] = profile[tokens[i]];
+        if(tokens[i] in userProfile){
+            //if we've already had to look up the word in the thesaurus,
+            // we should just replace it on all future queries
+            tokens[i] = userProfile[tokens[i]];
         }
     }
     return tokens;
 }
+
+function tokenizeThenStem(command) {
+    var tokenized = tokenizer.tokenize(command);
+    var tokens = [];
+    for(i=0; i<tokenized.length; i++){
+        var val = customStem(tokenized[i]);//stemmer.stem(tokenized[i]);
+        if(val != '')
+            tokens.push(val);
+    }
+    return tokens;
+}
+
+/*
+ Some special keywords may contain more useful information when they're not stemmed
+ or when they're stemmed another way. Put all those words and in specialWords, and
+ use customStem for stemming.
+ */
+function customStem(text){
+    /*
+     Stems normally, except for words that are in specialWords.
+     */
+    if(text in specialWords){
+        return specialWords[text];
+    }
+    else{
+        return stemmer.stem(text);
+    }
+}
+
+
 
 
 module.exports = {
