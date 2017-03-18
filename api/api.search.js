@@ -38,7 +38,10 @@ function youtubeSearch(text, custom) {
 
 function requestSearch(text, engine) {
   //strip Stella from text
-  text.replace(TRIGGER_NAME, '')
+  console.log("requeating serach");
+  console.log(TRIGGER_NAME);
+  text = text.replace(TRIGGER_NAME+' ', '');
+  console.log(text);
   var textArr = text.split(" ");
   var query = '';
   Debug.log(textArr);
