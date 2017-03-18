@@ -18,6 +18,7 @@ function takeAction(text) {
   else {
     var action = natural.otherClassifier.classify(tokens);
     action = natural.determineScroll(action, text, tokens);
+    console.log('action is : ' + action);
     natural.functionMap[action](text.replace(TRIGGER_NAME, '').trimLeft().trimRight());
   }
 }

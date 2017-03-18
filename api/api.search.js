@@ -37,8 +37,8 @@ function youtubeSearch(text, custom) {
 }
 
 function requestSearch(text, engine) {
-  //strip first word 'stella ' - 7 characters
-  text = text.slice(7)
+  //strip Stella from text
+  text.replace(TRIGGER_NAME, '')
   var textArr = text.split(" ");
   var query = '';
   Debug.log(textArr);
