@@ -20,8 +20,9 @@ function openEmptyTab() {
 
 function openSpecificTab(text) {
   var textArr = text.split(" ");
-  var num = ordinalToNum(textArr[textArr.indexOf("tab") - 1]);
-  var index = num - 1;
+  // var num = ordinalToNum(textArr[textArr.indexOf("tab") - 1]);
+  // var index = num - 1;
+  var index = textTonum(text) - 1;
   Tabs.openSpecificTab(index, function(tab) {
     responseMessage((textArr[textArr.indexOf("tab") - 1]) + " tab opened: " + tab.url);
   });

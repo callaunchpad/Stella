@@ -42,7 +42,7 @@ function parseAction(action, command_category, text, tokens) {
   console.log('Now in parseAction')
   if (command_category == 'tabActionCommands'){
     return natural.determineTab(action, text, tokens)
-  } else if (command_category == 'coreActionCommands') {
+  } else if (command_category == 'interactActionCommands') {
     return natural.determineScroll(action, text, tokens)
   } else {
     return action
