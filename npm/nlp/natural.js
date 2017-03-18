@@ -116,8 +116,12 @@ var specialWords = {
   key is the original key word, value is the custom stem
 */
   'tabs' : 'tabs',
-  "Google": "google",
-  "YouTube": "youtube"
+  'google': 'google',
+  'youtube': 'youtube',
+  'memory': 'memory',
+  'audible': 'audible',
+  'play': 'play'
+
 }
 
 
@@ -140,18 +144,18 @@ var coreActionCommands = {
 };
 
 var searchActionMap = {
-  'request-search': API.Search.requestSearch,
+  // 'request-search': API.Search.requestSearch,
   'youtube-search': API.Search.youtubeSearch,
   'google-search': API.Search.googleSearch
 };
 
 var searchActionCommands = {
   //search
-  'request-search': ['search', 'look up', 'find', 'identify'],
+  // 'request-search': ['search', 'look up', 'find', 'identify'],
   // google search
-  'google': ['google', 'online', 'search'],
+  'google-search': ['google', 'online', 'what', 'when', 'who', 'how', 'where', 'on'],
   //youtube search
-  'youtube-search': ['play', 'video', 'youtube']
+  'youtube-search': ['play', 'video', 'youtube', 'by', 'song', 'on',]
   //answerQuestion
 };
 
@@ -310,12 +314,14 @@ function replaceNum(tokens){
   }
   return tks;
 }
+
+// NOTE: open-specific-tab can handle "go to /n-th tab" commands trained on the listed words below, except for "go to the first tab" for some reason?
 var tabActionCommands = {
   'open-empty-tab': ['open', 'new', 'tab', 'empty', 'another', 'other'],
   'reopen-tabs': ['reopen', 'last', 're-open', 'open', 'previous', 'tabs'],
-  'open-specific-tab': ['go to', 'open', 'go to the', 'tab'],
-  'go-to-website': ['go', 'to', 'open', 'visit', 'w', 'dot', 'com', 'org', 'net', 'Google', 'Facebook', 'Youtube'],
-  'discard-non-active-audible-tabs': ['discard',  'non', 'no', 'active', 'audible', 'audio', 'sound', 'noise', 'tab'],
+  'open-specific-tab': ['go to', 'open', 'go to the', 'tab', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth'],
+  'go-to-website': ['go to', 'go', 'open', 'visit', 'w', 'dot', 'com', 'org', 'net', 'google', 'facebook', 'youtube'],
+  'discard-non-active-audible-tabs': ['discard',  'non', 'no', 'active', 'audible', 'audio', 'sound', 'noise', 'tabs', 'mute'],
   'close': ['close', 'remove', 'delete', 'tab', 'exit', 'dispose', 'discard', 'tabs'],
   'memory-save': ['memory', 'save', 'reduce']
 };
@@ -342,9 +348,29 @@ var textParameterCommands = [
   //none for browser
 ]
 
+
+function combineKeywords(commandsDictionary){
+  keywords = []
+  keys = Object.keys(commandsDictionary)
+  keys.forEach(function(key){
+    keywords = keywords.concat(commandsDictionary[key])
+  })
+  return keywords
+}
+
+var initialFilter = {
+  'searchActionCommands': combineKeywords(searchActionCommands),
+  'coreActionCommands': combineKeywords(coreActionCommands),
+  'interactActionCommands': combineKeywords(interactActionCommands),
+  'browserActionCommands': combineKeywords(browserActionCommands),
+  'tabActionCommands': combineKeywords(tabActionCommands)
+}
+
+
 var questionIndicators = {
   'question' : ["are", "who", "what", "when", "where", "why", "will", "how", "whom", "whose", "which", "is", "did", "can", "could", "would", "may"]
 }
+
 var functionMap = Object.assign({}, coreActionMap, interactActionMap, browserActionMap);
 var commandMap = Object.assign({}, coreActionCommands, interactActionCommands, browserActionCommands);
 
@@ -363,8 +389,36 @@ var questionClassifier = trainNaiveBayes(questionIndicators);
 var searchClassifier = trainNaiveBayes(searchActionCommands);
 var tabClassifier = trainNaiveBayes(tabActionCommands);
 var otherClassifier = trainNaiveBayes(commandMap);
+
+
+var initialFilterMap = {
+  'coreActionCommands':{
+    'map': coreActionMap,
+    'classifier': otherClassifier
+  },
+  'interactActionCommands': {
+    'map': interactActionMap,
+    'classifier': otherClassifier
+  },
+  'browserActionCommands': {
+    'map': browserActionMap,
+    'classifier': otherClassifier
+  },
+  'tabActionCommands':{
+    'map': tabActionMap,
+    'classifier': tabClassifier
+  },
+  'searchActionCommands':{
+    'map': searchActionMap,
+    'classifier': searchClassifier
+  }
+}
+
+var initialFilterClassifier = trainNaiveBayes(initialFilter)
+
 var closeTabOneNumClassifier = trainNaiveBayes(closeTabOneNumCommands);
 var closeTabNoNumClassifier = trainNaiveBayes(closeTabNoNumCommands);
+
 //scroll functions
 var scrollDirClassifier = trainNaiveBayes(scrollActionDirections);
 var scrollModClassifier = trainNaiveBayes(scrollActionModifiers);
@@ -409,8 +463,8 @@ function otherClassify(tokens){
 
 
 module.exports = {
-  searchClassifier, tabClassifier, otherClassifier, tokenizeAndStem,
-  tabActionMap, searchActionMap, functionMap, tokenizeThenStem,
-  determineScroll, storeSpeechInS3, questionClassifier, determineCloseTab,
-  startRecording, stopRecording, sleep
-}
+  initialFilterClassifier, searchClassifier, tabClassifier, 
+  otherClassifier, tokenizeAndStem, initialFilterMap, tabActionMap, 
+  searchActionMap, functionMap, tokenizeThenStem, determineScroll, 
+  initialFilter, determineCloseTab, startRecording, stopRecording
+};

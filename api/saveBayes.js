@@ -100,7 +100,7 @@ var browserActionCommands = {
    'reopen-tabs': ['reopen', 'last', 're-open', 'open', 'previous', 'tabs'],
    'open-specific-tab': ['go to', 'open', 'go to the', 'tab'],
    'go-to-website': ['go to', 'open', 'Google', 'Facebook', 'Youtube', '.com'],
-   'discard-non-active-audible-tabs': ['discard', 'close', 'non', 'no', 'active', 'audible', 'tabs'],
+   'discard-non-active-audible-tabs': ['discard', 'close', 'non', 'no', 'active', 'audible', 'tabs', 'mute'],
    'close-current-tab': ['close', 'current', 'tab', 'this'],
    'close-last-tab': ['close', 'last', 'tab', 'previous'],
    'close-first-tab': ['close', 'first', 'tab'], 
