@@ -272,6 +272,7 @@ var closeTabOneNumCommands ={
   'close-previous-tabs': ['previous', 'tabs'],
   'close-next-tabs': ['next', 'tabs']
 }
+
 function determineCloseTab(action, text, tokens){
 /**
   Takes in an action. If it is 'close' it will continue, if not it returns the action.
@@ -293,7 +294,7 @@ function determineCloseTab(action, text, tokens){
   }
   else if(num.length == 2){
     return 'close-specific-tabs';
-  }   
+  } 
   else if(num.length == 1){
     var tks = replaceNum(tokens);
     action = closeTabOneNumClassifier.classify(tks);
@@ -307,7 +308,26 @@ function determineCloseTab(action, text, tokens){
   }
 }
 
+function determineOpenTab(action, text, tokens){
+  if (action!= 'open') return action;
+
+  num = textTonums(text); //get any specific numbers
+  console.log(num);
+  if(num.length > 1){ //if more than two numbers, can't do that
+    return null;
+  }
+  else if(num.length == 1){
+    return 'open-specific-tab';
+  }
+  else{
+    return 'open-empty-tab';
+  }
+}
+
 function replaceNum(tokens){
+/**
+
+**/
   var tks = [];
   for (var i = 0; i < tokens.length; i++){
     if(textTonum(tokens[i]) != 0){
@@ -320,16 +340,20 @@ function replaceNum(tokens){
   return tks;
 }
 
+function determineTab(action, text, tokens){
+  return determineCloseTab(determineOpenTab(action, text, tokens), text, tokens);
+}
 // NOTE: open-specific-tab can handle "go to /n-th tab" commands trained on the listed words below, except for "go to the first tab" for some reason?
 var tabActionCommands = {
-  'open-empty-tab': ['open', 'new', 'tab', 'empty', 'another', 'other'],
+  'open' : ['open', 'new', 'tab', 'empty', 'another', 'other'],
+  //'open-empty-tab': ['open', 'new', 'tab', 'empty', 'another', 'other'],
   'reopen-tabs': ['reopen', 'last', 're-open', 'open', 'previous', 'tabs'],
-  'open-specific-tab': ['go to', 'open', 'go to the', 'tab', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth'],
+  //'open-specific-tab': ['go to', 'open', 'go to the', 'tab', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth'],
   'go-to-website': ['go to', 'go', 'open', 'visit', 'w', 'dot', 'com', 'org', 'net', 'google', 'facebook', 'youtube'],
   'discard-non-active-audible-tabs': ['discard',  'non', 'no', 'active', 'audible', 'audio', 'sound', 'noise', 'tabs', 'mute'],
   'close': ['close', 'remove', 'delete', 'tab', 'exit', 'dispose', 'discard', 'tabs'],
   'memory-save': ['memory', 'save', 'reduce']
-};
+};  
 
 var textParameterCommands = [
   //search
@@ -471,5 +495,6 @@ module.exports = {
   initialFilterClassifier, searchClassifier, tabClassifier, 
   otherClassifier, tokenizeAndStem, initialFilterMap, tabActionMap, 
   searchActionMap, functionMap, tokenizeThenStem, determineScroll, 
-  initialFilter, determineCloseTab, startRecording, stopRecording
+  initialFilter, determineCloseTab, startRecording, stopRecording,
+  determineTab
 };
