@@ -24,7 +24,7 @@ function buildUnknownWordMapping(tokens, trainingSet){
                 data: { param: unknownWord, trainingSet}
             }).done(function( o ) {
                 //assuming o is a word found that matched from the JSON file
-                userProfile.put(unknownWord, o);
+                userProfile.push({unknownWord: o});
                 tokens[i] = o;
             });
         }
