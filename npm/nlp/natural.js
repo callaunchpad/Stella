@@ -20,6 +20,8 @@ var interactWords = {"SKL":3, "KLK":3}; //scroll, click
 var browserWords = {"PK":4, "FRRT":4, "RFRX":4};//back, forward, refresh
 var tabWords = {"TP":5};//tab
 
+var userProfile = {};
+
 var specialWords = {
     /*
      special key words that require custom stemming
@@ -153,6 +155,23 @@ function hasSimilarity(commandWords, apiWords){
     
     Debug.log("No similarity");
     return false;
+}
+
+function buildProfile(importantWords, trainingSet){
+    for(var i = 0; i < importantWords.length; i++){
+        if(!trainingSet.contains(importantWords[i])){
+            var unknownWord = importantWords[i];
+            $.ajax({
+                type: "POST",
+                url: "../../jsonSearcher.py",
+                data: { param: unknownWord, trainingSet}
+            }).done(function( o ) {
+                //assuming o is a word found that matched from the JSON file
+                userProfile.put(unknownWord, o);
+            });
+        }
+    }
+
 }
 
 function applyProfile(query, userProfile){
