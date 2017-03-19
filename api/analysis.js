@@ -1,6 +1,9 @@
 function takeAction(text) {
   text = text.toLowerCase();
   var tokens = natural.tokenizeThenStem(text);
+  if(tokens.length == 0){ //if there is no command, just dont do anything
+    return;
+  }
   var action;
   console.log(natural.initialFilter)
   for(var i = 0; i < tokens.length; i +=1){
@@ -50,11 +53,27 @@ function parseAction(action, command_category, text, tokens) {
 }
 
 function checkQuestion(text, tokens){ //this is disgusting
+/**
+  Hardcorded way to determine if a given command is a question.
+  Most likely not to be used.
+  @author Arsh Zahed
+  @param text -- text to check for question
+  @param token -- tokens to use for checking if there is a question.
+  @return boolean -- true if question. false if not
+**/
   return !text.contains('you') && (tokens.length>1 && (tokens[1].isQuestion()) || 
     (tokens.indexOf('stella') < tokens.length - 1 && tokens[tokens.indexOf('stella') + 1].isQuestion()))
 }
 
 function getQuestion(text){//agh so hardcoded
+/**
+  Hardcoded way to snip the question from a given command (should be known
+  the command is a question at this point).
+  Most likely will not be used
+  @author Arsh Zahed
+  @param text -- text to use to get the question from
+  @return string -- the question in the command.
+**/
   var loc = text.indexOf('stella');
   if(loc<text.length/2){//if stella is less than half way into text, question is probably second part
     return text.substring(loc+6).trimLeft();
@@ -62,32 +81,32 @@ function getQuestion(text){//agh so hardcoded
   return text.substring(0, loc);
 }
 
-function oldTakeAction(text) {
-  text = text.toLowerCase();
-  var didAction = doCoreAction(text);
-  text = text.toLowerCase().remove(TRIGGER_NAME + " ");
-  if (!didAction) didAction = doInteractAction(text);
-  if (!didAction) didAction = doBrowserAction(text);
-  if (!didAction) didAction = doSearchAction(text);
-  if (!didAction) didAction = doTabAction(text);
-}
+// function oldTakeAction(text) {
+//   text = text.toLowerCase();
+//   var didAction = doCoreAction(text);
+//   text = text.toLowerCase().remove(TRIGGER_NAME + " ");
+//   if (!didAction) didAction = doInteractAction(text);
+//   if (!didAction) didAction = doBrowserAction(text);
+//   if (!didAction) didAction = doSearchAction(text);
+//   if (!didAction) didAction = doTabAction(text);
+// }
 
-function doCoreAction(text) {
-  if (text.contains("what can you do") || text.contains("open help menu") || text.contains("open help")) {
-    API.Core.openDocumentation(); return true;
-  } else if (text.contains("close help menu") || text.contains("close help")) {
-    API.Core.closeDocumentation(); return true;
-  } else if (text.contains("hello " + TRIGGER_NAME)) {
-    API.Core.focus(); return true;
-  } else if (text.contains(TRIGGER_NAME + " go to sleep")) {
-    API.Core.goToSleep(); return true;
-  } else if (text.contains("continuous analysis")) {
-    API.Core.toggleContinuousAnalysis(text); return true;
-  } else if (text.contains("be quiet") || text.contains("stop speaking") || text.contains("shut up")) {
-    API.Core.stopSpeaking(); return true;
-  }
-  return false;
-}
+// function doCoreAction(text) {
+//   if (text.contains("what can you do") || text.contains("open help menu") || text.contains("open help")) {
+//     API.Core.openDocumentation(); return true;
+//   } else if (text.contains("close help menu") || text.contains("close help")) {
+//     API.Core.closeDocumentation(); return true;
+//   } else if (text.contains("hello " + TRIGGER_NAME)) {
+//     API.Core.focus(); return true;
+//   } else if (text.contains(TRIGGER_NAME + " go to sleep")) {
+//     API.Core.goToSleep(); return true;
+//   } else if (text.contains("continuous analysis")) {
+//     API.Core.toggleContinuousAnalysis(text); return true;
+//   } else if (text.contains("be quiet") || text.contains("stop speaking") || text.contains("shut up")) {
+//     API.Core.stopSpeaking(); return true;
+//   }
+//   return false;
+// }
 
 // function doSearchAction(text) {
 //   Debug.log(text);

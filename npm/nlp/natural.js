@@ -94,6 +94,7 @@ function tokenizeThenStem(command) {
   return tokens;
 }
 
+
 /*
 Some special keywords may contain more useful information when they're not stemmed
 or when they're stemmed another way. Put all those words and in specialWords, and 
@@ -140,10 +141,10 @@ var coreActionMap = {
 };
 
 var coreActionCommands = {
-  'open-documentation': ['open', 'start', 'menu', 'docs', 'documentation', 'help', 'can', 'do', 'function', 'operate'],
+  'open-documentation': ['open', 'start', 'menu', 'docs', 'documentation', 'help', 'what', 'can', 'do', 'function', 'operate'],
   'close-documentation': ['close', 'exit', 'menu', 'docs', 'documentation', 'help'],
-  'focus': ['wake', 'up', 'hello', TRIGGER_NAME],
-  'sleep': ['exit', 'die', 'sleep', 'off', 'turn', 'power', 'bye', TRIGGER_NAME],
+  'focus': ['wake', 'up', 'hello'],
+  'sleep': ['exit', 'die', 'sleep', 'off', 'turn', 'power', 'bye'],
   'continuous-analysis': ['analyse', 'analyze', 'continuous'],
   'stop-speaking': ['stop', 'speak', 'shut', 'up', 'quiet', 'halt', 'hold']
 };
@@ -256,14 +257,9 @@ No numbers in text
   'close-current-tab': ['current', 'tab', 'this'],
   'close-last-tab': ['last', 'tab', 'previous'],
   'close-first-tab': ['first', 'tab'],
-  // 'close-past-tabs': ['past', 'tab'],
   'close-recent-tabs': ['recent', 'tab'],
   'close-previous-tab': ['previous', 'tab'],
-  // 'close-previous-tabs': ['previous', 'tabs'],
   'close-next-tab': ['next', 'tab']
-  // 'close-next-tabs': ['next', 'tabs'],
-  // 'close-specific-tab': ['specific', 'tab'],
-  // 'close-specific-tabs': ['tabs']
 }
 
 var closeTabOneNumCommands ={
@@ -309,6 +305,16 @@ function determineCloseTab(action, text, tokens){
 }
 
 function determineOpenTab(action, text, tokens){
+/**
+  Takes in an action. If it is 'open' it will continue, if not it returns the action.
+  If the the action is 'open', use the text and tokens to determine which close tab
+  function is desired by whether it has a number or not.
+  @author Arsh Zahed
+  @param action -- action to be checked
+  @param text -- text to use for classification
+  @param token -- tokens to use for classification
+  @return string -- the modified action to be executed.
+**/
   if (action!= 'open') return action;
 
   num = textTonums(text); //get any specific numbers
@@ -326,7 +332,11 @@ function determineOpenTab(action, text, tokens){
 
 function replaceNum(tokens){
 /**
-
+  Replaces any tokens that are numbers with the string, 'numplace' to make
+  classification based on whether there is a number easier.
+  @author Arsh Zahed
+  @param token -- tokens to use for classification
+  @return array -- the modified tokens.
 **/
   var tks = [];
   for (var i = 0; i < tokens.length; i++){
@@ -341,6 +351,15 @@ function replaceNum(tokens){
 }
 
 function determineTab(action, text, tokens){
+/**
+  Takes in an action and sends it to determineCLoseTab and
+  determineOpenTab to classify further if necessary.
+  @author Arsh Zahed
+  @param action -- action to be checked
+  @param text -- text to use for classification
+  @param token -- tokens to use for classification
+  @return string -- the modified action to be executed.
+**/
   return determineCloseTab(determineOpenTab(action, text, tokens), text, tokens);
 }
 // NOTE: open-specific-tab can handle "go to /n-th tab" commands trained on the listed words below, except for "go to the first tab" for some reason?
@@ -468,26 +487,6 @@ function storeSpeechInS3(text) {
         if (err) console.log(err, err.stack); // an error occurred
         else console.log(data);              // a successful response
     });
-}
-
-function intersect(a, b) {
-    var t;
-    if (b.length > a.length) t = b, b = a, a = t; // indexOf to loop over shorter
-    return a.filter(function (e) {
-        return b.indexOf(e) > -1;
-    });
-}
-
-function tabClasify(tokens){
-
-}
-
-function searchClassify(tokekns){
-
-}
-
-function otherClassify(tokens){
-
 }
 
 
