@@ -3,7 +3,7 @@ var natural = require('natural'),
     tokenizer = new natural.WordTokenizer(),
     stemmer = new natural.PorterStemmer();
 
-var userProfile = {};
+var wordMapping = {};
 var ignoredWords = ['a','the','or','is','and','who'];
 
 /**
@@ -24,7 +24,7 @@ function buildUnknownWordMapping(tokens, trainingSet){
                 data: { param: unknownWord, trainingSet}
             }).done(function( o ) {
                 //assuming o is a word found that matched from the JSON file
-                userProfile.push({unknownWord: o});
+                wordMapping.push({unknownWord: o});
                 tokens[i] = o;
             });
         }
