@@ -5,6 +5,7 @@ var natural = require('natural'),
 
 var wordMapping = {};
 var ignoredWords = ['a','the','or','is','and','who'];
+var thesaurus = require('jsonSearcher');
 
 /**
  * If an important word in the search query is not in the naive bayes training set
@@ -18,17 +19,15 @@ function buildUnknownWordMapping(tokens, trainingSet){
     for(var i = 0; i < tokens.length; i++){
         var unknownWord = tokens[i];
         if(!trainingSet.contains(unknownWord) && !ignoredWords.contains(unknownWord)){
-            //TODO: call jsonSearcher.js here to query thesaurus
             Debug.log('thesaurus was queried');
-            // $.ajax({
-            //     type: "POST",
-            //     url: "../../jsonSearcher.py",
-            //     data: { param: unknownWord, trainingSet}
-            // }).done(function( o ) {
-            //     //assuming o is a word found that matched from the JSON file
-            //     wordMapping.push({unknownWord: o});
-            //     tokens[i] = o;
-            // });
+            var synonym = thesaurus.query(unknownWord, trainingSet);
+            //if we didn't find a synonym, log that none was found
+            if(synonym === 'not found'){
+                Debug.log('no synonym found for word: ' + unknownWord);
+            } else {
+                wordMapping[unknownWord] =  synonym;
+                tokens[i] = synonym;
+            }
         }
     }
 

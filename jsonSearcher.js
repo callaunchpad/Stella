@@ -54,7 +54,7 @@ function binaryDictSearch(thesaurus, key, small, big){
 @param[bayesBank]: a bank of words that are currently recognized by the bayes classifer
 @returns[string]: returns a synonym found in the bayesBank else "not found"
 **/
-function findSynonym(jsonEntry, bayesBank){
+exports.query = function (jsonEntry, bayesBank){
     var synonyms = jsonEntry['synonyms'];
     var bank = set(bayesBank);
     for(var i = 0; i < synonyms.length; i++) {
@@ -65,6 +65,4 @@ function findSynonym(jsonEntry, bayesBank){
     }
     return "not found";
 
-}
-
-module.exports = {findSynonym : findSynonym};
+};
