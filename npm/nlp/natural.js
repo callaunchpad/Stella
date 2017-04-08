@@ -3,11 +3,7 @@ var natural = require('natural'),
     stemmer = natural.PorterStemmer,
     randomstring = require('randomstring'),
     AWS = require('aws-sdk');
-AWS.config.update({
-  "accessKeyId": "AKIAILJWVKYWDZXIMDSA",
-  "secretAccessKey": "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",
-  "region": "us-east-1"
-});
+
 var s3 = new AWS.S3();
 
 var key = null;
