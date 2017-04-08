@@ -18,15 +18,17 @@ function buildUnknownWordMapping(tokens, trainingSet){
     for(var i = 0; i < tokens.length; i++){
         var unknownWord = tokens[i];
         if(!trainingSet.contains(unknownWord) && !ignoredWords.contains(unknownWord)){
-            $.ajax({
-                type: "POST",
-                url: "../../jsonSearcher.py",
-                data: { param: unknownWord, trainingSet}
-            }).done(function( o ) {
-                //assuming o is a word found that matched from the JSON file
-                wordMapping.push({unknownWord: o});
-                tokens[i] = o;
-            });
+            //TODO: call jsonSearcher.js here to query thesaurus
+            Debug.log('thesaurus was queried');
+            // $.ajax({
+            //     type: "POST",
+            //     url: "../../jsonSearcher.py",
+            //     data: { param: unknownWord, trainingSet}
+            // }).done(function( o ) {
+            //     //assuming o is a word found that matched from the JSON file
+            //     wordMapping.push({unknownWord: o});
+            //     tokens[i] = o;
+            // });
         }
     }
 
