@@ -5,7 +5,7 @@ var natural = require('natural'),
 
 var wordMapping = {};
 var ignoredWords = ['a','the','or','is','and','who'];
-var thesaurus = require('jsonSearcher');
+var thesaurus = require('../../jsonSearcher');
 
 /**
  * If an important word in the search query is not in the naive bayes training set

@@ -1,5 +1,5 @@
 var raw_thesaurus = JSON.parse('jsonThesaurus.json');
-var bs = require('binarysearch');
+// var bs = require('binarysearch');
 
 
 var thesaurus = jQuery.map(raw_thesaurus, function(value, index){
