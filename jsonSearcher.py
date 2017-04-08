@@ -73,7 +73,7 @@ def main(key, bayesBank):
 	"""
     entry = finder(thesaurus, key)
     if entry == "not found":
-    	return "not found" 
+    	return "not found"
     bank = set(bayesBank)
     return find_synonym(entry, bank)
 
