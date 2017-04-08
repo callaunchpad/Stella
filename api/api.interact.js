@@ -3,6 +3,8 @@ function handleLink(text) {
   content = content.replace("click the link that says ", "");
   content = content.replace("click on the link that contains ", "");
   content = content.replace("click the link that contains ", "");
+  content = content.replace("click on the link ", "");
+  content = content.replace("click the link ", "");
   Debug.log("Trying to click on link containing: " + content);
   Click.link(content);
 }

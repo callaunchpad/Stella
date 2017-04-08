@@ -1,205 +1,504 @@
 
 var natural = require('natural'),
     tokenizer = new natural.WordTokenizer(),
-    stemmer = new natural.PorterStemmer();
+    stemmer = natural.PorterStemmer,
+    randomstring = require('randomstring'),
+    AWS = require('aws-sdk'),
+    thesaurus = require('../../jsonSearcher');
 
-var wordMapping = {};
-var ignoredWords = ['a','the','or','is','and','who'];
-var thesaurus = require('../../jsonSearcher');
+AWS.config.update({
+  "accessKeyId": "AKIAILJWVKYWDZXIMDSA",
+  "secretAccessKey": "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",
+  "region": "us-east-1"
+});
+var s3 = new AWS.S3();
 
-/**
- * If an important word in the search query is not in the naive bayes training set
- * then we query the thesaurus to find related words. if a word is found that's related, we add
- * a dictionary entry that establishes the mapping for future uses of the word
- * @author Hank
- * @param tokens a list of important/relevant words from the search query
- * @param trainingSet the set of words the naive bayes classifier was trained with
- */
-function buildUnknownWordMapping(tokens, trainingSet){
-    for(var i = 0; i < tokens.length; i++){
-        var unknownWord = tokens[i];
-        if(!trainingSet.contains(unknownWord) && !ignoredWords.contains(unknownWord)){
-            Debug.log('thesaurus was queried');
-            var synonym = thesaurus.query(unknownWord, trainingSet);
-            //if we didn't find a synonym, log that none was found
-            if(synonym === 'not found'){
-                Debug.log('no synonym found for word: ' + unknownWord);
-            } else {
-                wordMapping[unknownWord] =  synonym;
-                tokens[i] = synonym;
-            }
-        }
-    }
+var key = null;
+var options = {mimeType: 'video/webm;codecs=vp9'};
+var mediaRecorder = null;
+var recordedChunks = [];
 
+navigator.getUserMedia = navigator.getUserMedia ||
+                         navigator.webkitGetUserMedia ||
+                         navigator.mozGetUserMedia;
+
+// sleep time expects milliseconds
+function sleep (time) {
+  return new Promise((resolve) => setTimeout(resolve, time));
 }
 
-/**
- * given a user query string, this function tokenizes the query and replaces words in the query
- * that we have previously established as having a mapping in bayes set
- * @author Hank
- * @param query user's raw query string
- * @param thesaurusMapping dictionary which maps previously unknown words to known words in the bayes set
- * @returns the tokenized query with all 'learned' words replaced with their known counterpart
- */
-function applyUnknownWordMapping(query, thesaurusMapping){
-    //profile is dictionary mapping previously unknown words to works we know, e.g. assist -> help
-    var tokens = tokenizeThenStem(query);
-    for(var i = 0; i < tokens.length; i++){
-        if(tokens[i] in thesaurusMapping){
-            //if we've already had to look up the word in the thesaurus,
-            // we should just replace it on all future queries
-            tokens[i] = thesaurusMapping[tokens[i]];
+function startRecording() {
+  key = randomstring.generate(10);
+  recordedChunks = [];
+  navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+    .then(function(stream) {
+      mediaRecorder = new MediaRecorder(stream, options);
+      mediaRecorder.addEventListener('dataavailable', function(e) {
+        if (e.data.size > 0) {
+          recordedChunks.push(e.data);
         }
-    }
-    return tokens;
+        var audioContent = new File([new Blob(recordedChunks)], `${key}.webm`);
+        storeAudioInS3(audioContent, key);
+      });
+      mediaRecorder.start();
+    });
+}
+
+function stopRecording(text) {
+  mediaRecorder.stop();
+
+  storeSpeechInS3(text, key);
+}
+
+// function storeSpeechInS3(text, key) {
+//     var params = {
+//         Bucket: 'launchpad.stella',
+//         Key: `speech/${key}.txt`,
+//         Body: text,
+//     };
+//     s3.putObject(params, function(err, data) {
+//         if (err) console.log(err, err.stack); // an error occurred
+//         else console.log(data);               // a successful response
+//     });
+// }
+//
+// function storeAudioInS3(audio, key) {
+//     var params = {
+//         Bucket: 'launchpad.stella',
+//         Key: audio.name,
+//         Body: `audio/${key}.webm`,
+//         ContentType: audio.type,
+//     };
+//     s3.putObject(params, function(err, data) {
+//         if (err) console.log(err, err.stack); // an error occurred
+//         else console.log(data);               // a successful response
+//     });
+// }
+
+function tokenizeAndStem(command) {
+  natural.PorterStemmer.attach();
+  return command.tokenizeAndStem();
 }
 
 function tokenizeThenStem(command) {
-    var tokenized = tokenizer.tokenize(command);
-    var tokens = [];
-    for(i=0; i<tokenized.length; i++){
-        var val = customStem(tokenized[i]);//stemmer.stem(tokenized[i]);
-        if(val != '')
-            tokens.push(val);
-    }
-    return tokens;
+  /**
+  Takes in a command string and returns and
+  @author Arsh Zahed
+  @param command -- a string of the command
+  @return array -- the tokenized and stemed version of the input command
+**/
+  var tokenized = tokenizer.tokenize(command);
+  var tokens = [];
+  for(i=0; i<tokenized.length; i++){
+    var val = customStem(tokenized[i]);//stemmer.stem(tokenized[i]);
+    if(val != '')
+      tokens.push(val);
+  }
+  return tokens;
 }
 
 /*
- Some special keywords may contain more useful information when they're not stemmed
- or when they're stemmed another way. Put all those words and in specialWords, and
- use customStem for stemming.
- */
+Some special keywords may contain more useful information when they're not stemmed
+or when they're stemmed another way. Put all those words and in specialWords, and 
+use customStem for stemming.
+*/
 function customStem(text){
-    /*
-     Stems normally, except for words that are in specialWords.
-     */
-    if(text in specialWords){
-        return specialWords[text];
-    }
-    else{
-        return stemmer.stem(text);
-    }
+/**
+  Takes in a specific word, and checks if it is in specialWords. If so, return the corresponding
+  special stem. Else, stem normally.
+  @author Arsh Zahed
+  @param text -- a aspecific word to be stemmed
+  @return string -- the stmemmed version of the input word
+**/
+  if(text in specialWords){
+    return specialWords[text];
+  }
+  else{
+    return stemmer.stem(text);
+  }
 }
 
 
 
+var specialWords = {
+/*
+  special key words that require custom stemming
+  key is the original key word, value is the custom stem
+*/
+  'tabs' : 'tabs',
+  'google': 'google',
+  'youtube': 'youtube',
+  'memory': 'memory',
+  'audible': 'audible',
+  'play': 'play'
 
-module.exports = {
-    phonemifyAndTrigger: phonemifyAndTrigger
+}
+
+var ignoredWords = ['a','the','or','is','and','who'];
+
+
+var coreActionMap = {
+  'open-documentation': API.Core.openDocumentation,
+  'close-documentation': API.Core.closeDocumentation,
+  'focus': API.Core.focus,
+  'sleep': API.Core.goToSleep,
+  'continuous-analysis': API.Core.toggleContinuousAnalysis,
+  'stop-speaking': API.Core.stopSpeaking
+};
+
+var coreActionCommands = {
+  'open-documentation': ['open', 'start', 'menu', 'docs', 'documentation', 'help', 'what', 'can', 'do', 'function', 'operate'],
+  'close-documentation': ['close', 'exit', 'menu', 'docs', 'documentation', 'help'],
+  'focus': ['wake', 'up', 'hello'],
+  'sleep': ['exit', 'die', 'sleep', 'off', 'turn', 'power', 'bye'],
+  'continuous-analysis': ['analyse', 'analyze', 'continuous'],
+  'stop-speaking': ['stop', 'speak', 'shut', 'up', 'quiet', 'halt', 'hold']
+};
+
+var searchActionMap = {
+  // 'request-search': API.Search.requestSearch,
+  'youtube-search': API.Search.youtubeSearch,
+  'google-search': API.Search.googleSearch
+};
+
+var searchActionCommands = {
+  //search
+  // 'request-search': ['search', 'look up', 'find', 'identify'],
+  // google search
+  'google-search': ['google', 'online', 'what', 'when', 'who', 'how', 'where', 'on'],
+  //youtube search
+  'youtube-search': ['play', 'video', 'youtube', 'by', 'song', 'on',]
+  //answerQuestion
+};
+
+var interactActionMap = {
+  'scroll-up': API.Interact.Scroll.medUp,
+  'scroll-down': API.Interact.Scroll.medDown,
+  'scroll-up-a-little': API.Interact.Scroll.littleUp,
+  'scroll-down-a-little': API.Interact.Scroll.littleDown,
+  'scroll-up-a-lot': API.Interact.Scroll.bigUp,
+  'scroll-down-a-lot': API.Interact.Scroll.bigDown,
+  'click-link': API.Interact.Click.handleLink,
+  'type': API.Interact.Type.handleTextbox
+};
+
+var interactActionCommands = {
+  'scroll':['scroll', 'go', 'show', 'move', 'up', 'above', 'higher', 'down', 'below', 'lower'],
+  'click-link': ['click', 'link'],
+  'type': ['type', 'box', 'input']
+};
+
+var scrollActionDirections = {
+  '-up': ['up', 'above', 'higher'],
+  '-down':['down', 'below', 'lower']
+};
+
+var scrollActionModifiers = {
+  '-a-little': ['little', 'bit', 'tiny', 'tad', 'slightly'],
+  '-a-lot': ['lot', 'ton', 'way', 'bunch', 'large'],
+  '': ['medium', 'decent', 'normal']
 };
 
 
-//build key word set
-//raw string
-//aggressive stem
-//metaphone phonetics
-//N-gram
-//for each n-gram test similarity to keywords
+function determineScroll(action, text, tokens){
+/**
+  Takes in an action. If it is 'scroll' it will continue, if not it returns the action.
+  If the the action is 'scroll', use the text and tokens to determine which scroll
+  function is desired by using seperate Naive Bayes classifiers.
+  @author Arsh Zahed
+  @param action -- action to be checked
+  @param text -- text to use for classification
+  @param token -- tokens to use for classification
+  @return string -- the modified action to be executed.
+**/
+  if(action != 'scroll') return action;
 
-// natural.PorterStemmer.attach();
-//
-// var coreWords = {"HLP":1, "AST":1, "TKMNTXN":1, "SLP":1, "KT":1, "KNTNS":1, "ANLS":1}; //help, assist, documentation, sleep, quiet, continuous, analysis
-// var searchWords = {"SRX":2, "LK":2, "KKL":2, "ATP":2}; //search, look, google, youtube
-// var interactWords = {"SKL":3, "KLK":3}; //scroll, click
-// var browserWords = {"PK":4, "FRRT":4, "RFRX":4};//back, forward, refresh
-// var tabWords = {"TP":5};//tab
-
-
-// var specialWords = {
-//     /*
-//      special key words that require custom stemming
-//      key is the original key word, value is the custom stem
-//      */
-//     'tabs' : 'tabs',
-//     "Google": "google",
-//     "YouTube": "youtube"
-// }
+  var direction = scrollDirClassifier.classify(tokens);
+  var modifier = scrollModClassifier.classify(tokens);
+  return action+direction+modifier;
 
 
-// function phonemifyAndTrigger(final_transcript) {
-//     Debug.log(final_transcript);
-//
-//     var tokenizer = new natural.WordTokenizer();
-//     var tokenList = tokenizer.tokenize(final_transcript);
-//
-//     var metaphone = natural.DoubleMetaphone;
-//
-//     function toPhoneme(curr, index, arr) {
-//         arr[index] = metaphone.process(curr);
-//     }
-//
-//     tokenList.forEach(toPhoneme);
-//
-//     var concatList = [];
-//     var i;
-//
-//     for (i = 0; i < tokenList.length; i++) {
-//         var j = 0;
-//         for (j = 0; j < 2; j++) {
-//             concatList.push(tokenList[i][j])
-//         }
-//     }
-//
-//     // Debug.log("help phonemes: " + apiWords);
-//     Debug.log("token phonemes: " + concatList);
-//
-//     // var NGrams = natural.NGrams;
-//     //number of words per ngram  = 2
-//     // var nGramSet = NGrams.ngrams(concatList.join(" "), 2);
-//
-//     if (setContainsListMember(concatList, coreWords)) {
-//         evaluateCoreExp(concatList);
-//     } else if (setContainsListMember(concatList, searchWords)) {
-//         evaluateSearchExp(concatList);
-//     } else if (setContainsListMember(concatList, interactWords)) {
-//         evaluateInteractExp(concatList);
-//     } else if (setContainsListMember(concatList, browserWords)) {
-//         evaluateBrowserExp(concatList);
-//     } else if (setContainsListMember(concatList, tabWords)) {
-//         evaluateTabExp(concatList);
-//     }
-//
-// }
+
+}
+
+var browserActionMap = {
+  'go-back': API.Browser.Window.back,
+  'go-forward': API.Browser.Window.forward,
+  'refresh-page': API.Browser.Window.refresh,
+  'refresh-yourself': API.Browser.Window.refreshApp 
+};
+
+var browserActionCommands = {
+  'go-back': ['go', 'back', 'previous', 'past'],
+  'go-forward': ['go', 'forward'],
+  'refresh-page': ['refresh', 'reload', 'reset', 'page'],
+  'refresh-yourself': ['refresh', 'reload', 'reset', 'you', 'yourself'],
+};
+
+var tabActionMap ={
+  'open-empty-tab': API.Tabs.openEmptyTab,
+  'reopen-tabs': API.Tabs.reopenTabs,
+  'open-specific-tab': API.Tabs.openSpecificTab,
+  'go-to-website': API.Tabs.goToWebsite,
+  'discard-non-active-audible-tabs': API.Tabs.discardNonActiveAudibleTabs,
+  'close-current-tab': API.Tabs.closeCurrentTab,
+  'close-last-tab': API.Tabs.closeLastTab,
+  'close-first-tab': API.Tabs.closeFirstTab,
+  'close-past-tabs': API.Tabs.closePastTabs,
+  'close-recent-tabs': API.Tabs.closeRecentTabs,
+  'close-previous-tab': API.Tabs.closePreviousTab,
+  'close-previous-tabs': API.Tabs.closePreviousTabs,
+  'close-next-tab': API.Tabs.closeNextTab,
+  'close-next-tabs': API.Tabs.closeNextTabs,
+  'close-specific-tab': API.Tabs.closeSpecificTab,
+  'close-specific-tabs': API.Tabs.closeSpecificTabs,
+  'memory-save': API.Tabs.discardNonActiveTabs
+};
+
+var closeTabNoNumCommands = {
+/*
+No numbers in text
+*/
+  'close-current-tab': ['current', 'tab', 'this'],
+  'close-last-tab': ['last', 'tab', 'previous'],
+  'close-first-tab': ['first', 'tab'],
+  'close-recent-tabs': ['recent', 'tab'],
+  'close-previous-tab': ['previous', 'tab'],
+  'close-next-tab': ['next', 'tab']
+};
+
+var closeTabOneNumCommands ={
+  'close-past-tabs': ['past', 'tabs'],
+  'close-specific-tab': ['tab', 'numplace'],
+  'close-previous-tabs': ['previous', 'tabs'],
+  'close-next-tabs': ['next', 'tabs']
+};
+
+function determineCloseTab(action, text, tokens){
+/**
+  Takes in an action. If it is 'close' it will continue, if not it returns the action.
+  If the the action is 'close', use the text and tokens to determine which close tab
+  function is desired by using seperate Naive Bayes classifiers.
+  @author Arsh Zahed
+  @param action -- action to be checked
+  @param text -- text to use for classification
+  @param token -- tokens to use for classification
+  @return string -- the modified action to be executed.
+**/
+  if (action!= 'close') return action;
+
+  num = textTonums(text); //get any specific numbers
+  console.log(num);
+  if(num.length > 2){ //if more than two numbers, can't do that
+    tts.say('Please either specify a specific tab or a range of tabs to close.');
+    return null;
+  }
+  else if(num.length == 2){
+    return 'close-specific-tabs';
+  } 
+  else if(num.length == 1){
+    var tks = replaceNum(tokens);
+    action = closeTabOneNumClassifier.classify(tks);
+    console.log(action);
+    return action;
+  }
+  else{
+    action = closeTabNoNumClassifier.classify(tokens);
+    console.log(action);
+    return action;
+  }
+}
+
+function determineOpenTab(action, text, tokens){
+/**
+  Takes in an action. If it is 'open' it will continue, if not it returns the action.
+  If the the action is 'open', use the text and tokens to determine which close tab
+  function is desired by whether it has a number or not.
+  @author Arsh Zahed
+  @param action -- action to be checked
+  @param text -- text to use for classification
+  @param token -- tokens to use for classification
+  @return string -- the modified action to be executed.
+**/
+  if (action!= 'open') return action;
+
+  num = textTonums(text); //get any specific numbers
+  console.log(num);
+  if(num.length > 1){ //if more than two numbers, can't do that
+    return null;
+  }
+  else if(num.length == 1){
+    return 'open-specific-tab';
+  }
+  else{
+    return 'open-empty-tab';
+  }
+}
+
+function replaceNum(tokens){
+/**
+  Replaces any tokens that are numbers with the string, 'numplace' to make
+  classification based on whether there is a number easier.
+  @author Arsh Zahed
+  @param token -- tokens to use for classification
+  @return array -- the modified tokens.
+**/
+  var tks = [];
+  for (var i = 0; i < tokens.length; i++){
+    if(textTonum(tokens[i]) != 0){
+      tks[i] = 'numplace';
+    }
+    else{
+      tks[i] = tokens[i];
+    }
+  }
+  return tks;
+}
+
+function determineTab(action, text, tokens){
+/**
+  Takes in an action and sends it to determineCLoseTab and
+  determineOpenTab to classify further if necessary.
+  @author Arsh Zahed
+  @param action -- action to be checked
+  @param text -- text to use for classification
+  @param token -- tokens to use for classification
+  @return string -- the modified action to be executed.
+**/
+  return determineCloseTab(determineOpenTab(action, text, tokens), text, tokens);
+}
+// NOTE: open-specific-tab can handle "go to /n-th tab" commands trained on the listed words below, except for "go to the first tab" for some reason?
+var tabActionCommands = {
+  'open' : ['open', 'new', 'tab', 'empty', 'another', 'other'],
+  //'open-empty-tab': ['open', 'new', 'tab', 'empty', 'another', 'other'],
+  'reopen-tabs': ['reopen', 'last', 're-open', 'open', 'previous', 'tabs'],
+  //'open-specific-tab': ['go to', 'open', 'go to the', 'tab', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth'],
+  'go-to-website': ['go to', 'go', 'open', 'visit', 'w', 'dot', 'com', 'org', 'net', 'google', 'facebook', 'youtube'],
+  'discard-non-active-audible-tabs': ['discard',  'non', 'no', 'active', 'audible', 'audio', 'sound', 'noise', 'tabs', 'mute'],
+  'close': ['close', 'remove', 'delete', 'tab', 'exit', 'dispose', 'discard', 'tabs'],
+  'memory-save': ['memory', 'save', 'reduce']
+};  
+
+var textParameterCommands = [
+  //search
+  'API.Search.youtubeSearch',
+  'API.Search.answerQuestion',
+  //tab
+  'API.Tabs.reopenTabs',
+  'API.Tabs.openSpecificTab',
+  'API.Tabs.goToWebsite',
+  'API.Tabs.closePastTabs',
+  'API.Tabs.closeRecentTabs',
+  'API.Tabs.closePreviousTabs',
+  'API.Tabs.closeNextTabs',
+  'API.Tabs.closeSpecificTab',
+  'API.Tabs.closeSpecificTabs',
+  //core 
+  'API.Core.toggleContinuousAnalysis',
+  //interact
+  'API.Interact.Click.handleLink',
+  'API.Interact.Type.handleTextbox',
+  //none for browser
+];
 
 
-// function stringDistance(str1, str2){
-//     natural = require('natural');
-//     Debug.log("str1: " + str1 + " str2: " + str2);
-//     jwDistance = natural.JaroWinklerDistance(str1, str2);
-//     return jwDistance;
-// }
-//
-// function setContainsListMember(lst, dict) {
-//     var i = 0;
-//     for (i = 0; i < lst.length; i++) {
-//         if (lst[i] in dict) {
-//             return true;
-//         }
-//     }
-//     return false;
-// }
-//
-// function hasSimilarity(commandWords, apiWords){
-//     // Debug.log("apiWords: " + Object.keys(apiWords)[0]);
-//     // Debug.log("commandWords: " + commandWords);
-//     // Debug.log("api length: " + Object.keys(apiWords).length + " ###words length: " + commandWords.length);
-//     var counter = 0;
-//     for(var i = 0; i < Object.keys(apiWords).length; i++){
-//         for(var j = 0; j < commandWords.length; j++){
-//             if(stringDistance(Object.keys(apiWords)[i], commandWords[j]) > 0.85){
-//                 Debug.log("Similarity found between " + apiWords[i] + " and " + commandWords[j]);
-//                 counter++;
-//             }
-//         }
-//     }
-//
-//     if (counter > 0) {
-//         return true;
-//     }
-//
-//     Debug.log("No similarity");
-//     return false;
-// }
+function combineKeywords(commandsDictionary){
+  keywords = []
+  keys = Object.keys(commandsDictionary)
+  keys.forEach(function(key){
+    keywords = keywords.concat(commandsDictionary[key])
+  })
+  return keywords
+}
+
+var initialFilter = {
+  'searchActionCommands': combineKeywords(searchActionCommands),
+  'coreActionCommands': combineKeywords(coreActionCommands),
+  'interactActionCommands': combineKeywords(interactActionCommands),
+  'browserActionCommands': combineKeywords(browserActionCommands),
+  'tabActionCommands': combineKeywords(tabActionCommands)
+};
 
 
+var questionIndicators = {
+  'question' : ["are", "who", "what", "when", "where", "why", "will", "how", "whom", "whose", "which", "is", "did", "can", "could", "would", "may"]
+};
+
+var functionMap = Object.assign({}, coreActionMap, interactActionMap, browserActionMap);
+var commandMap = Object.assign({}, coreActionCommands, interactActionCommands, browserActionCommands);
+
+function trainNaiveBayes(commands) {
+  var classifier = new natural.BayesClassifier();
+    for (var key in commands) {
+      //makes sure that the key you get is an actual property of an object, and doesn't come from the prototype
+      if (commands.hasOwnProperty(key)) {
+        classifier.addDocument(commands[key], key);
+    }
+  }
+  classifier.train();
+  return classifier;
+}
+var questionClassifier = trainNaiveBayes(questionIndicators);
+var searchClassifier = trainNaiveBayes(searchActionCommands);
+var tabClassifier = trainNaiveBayes(tabActionCommands);
+var otherClassifier = trainNaiveBayes(commandMap);
+
+
+var initialFilterMap = {
+  'coreActionCommands':{
+    'map': coreActionMap,
+    'classifier': otherClassifier
+  },
+  'interactActionCommands': {
+    'map': interactActionMap,
+    'classifier': otherClassifier
+  },
+  'browserActionCommands': {
+    'map': browserActionMap,
+    'classifier': otherClassifier
+  },
+  'tabActionCommands':{
+    'map': tabActionMap,
+    'classifier': tabClassifier
+  },
+  'searchActionCommands':{
+    'map': searchActionMap,
+    'classifier': searchClassifier
+  }
+};
+
+var initialFilterClassifier = trainNaiveBayes(initialFilter);
+
+var closeTabOneNumClassifier = trainNaiveBayes(closeTabOneNumCommands);
+var closeTabNoNumClassifier = trainNaiveBayes(closeTabNoNumCommands);
+
+//scroll functions
+var scrollDirClassifier = trainNaiveBayes(scrollActionDirections);
+var scrollModClassifier = trainNaiveBayes(scrollActionModifiers);
+
+function isQuestion(text){
+  return questionClassifier.classify(text);
+}
+console.log(tabClassifier.classify(['new', 'tab']));
+
+function storeSpeechInS3(text) {
+    var key = randomstring.generate(10);
+    var params = {
+        Bucket: 'launchpad.stella',
+        Key: `speech/${key}.txt`,
+        Body: text,
+    };
+    s3.putObject(params, function(err, data) {
+        if (err) console.log(err, err.stack); // an error occurred
+        else console.log(data);              // a successful response
+    });
+}
+
+
+module.exports = {
+  initialFilterClassifier, searchClassifier, tabClassifier, 
+  otherClassifier, tokenizeAndStem, initialFilterMap, tabActionMap, 
+  searchActionMap, functionMap, tokenizeThenStem, determineScroll, 
+  initialFilter, determineCloseTab, startRecording, stopRecording,
+  determineTab
+};
