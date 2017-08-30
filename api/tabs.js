@@ -78,7 +78,7 @@ function duplicateTab(tabId, callback) {
     var query = { currentWindow: true };
     chrome.tabs.query(query, function(tabs) {
       while (num > 0) {
-        var tab = tabs[num];
+        var tab = tabs[num-1];
         if (tab.url != APP_URL) {
           if (callback) callback(tab);
           chrome.tabs.remove(tab.id, function() {
@@ -170,7 +170,7 @@ function duplicateTab(tabId, callback) {
     chrome.tabs.query(query, function(tabs) {
       for (var i = start; i <= end; i++) {
         var tab = tabs[i];
-        if (start > 0 && end < tabs.length) {
+        if (start >= 0 && end < tabs.length) {
           if (tab.url != APP_URL) {
             if (callback) callback(tab);
             chrome.tabs.remove(tab.id, function() {
@@ -185,7 +185,7 @@ function duplicateTab(tabId, callback) {
   function openSpecificTab(index, callback) {
     var query = { currentWindow: true };
     chrome.tabs.query(query, function(tabs) {
-      if (index > 0 && index < tabs.length) {
+      if (index >= 0 && index < tabs.length) {
         var tab = tabs[index];
         chrome.tabs.update(tab.id, { active: true, highlighted: true }, function(tab) {
           callback(tab);
@@ -200,7 +200,7 @@ function duplicateTab(tabId, callback) {
       for (var i = 0; i < results.length; i++) {
         openNewTab(results[i].url, callback);
       }
-    })
+    });
   }
 
   document.addEventListener('DOMContentLoaded', function() {

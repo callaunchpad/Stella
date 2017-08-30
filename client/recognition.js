@@ -1,5 +1,9 @@
 continuous_check.addEventListener('change', toggleRecognition);
 
+navigator.getUserMedia = navigator.getUserMedia ||
+                         navigator.webkitGetUserMedia ||
+                         navigator.mozGetUserMedia;
+
 var final_transcript = '';
 var recognizing = false;
 var ignore_onend;
@@ -16,6 +20,7 @@ if (!('webkitSpeechRecognition' in window)) {
     recognizing = true;
     showInfo('info_speak_now');
     micRec();
+    natural.startRecording();
   };
 
   recognition.onerror = function(event) {
@@ -109,6 +114,8 @@ function forceStop() {
   if (recognizing) {
     Debug.log("Forcing Mic Off");
     recognition.stop();
+    console.log(final_transcript);
+    takeAction(final_transcript);
     return;
   }
 }

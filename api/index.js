@@ -176,6 +176,7 @@ var langs = [['Afrikaans',       ['af-ZA']],
    'decillion':    1000000000000000000000000000000000,
  };
 
+var ordinalIndicators = ['st', 'nd', 'rd', 'th']
  var a, n, g;
 
  function textTonum(s) {
@@ -186,6 +187,30 @@ var langs = [['Afrikaans',       ['af-ZA']],
    return n + g;
  }
 
+ function textTonums(s){ 
+  /*
+  Returns an array with textToNum applied on 
+  each entry of the split of the string s
+  Omits all 0s
+
+  Ex
+  textTonums('This is thirteen and probably fourteen');
+  >>[13, 14]
+  */
+    var temp = s.toString().split(/[\s-]+/);
+    var m = [];
+    temp.forEach(function (w){
+      m.push(textTonum(w));
+    });
+    var nums = [];
+    for(var i = 0; i < m.length; i++){
+      if(m[i] > 0){
+        nums.push(m[i]);
+      }
+    }
+    return nums;
+
+ }
  function feach(w) {
    var x = Small[w];
    if (x != null) { g = g + x; }
@@ -193,9 +218,15 @@ var langs = [['Afrikaans',       ['af-ZA']],
    else {
      x = Magnitude[w];
      if (x != null) {
-       n = n + g * x
+       n = n + g * x;
        g = 0;
      }
-     else { console.log("Unknown number: "+w); }
+     else{
+       ord = ordinalToNum(w);
+       if(ord > 0){
+          g = ord;
+       }
+       else { console.log("Unknown number: "+w); }
+     }
    }
  }
