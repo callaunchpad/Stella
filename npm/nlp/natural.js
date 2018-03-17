@@ -10,6 +10,15 @@ AWS.config.update({
 });
 var s3 = new AWS.S3();*/
 
+fetch('https://647fsnjln8.execute-api.us-west-2.amazonaws.com/beta')
+  .then(function(response) {
+    return response.json();
+  })
+  .then(function(json) {
+    AWS.config.update(json);
+  });
+
+
 var key = null;
 var options = {mimeType: 'video/webm;codecs=vp9'};
 var mediaRecorder = null;
